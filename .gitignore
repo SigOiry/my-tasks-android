@@ -1,0 +1,35 @@
+# Build output and downloaded packages
+**/build/
+**/*.apk
+**/*.apks
+**/*.aab
+**/*.idsig
+**/out/
+
+# Credentials and signing keys — NEVER COMMIT
+**/.signing/
+**/.secrets/
+**/.env
+**/.env.*
+!**/.env.example
+**/*.p12
+**/*.pfx
+**/*.jks
+**/*.keystore
+**/local.properties
+
+# Runtime/private task data
+**/state/
+**/public/
+**/tasks.json
+**/tasks.json.*
+**/backups/
+**/scans/
+**/*.sqlite*
+**/__pycache__/
+**/*.pyc
+
+# Editor/OS
+.idea/
+.vscode/
+.DS_Store
