@@ -1,63 +1,58 @@
-# Android native redesign — local preview
+# Android Liquid Glass v3 — native preview
 
-## Status and scope
+## Scope and identity
 
-Opt-in `1.4.0-preview` / versionCode `6`. Native Java Views, minimum API26, target/API35; the existing direct SDK build is retained. No WebView, Compose/Gradle migration, backend/schema change or production deployment is included. Preview distribution was separately requested after the local redesign delivery and does not promote the stable release. The package, signing certificate, Keystore alias/AAD, authentication, task revisions and durable conversation protocol remain unchanged.
+`1.5.0-glass-preview`, versionCode **7**, package `com.simon.mytasks`. Java/native Views, minimum API 26, SDK/target 35, direct `aapt2`/`javac`/D8 build. No WebView, flattened reference artwork, Compose scaffold, backend/schema migration or production deployment. Existing release certificate, Android Keystore identity/AAD, HTTPS authentication, canonical task store and durable conversation contracts are retained.
 
-The local APK is `android/build/my-tasks.apk`. Install over the existing signed app; do not uninstall or reset app storage. This document does **not** certify native launch or upgrade behavior.
+The implementation brief is `IMPLEMENTATION-PROMPT.txt` and installed `native-android-liquid-glass` 3.0.0. All nine boards were opened with vision before implementation. They are references, not runtime evidence. Native iteration started from installed 1.4.0-preview/code 6 (SHA-256 `3214947b8cb3c267c33ee85b11432868cd8ea8747e6f3a0e4309f73ff009209a`).
 
-## Assessment and rendering decision
+## Presentation architecture
 
-The baseline already had explicit read-only details/editing, update prose and saved conversations. The actual UI lacked separate row completion/context actions, used a conventional update dialog and rebuilt message content on unrelated request-state changes. The implementation therefore keeps Views and improves the native composition and state boundaries rather than rebuilding the backend or introducing another UI framework.
+- `WorkspaceUi`: pearl `#F5F5F7` / graphite `#0D0F14`, stable white/graphite reading surfaces, licensed Inter, 600-weight headings, restrained blue, separators and semantic spacing. Native actions retain at least 48dp targets.
+- `GlassLayout`, `GlassDrawable`, `GlassPixels`: actual bounded decor-backdrop sampling and two-pass downsampled blur, translucent tint and directional rim. All glass subtrees are omitted during capture so foreground labels remain sharp. Reused pixel buffers are bounded to 65,536 samples per surface. Scroll trailing refresh and visibility/focus checks limit work; reduced transparency/high contrast use opaque surfaces. This is not Apple's private optical/refraction renderer, nor a claim about physical-device frame rate. SurfaceView/video, hardware-only content and other windows cannot be sampled by this software renderer.
+- Glass is a control/navigation material, not a filter over paragraphs or the whole window. API31+ native window blur is optional on supported sheet/menu windows. The ordinary app material does not rely on that capability.
+- Android owns status/navigation bars, Back, IME, selection tools, permissions and installation. No fake iOS OS chrome is drawn.
 
-Material: pearl/cool-neutral canvas and solid white content; graphite canvas/content in dark mode; restrained blue, licensed Inter, quiet separators, concentric rounded controls and shallow elevation. `WorkspaceUi` defines semantic color, type, spacing, radius, elevation and motion tokens. Settings retains system/light/dark, reduced motion and reduced transparency.
+## Screen and state map
 
-**Glass is a translucent-fill/edge-highlight approximation, not backdrop sampling, blur or optical refraction.** Readable content and messages remain opaque. No RenderEffect is installed on text/control children. A custom capture pipeline was not introduced without a native runtime to validate capture cost, recursion, scrolling or IME behavior. Reduced transparency/high-text-contrast use opaque fills. Kyant0/AndroidLiquidGlass was not adopted because this is not a Compose implementation.
-
-References studied for hierarchy/material inspiration, not copied assets or implementation prompts:
-- https://liquidglassdesign.com
-- https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass
-- Apple's documentation data: https://developer.apple.com/tutorials/data/documentation/technologyoverviews/adopting-liquid-glass.json
-- https://developer.android.com/reference/android/graphics/RenderEffect
-
-The product skill and its `materials-motion.md`/`hermes-flows.md` references and `interaction-design` were inspected. `ui-ux-pro-max` is not installed. Compose-only design/performance skills were not applied to Views.
-
-## Component and state map
-
-| Component | Implementation and authority |
+| Route | Implementation |
 |---|---|
-| Tasks | `TasksUi` recycles native ListView rows. Existing filters/search/sorts remain presentation-only. Visible task-ID/top-offset anchors survive root rebuilds; filter changes explicitly reset the anchor. Filter/project/sort preferences use the existing epoch-scoped account preferences. |
-| Task row | `TaskRowView`: 72dp minimum, two-line title and subordinate context; content can increase row height. Separate native 48dp completion and overflow targets. Long press/overflow route to the same contextual sheet. Completion waits for server-confirmed state and never acknowledges an update. |
-| Update accent | `UpdateEmphasis` tracks exact task/token pairs for this Activity session, limits two simultaneous accent-only breaths, two 2300ms cycles, then a static marker. Navigation/rebinding does not replay observed identities. Detach/background/reduced motion stop animated emphasis without changing unread state. |
-| Update review | `UpdateSheet` is bottom-anchored on compact windows and centered on wider ones, with scrollable opaque prose and acknowledge/details/discuss actions. `UpdateReviewPolicy.Snapshot` owns immutable displayed strings/token. Missing context/advice is omitted; raw legacy JSON/diffs and source actions are not shown. |
-| Acknowledgement | Only the displayed token is posted after explicit action. Failure retains review context. A newer observed unread task cannot be overwritten by a late old acknowledgement reply, and its OS notification is not cancelled. Rotation/theme replacement retains the original displayed snapshot. |
-| Foreground updates | One quiet GET at a time, checked every30s while active. `UiReadGate` fences old reads when paused, a write starts or the session changes. Unchanged snapshots do not rebuild the root. Open editors keep their fields and original revision; changed remote revisions get a preserved-draft notice. This is polling, not instant push. |
-| Details/editor | Title, readable metadata, prominent saved-task conversation entry, explicit Edit, description/notes, supplied safe source actions and available timestamps. The API does not expose historical update prose; the UI says so rather than inventing an activity feed. Save/Cancel and all existing editable fields/revision checks remain. |
-| Context actions | Native sheets provide supported status/priority/project/edit/recoverable-trash/restore actions. `TaskActionPolicy` sends only the requested field and exact revision. A dirty editor for the same task must be saved/cancelled before a quick action. Ambiguous writes are not automatically retried. |
-| Messaging | `ConversationsUi` renders opaque left/right grouped bubbles, actual timestamps/date separators, selectable inert Markdown and Copy original. Message history changes, not request-only polls, trigger history reconciliation. Per-thread ID/offset anchors, jump-to-latest and own-request following preserve reading position. |
-| Discussions | Saved titles, excerpts, timestamps, filters, rename/archive/reopen and New conversation. Search explicitly covers loaded metadata, not full message history. Free chat discusses/drafts; the existing no-tools integration cannot apply task/project proposals, send mail or execute calendar actions. |
-| Navigation/insets | Two labelled floating destinations, utility Settings, current-width list/detail layout and keyboard-sensitive chrome. Measured navigation height adjusts Tasks/FAB/editor clearance when text grows; the composer reserves navigation space until IME takes precedence. |
+| Tasks | Recycled grouped `ListView`, 64dp ordinary row minimum, circular 48dp completion controls, independent priority/unread/selection states. Default title and scope chrome is approximately 102dp; project/sort/less-used scopes are in the utility menu. Selected project is the title; non-default sort has quiet context. Week/Trash remain visibly selected. |
+| Adaptive navigation | Two global destinations only. Compact home uses one floating capsule and an aligned Add/New action. Compact details/edit/full chat hide global navigation. Unfolded uses a 72dp rail, 280–340dp master and readable detail pane. Width and font scale determine whether both panes are usable. |
+| Accessibility | Text grows rather than shrinking targets; large task titles and unread context wrap. At 200% a fold-sized window switches to a usable single pane. Priority has filled/outline/no-flag distinctions as well as contrast-safe colors. Native labels, checked/selected states and assistant review accessibility actions remain available. |
+| Details/edit | Grouped reading surfaces, compact value rows, all editable fields, native date picker/clear and one relevant bottom action area. Save/Cancel remain outside the form scroll above IME. Focused editor fields request sufficient visible space after resize. Revisions and dirty draft confirmation stay authoritative. |
+| Update review | Immutable displayed snapshot/token, restricted inert Markdown, supplied Context/What's new/Next step only. **Mark reviewed** alone acknowledges. Open task, Ask Hermes and dismissal keep unread. Newer-token conflict retains review and offers refresh. |
+| Context actions | Bounded content-sized native menus, row anchoring when identity is unambiguous, safe compact fallback, status/priority/project/edit/recoverable Trash actions and focus restoration. No UI-only mutation queue. |
+| Discussions/chat | Compact list, loaded-metadata search, scopes, saved task/free threads, rename/archive/reopen/history. One thread header and one multiline sampled-glass composer. Stable message views are retained; only new local insertions near the end animate. ID/offset anchors, older history, drafts and originating request/thread identity remain independent of navigation. |
+| Manual planning review | Assistant text offers **Review as new task** through context/selection/accessibility actions. It opens an explicitly unsaved DRAFT editor with blank required title and exact editable description, after any dirty confirmation. Only a valid explicit Create uses the existing canonical task API; project remains a task attribute. No invented proposal schema or model tools. |
+| Utilities | Grouped Settings, system/light/dark, reduced motion/transparency, Android notification controls, account/privacy/update utilities and native sign-in. No passwords are persisted. |
 
-## Verification performed
+## Verification and data boundary
 
-The parent performed complete resource linking and full-source Java8/API35 compilation, then the repository's signed APK build using the existing authorized signing identity. The normal host test runner includes new review/quick-action/read-gate/emphasis/chat policy tests, plus executable extracted-method regressions covering reload, clean-editor quick actions, delayed acknowledgement versus replacement OS notifications, self-edit/remote-token interleaving and cross-task conversation navigation. Separate Tasks checks exercise the ID/offset anchor and isolated module compilation. Source-wiring checks and extracted-method host seams are explicitly **not** Android interaction tests.
+Native QA uses the local Linux **Pixel_Fold**, Android 17/API37, measured **411×797dp folded** and **841×701dp unfolded** at normal text. An isolated `com.simon.mytasks.qa` build uses the same presentation sources but separate identity, private loopback TLS trust and synthetic account. The normal package's real account was inspected read-only and upgraded in place, not logged out or cleared.
 
-OS task notifications now use exact epoch/task/token identities. Posting supersedes older versioned notifications for the same account/task; acknowledgement cancels only its displayed identity. Pre-preview shared-tag notifications have no trustworthy epoch/token and may require manual dismissal after upgrade. They are not cancelled speculatively by acknowledgement.
+The fixture uses the real canonical integration, authentication, revisions, unread identities and durable workers. Only the model boundary is synthetic; its text is labeled **SYNTHETIC QA**. Real task/mail/calendar data is never a fixture. Linux SSH forwarding is explicitly prohibited; the backend runs in an isolated host-local venv on `127.0.0.1:9147`, reached through the specifically owned ADB reverse. No forwarding restriction was bypassed or LAN service installed.
 
-Available checks passed: **486 JVM assertions**, **28 Python source-contract checks**, **5 extracted-method host regression groups**, and **9 additional task-anchor checks**, plus complete resource/Java/D8 compilation and original-certificate APK signature verification. Final independent source re-review found no blocking security or logic issues; its recorded production hashes match the delivered source snapshot. This is approval of the local preview source, not native runtime validation or authorization to publish.
+Actual native checks include Tasks chrome/targets, project/date/Week/Trash scopes, light/dark/reduced-transparency/offline rendering, saved task/free chat, IME-open compact/unfolded layouts, multiline drafts and selected thread/task across folding, older-page loading, a pending reply completing in its original thread, durable provider failure, native all-field edits and stale revision retention. A genuine newer canonical update during an open review was rejected for the old token; the refreshed exact token cleared only that update. API readbacks verify mutations, acknowledgements, history and explicit draft-to-task creation.
 
-Concrete final counts, APK/source hashes and review results are recorded in `android/build/redesign-verification.json`. The final build log is retained locally, not as native UI evidence.
+Commands (run against final source):
 
-## Native runtime gates still open
+```sh
+JAVA_HOME=/path/to/jdk17 bash android/test.sh
+python android/tests/run_tasks_ui.py
+JAVA_HOME=/path/to/jdk17 python android/tests/run_details_v3.py
+JAVA_HOME=/path/to/jdk17 python android/tests/run_conversation_review_regressions.py
+python -W error::ResourceWarning -m unittest discover -s qa/liquid-glass -p 'test_*.py' -v
+# Existing authorized signer supplied privately:
+bash android/build.sh
+```
 
-ADB lists no connected device; the active emulator configuration lists no AVD, and its acceleration check reports missing `/dev/kvm`. No before/after native screenshots, motion recording or native visual iteration has been produced. Reference-gallery images are not app screenshots.
+`qa/liquid-glass/README.md` documents the reproducible isolated service/build/native test workflow. Local `qa/liquid-glass/evidence/` is gitignored because it also contains the private real-account baseline. Deliver only explicitly selected synthetic screenshots/recordings and safe test reports, never that baseline. Full-display `*-display.png` files come from Android `screencap`; the additional `.png` files are native Window PixelCopy, and JSON records actual View/state measurements. Neither is generated preview art.
 
-The following remain **unverified on Android**, even where source paths/pure policy tests exist:
-- Light/dark rendering at360dp/412dp and expanded windows; rotation/fold and long task/project names.
-- Text through200%, actual48dp touch targets, TalkBack traversal/focus restoration, system/gesture bars.
-- Keyboard-open composer and short-window/inset behavior; offline/loading/empty/error visuals.
-- Actual update-sheet interaction during arrival/acknowledgement, native edit conflicts and thread switching mid-response.
-- Physical install-over-existing, Android Keystore, recognizer, notifications and installer behavior.
-- Release-like frame timing, scrolling/typing responsiveness and battery cost. Task rows are virtualized, but loaded chat histories still reconstruct their message views when real message content changes; large histories require device profiling. No frame-rate or jank improvement is claimed from a host build.
+Final native iteration also reproduced and fixed expanded Search losing an unsaved editor draft, verified 200% long task titles without ellipsis, and moved native sheet/menu bounds before Window attachment to remove the observed narrow-first-frame flash. The final QA build repeated compact/unfolded density, Search draft retention, large text, compact editor, scopes/dark/reduced effects/offline and sign-out/sign-in checks. `native-compact-final.mp4` and `native-fold-final.mp4` are actual host ADB recordings of that candidate; the square fold encoder canvas is letterboxed, not a square app layout. These recordings do not measure UI frame performance. Final production installation is verified by hashing `pm path`'s actual APK, and the original authenticated workspace remains available. No production task/message mutation was performed. The owned fixture worker and only its `tcp:9147` reverse are stopped after readback; synthetic data remains available for a deliberate restart.
 
-Use synthetic tasks/threads for those checks. Never use production transcripts or canonical tasks as fixtures. Quiet-read generation invalidation prevents stale cache/UI application but does not cancel already queued/running network work; repeated pause/resume can leave obsolete work to finish on the serial executor. Request-queue cancellation/occupancy optimization remains a nonblocking follow-up. Do not publish/deploy this preview until separately authorized.
+## Remaining limits
+
+Physical Samsung/One UI, spoken TalkBack walkthrough, recognizer audio processing, background notification scheduling, updater installer consent, battery cost and physical-device frame timing are separate checks. Emulator recordings and SDK/JVM tests do not establish those. Large text/native semantic targets are checked separately from a spoken screen-reader session. Cold-start offline access still requires the existing session verification contract; an already verified open workspace retains read-only cached tasks. There is no hidden offline mutation replay, unrestricted model execution, automatic project database or reconstructed old stateless history.
+
+This is a local preview delivery, not a stable-release promotion or authorization to publish source, APKs or private captures.

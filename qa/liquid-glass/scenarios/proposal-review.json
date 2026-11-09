@@ -1,0 +1,15 @@
+[
+ {"op":"tap","label":"Discussions","ms":700},
+ {"op":"tapIfPresent","label":"Back to Discussions","ms":700},
+ {"op":"tap","label":"QA · Free planning","ms":900},
+ {"op":"scroll","dy":50000,"ms":800},
+ {"op":"accessibilityAction","label":"SYNTHETIC QA — fixture provider","actionLabel":"Review as new task"},
+ {"op":"assert","label":"DRAFT · Not saved. Review all fields and enter a title before choosing Create task."},
+ {"op":"capture","name":"proposal-native-draft-review"},
+ {"op":"tap","label":"Create task"},
+ {"op":"assert","label":"Title is required"},
+ {"op":"capture","name":"proposal-requires-explicit-valid-fields"},
+ {"op":"tap","label":"OK"},
+ {"op":"tap","label":"Cancel"},
+ {"op":"tap","label":"Continue"}
+]

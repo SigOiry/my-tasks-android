@@ -1,0 +1,9 @@
+[
+ {"op":"tap","label":"Discussions","ms":700},
+ {"op":"tapIfPresent","label":"Back to Discussions","ms":600},
+ {"op":"tap","label":"QA · Free planning","ms":700},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":"[fixture:fail] Explicit native QA failure path."},
+ {"op":"tap","label":"Send to Hermès","ms":1800},
+ {"op":"assert","label":"Request failed. No message was automatically resent."},
+ {"op":"capture","name":"chat-real-durable-failure"}
+]

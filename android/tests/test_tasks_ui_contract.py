@@ -54,4 +54,34 @@ class TasksUiContractTest(unittest.TestCase):
   self.assertIn('ownsEmphasis',s,'a non-animating recycled row must not release another row slot')
   self.assertNotIn('RenderEffect',s,'do not blur text children')
 
+ def test_scope_selection_is_visible_checked_and_saved(self):
+  s=self.source('TasksUi')
+  self.assertIn('TaskPresentation.visibleScopes(a.filter)',s)
+  self.assertIn('setSingleChoiceItems(labels,TaskPresentation.selectedScope(a.filter)',s)
+  self.assertIn('a.filter=labels[index]',s)
+  self.assertIn('a.saveWorkspacePreferences()',s)
+  self.assertIn('a.filter=scope',s)
+ def test_unread_presentation_is_used_and_resets_recycled_context(self):
+  s=self.source('TaskRowView')
+  for required in ['TaskPresentation.context(detail,unread)','TaskPresentation.wrapContext(unread)',
+                   'context.setSingleLine(!wrap)','context.setMaxLines(wrap?Integer.MAX_VALUE:1)',
+                   'context.setEllipsize(wrap?null:TextUtils.TruncateAt.END)']:
+   self.assertIn(required,s)
+
+ def test_priority_policy_drives_actual_icons_and_colors(self):
+  s=self.source('TaskRowView')
+  for required in ['int flag=TaskPresentation.flag(priority)',
+                   'if(flag==TaskPresentation.FLAG_FILLED)overflow.setImageDrawable(filledFlag())',
+                   'flag==TaskPresentation.FLAG_OUTLINE?R.drawable.ic_flag:R.drawable.ic_more',
+                   'TaskPresentation.flagColor(priority,android.graphics.Color.red(ui.canvas)<100,ui.secondary)']:
+   self.assertIn(required,s)
+ def test_compact_rows_and_accessible_scope_targets(self):
+  row=self.source('TaskRowView');tasks=self.source('TasksUi')
+  self.assertIn('setMinimumHeight(ui.dp(64))',row)
+  self.assertGreaterEqual(row.count('new LayoutParams(ui.dp(WorkspaceUi.ACTION_MIN),ui.dp(WorkspaceUi.ACTION_MIN))'),2)
+  self.assertIn('tab.setMinHeight(ui.dp(48))',tasks)
+ def test_clear_scope_persists_like_menu_and_tabs(self):
+  s=self.source('TasksUi')
+  self.assertIn('a.filter="Active";resetAnchor();a.saveWorkspacePreferences();a.render();',s)
+
 if __name__=='__main__':unittest.main(verbosity=2)

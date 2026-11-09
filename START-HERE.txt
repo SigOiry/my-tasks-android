@@ -1,0 +1,55 @@
+MY TASKS — iOS LIQUID GLASS DESIGN KIT v3
+Prepared 2026-11-09
+
+WHAT IS INCLUDED
+- native-android-liquid-glass/: complete updated skill, version 3.0.0.
+- Nine UI reference boards inside the skill's assets/previews/ folder, covering
+  nineteen screen/state views. The earlier approved style board is retained.
+- IMPLEMENTATION-PROMPT.txt: the complete rewritten prompt to paste into Hermes.
+- preview-gallery.html: local gallery. Extract the whole kit before opening it.
+- Asset manifest and generation prompts for provenance.
+
+INSTALL IN YOUR HERMES INSTANCE
+1. Make this ZIP available to Hermes as a file attachment or in a location its
+   terminal can read. Do not paste image bytes or a private key into chat.
+2. Ask Hermes to back up its existing native-android-liquid-glass skill, then
+   install this complete folder under its active HERMES_HOME/skills directory.
+   Your known HERMES_HOME is /opt/data, so the normal destination is:
+   /opt/data/skills/native-android-liquid-glass/
+3. Keep assets/, references/ and SKILL.md together; do not install just SKILL.md.
+   Do not nest the folder twice or put unrelated kit files inside skills/.
+4. Confirm the loaded skill reports version 3.0.0 and that Hermes can open the
+   preview PNGs using its vision tool.
+5. Start a fresh chat or refresh skills as supported by your installed Hermes.
+   Paste IMPLEMENTATION-PROMPT.txt. It begins with /native-android-liquid-glass.
+
+SUGGESTED INSTALL MESSAGE
+Install the attached v3 kit. Back up the existing native-android-liquid-glass
+skill, then replace it with the complete version-3 folder under the active
+HERMES_HOME/skills directory. Preserve every preview and reference. Verify the
+skill version is 3.0.0 and inspect 01-tasks-light.png and 06-foldable-tasks.png
+with your vision tools. Tell me when the installed skill and images are readable.
+
+VISUAL STATUS
+The user approved the earlier pearl/blue Liquid Glass direction. The v3 boards
+are generated expansions at the user's request, not individually approved
+measurements and not screenshots of a rebuilt app. Their frames/captions, sample
+text and minor illustrative inconsistencies are not application requirements.
+Written behavior and the user's latest feedback take precedence.
+
+WORKING TEST SETUP
+The skill includes the already exercised NAS-Hermes -> SSH transfer -> Linux
+Mobile MCP -> Pixel_Fold deployment/test loop. It includes local addresses, file
+paths and the public server fingerprint, but no private key, bearer token,
+password, signing material or production database. These machine locations may
+need adapting if moved to a different setup.
+
+The emulator is signed in. Preserve real data and use synthetic records for
+mutation, update acknowledgement and chat-send tests. Actual render/recording
+evidence must come from the rebuilt Android APK.
+
+GENERATION AND VALIDATION
+The UI boards were generated using the built-in image-generation tool, with
+targeted corrections and visual inspection. Their prompt set is included under
+assets/previews/prompts. The package/links/skill structure were checked. No
+Android source or APK is rebuilt by this design-kit task itself.

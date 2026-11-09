@@ -12,7 +12,7 @@ final class AuthUi {
   a.authBusy=a.authBusy||inFlight;
   LinearLayout bar=a.horizontal();bar.addView(a.heading("My Tasks",22),new LinearLayout.LayoutParams(0,-2,1));bar.addView(a.ui.icon(R.drawable.ic_settings,"Settings and account-free updates",a::settings),new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(root,bar);
   ScrollView scroll=new ScrollView(a);scroll.setFillViewport(true);LinearLayout outer=a.vertical();outer.setGravity(Gravity.CENTER);outer.setPadding(a.dp(8),a.dp(16),a.dp(8),a.dp(24));scroll.addView(outer);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
-  LinearLayout form=a.vertical();form.setPadding(a.dp(20),a.dp(20),a.dp(20),a.dp(20));form.setBackground(a.ui.glass());form.setElevation(a.dp(4));LinearLayout.LayoutParams size=new LinearLayout.LayoutParams(-1,-2);if(a.getResources().getConfiguration().screenWidthDp>600)size.width=a.dp(480);outer.addView(form,size);
+  LinearLayout form=a.vertical();form.setPadding(a.dp(20),a.dp(20),a.dp(20),a.dp(20));form.setBackground(a.ui.shape(a.card,0,24));form.setElevation(a.dp(1));LinearLayout.LayoutParams size=new LinearLayout.LayoutParams(-1,-2);if(a.getResources().getConfiguration().screenWidthDp>600)size.width=a.dp(480);outer.addView(form,size);
   boolean change=a.authState==AuthPolicy.State.CHANGE;
   a.add(form,a.heading(change?"Choose your private password":a.authState==AuthPolicy.State.CHECKING?"Checking your session":"Sign in",24));
   a.add(form,a.label(a.authMessage,14,a.muted));a.space(form,12);

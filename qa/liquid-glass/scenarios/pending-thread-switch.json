@@ -1,0 +1,18 @@
+[
+ {"op":"tap","label":"Discussions","ms":700},
+ {"op":"tapIfPresent","label":"Back to Discussions","ms":700},
+ {"op":"tap","label":"QA · Observatory review","ms":800},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":"[fixture:slow] Verify thread-bound reply for native QA."},
+ {"op":"tap","label":"Send to Hermès","ms":700},
+ {"op":"capture","name":"chat-real-request-pending"},
+ {"op":"tap","label":"Back to Discussions","ms":600},
+ {"op":"tap","label":"QA · Free planning","ms":700},
+ {"op":"absent","label":"[fixture:slow] Verify thread-bound reply for native QA."},
+ {"op":"capture","name":"chat-other-thread-during-reply"},
+ {"op":"wait","ms":8000},
+ {"op":"absent","label":"[fixture:slow] Verify thread-bound reply for native QA."},
+ {"op":"tap","label":"Back to Discussions","ms":700},
+ {"op":"tap","label":"QA · Observatory review","ms":800},
+ {"op":"assert","label":"[fixture:slow] Verify thread-bound reply for native QA."},
+ {"op":"capture","name":"chat-thread-correct-completion"}
+]

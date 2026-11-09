@@ -28,7 +28,7 @@ Use cool neutral light/dark content, blue functional accents and quiet separator
 
 Self-hosted **Inter** is the licensed cross-client font, with system fallback and OFL attribution in Settings. Do not redistribute Apple's SF Pro. Preserve user font scaling. Hierarchy comes from weight, size and alignment, not oversized headings or constant all-caps copy.
 
-Short purpose-driven transitions and pressed/selected feedback should clarify navigation and status without replaying on every poll. Honor browser reduced motion and Android system animation settings plus explicit preferences. No endless decorative shimmer, heavy continuous effects, or unmeasured frame-rate/battery claims. Native materials are a custom translucent-highlight approximation; no native backdrop-refraction implementation is claimed.
+Short purpose-driven transitions and pressed/selected feedback should clarify navigation and status without replaying on every poll. Honor browser reduced motion and Android system animation settings plus explicit preferences. No endless decorative shimmer, heavy continuous effects, or unmeasured frame-rate/battery claims. Native controls use bounded decor-backdrop capture/downsampled blur with a fine rim and opaque accessibility fallback; browser materials retain their own implementation. This does not reproduce Apple’s private optical-refraction renderer. Actual Android screenshots and recordings, not gallery art, establish native appearance.
 
 ## Updates and task safety
 

@@ -34,7 +34,9 @@ class NativeAccountWiring(unittest.TestCase):
 
     def test_mandatory_gate_precedes_private_workspace(self):
         source = (SRC / 'MainActivity.java').read_text()
-        self.assertLess(source.index('new AuthUi(this).build(root)'), source.index('heading(destination,20)'))
+        gate = source.index('if(authState!=AuthPolicy.State.FULL){new AuthUi(this).build(root);return;}')
+        for private_surface in ('if(wide)buildRail(shell)', 'conversationUi.buildGlobal(workspace)', 'if(wide||selected.isEmpty())buildList()'):
+            self.assertLess(gate, source.index(private_surface))
         create = source[source.index('@Override public void onCreate'):source.index('@Override protected void onResume')]
         self.assertNotIn('store.cached()', create)
         self.assertIn('new ConversationController(store,null)', create)
@@ -91,7 +93,7 @@ class NativeAccountWiring(unittest.TestCase):
         self.assertIn('SIL OPEN FONT LICENSE', (ROOT / 'res/raw/inter_license.txt').read_text())
 
     def test_reduced_preferences_and_system_motion_are_consulted(self):
-        source = (SRC / 'WorkspaceUi.java').read_text()
+        source = (SRC / 'WorkspaceUi.java').read_text() + (SRC / 'GlassLayout.java').read_text()
         for value in ('reduce_motion', 'reduce_transparency', 'areAnimatorsEnabled', 'TRANSITION_ANIMATION_SCALE', 'high_text_contrast_enabled'):
             self.assertIn(value, source)
 

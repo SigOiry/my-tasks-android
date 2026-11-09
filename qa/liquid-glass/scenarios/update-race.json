@@ -1,0 +1,13 @@
+[
+ {"op":"tap","label":"Book the team planning session","ms":600},
+ {"op":"capture","name":"review-token-before-race"},
+ {"op":"host","action":"newer-update","ms":400},
+ {"op":"tap","label":"Mark reviewed","ms":900},
+ {"op":"await","label":"Review latest update"},
+ {"op":"capture","name":"review-newer-update-kept-unread"},
+ {"op":"tap","label":"Review latest update","ms":1000},
+ {"op":"capture","name":"review-refreshed-snapshot"},
+ {"op":"tap","label":"Mark reviewed","ms":1000},
+ {"op":"absent","label":"New update"},
+ {"op":"capture","name":"review-exact-token-confirmed"}
+]

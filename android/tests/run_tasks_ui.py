@@ -24,6 +24,8 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
  work=Path(work);jvm=work/'jvm';jvm.mkdir()
  run([JAVA/'javac','--release','8','-d',jvm,SRC/'UpdateEmphasis.java',ANDROID/'tests/UpdateEmphasisTest.java'])
  run([JAVA/'java','-cp',jvm,'com.simon.mytasks.UpdateEmphasisTest'])
+ run([JAVA/'javac','--release','8','-d',jvm,SRC/'TaskPresentation.java',ANDROID/'tests/TaskPresentationTest.java'])
+ run([JAVA/'java','-cp',jvm,'com.simon.mytasks.TaskPresentationTest'])
  run(['python3',ANDROID/'tests/test_tasks_ui_contract.py'])
  # Signature-only seam: not packaged, not used to claim behavior or rendering.
  seams=work/'seams/com/simon/mytasks';seams.mkdir(parents=True)
@@ -35,13 +37,17 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
   void navigate(String id){} void projectMenu(){} void sortMenu(){} void settings(){}
   void showTaskActions(JSONObject t){} void quickChange(JSONObject t,String field,Object value){}
   String dueLabel(JSONObject t){return "";} String human(String s){return s;}
-  void captureDraft(){} void render(){} AlertDialog.Builder dialogBuilder(){return null;}
+  void captureDraft(){} void render(){} void saveWorkspacePreferences(){} void refresh(){}
+  android.widget.LinearLayout vertical(){return null;} android.widget.LinearLayout horizontal(){return null;}
+  android.widget.TextView heading(String text,int size){return null;}
+  void add(android.widget.LinearLayout parent,android.view.View child){}
+  AlertDialog.Builder dialogBuilder(){return null;}
  }''')
  (seams/'R.java').write_text('''package com.simon.mytasks;
  final class R {static final class font {static final int inter_variable=1;}
- static final class drawable {static final int ic_more=2;}}''')
+ static final class drawable {static final int ic_more=2,ic_search=3,ic_flag=4;}}''')
  classes=work/'sdk';classes.mkdir()
- sources=[SRC/(n+'.java') for n in ['WorkspaceUi','TasksUi','TaskRowView','UpdateEmphasis','PresentationPolicy','CompactPolicy','Core']]
+ sources=[SRC/(n+'.java') for n in ['WorkspaceUi','GlassLayout','GlassDrawable','GlassPixels','CompletionMark','TasksUi','TaskRowView','TaskPresentation','UpdateEmphasis','PresentationPolicy','CompactPolicy','Core']]
  run([JAVA/'javac','--release','8','-cp',SDK/'platforms/android-35/android.jar','-d',classes,*sources,seams/'MainActivity.java',seams/'R.java',ANDROID/'tests/TasksAnchorTest.java'])
  print('Tasks UI: SDK 35 / Java 8 isolated module compilation passed')
  run([JAVA/'java','-cp',str(classes)+os.pathsep+str(SDK/'platforms/android-35/android.jar'),'com.simon.mytasks.TasksAnchorTest'])

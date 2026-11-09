@@ -1,0 +1,278 @@
+[
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Project · All projects"
+ },
+ {
+  "op": "tap",
+  "label": "Research"
+ },
+ {
+  "op": "state",
+  "field": "projectFilter",
+  "value": "Research"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-project-research"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Sort · Project"
+ },
+ {
+  "op": "tap",
+  "label": "Due date"
+ },
+ {
+  "op": "state",
+  "field": "sortOrder",
+  "value": "Due date"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-due-date-sort"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Week"
+ },
+ {
+  "op": "state",
+  "field": "filter",
+  "value": "Week"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-week-scope"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Project · Research"
+ },
+ {
+  "op": "tap",
+  "label": "All projects"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Trash"
+ },
+ {
+  "op": "state",
+  "field": "filter",
+  "value": "Trash"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-trash-scope"
+ },
+ {
+  "op": "tap",
+  "label": "Active"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Sort · Due date"
+ },
+ {
+  "op": "tap",
+  "label": "Project"
+ },
+ {
+  "op": "longPress",
+  "label": "Confirm room accessibility and equipment"
+ },
+ {
+  "op": "capture",
+  "name": "task-anchored-quick-actions"
+ },
+ {
+  "op": "back"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Settings"
+ },
+ {
+  "op": "tap",
+  "label": "Dark",
+  "ms": 700
+ },
+ {
+  "op": "capture",
+  "name": "settings-dark"
+ },
+ {
+  "op": "tap",
+  "label": "Close Settings"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-dark"
+ },
+ {
+  "op": "tap",
+  "label": "Discussions",
+  "ms": 700
+ },
+ {
+  "op": "tapIfPresent",
+  "label": "Back to Discussions",
+  "ms": 600
+ },
+ {
+  "op": "capture",
+  "name": "discussions-dark"
+ },
+ {
+  "op": "tap",
+  "label": "QA · Free planning",
+  "ms": 700
+ },
+ {
+  "op": "capture",
+  "name": "free-chat-dark"
+ },
+ {
+  "op": "tap",
+  "label": "Back to Discussions"
+ },
+ {
+  "op": "tapLast",
+  "label": "Tasks"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Settings"
+ },
+ {
+  "op": "tap",
+  "label": "Light",
+  "ms": 600
+ },
+ {
+  "op": "tap",
+  "label": "Reduce motion"
+ },
+ {
+  "op": "tap",
+  "label": "Reduce transparency"
+ },
+ {
+  "op": "capture",
+  "name": "settings-reduced-effects"
+ },
+ {
+  "op": "tap",
+  "label": "Close Settings"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-opaque-fallback"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Settings"
+ },
+ {
+  "op": "tap",
+  "label": "Reduce motion"
+ },
+ {
+  "op": "tap",
+  "label": "Reduce transparency"
+ },
+ {
+  "op": "tap",
+  "label": "Close Settings"
+ },
+ {
+  "op": "host",
+  "action": "offline"
+ },
+ {
+  "op": "tap",
+  "label": "Complete Confirm room accessibility and equipment",
+  "ms": 900
+ },
+ {
+  "op": "await",
+  "label": "Change not confirmed"
+ },
+ {
+  "op": "capture",
+  "name": "quick-action-offline-failure"
+ },
+ {
+  "op": "tap",
+  "label": "OK"
+ },
+ {
+  "op": "state",
+  "field": "online",
+  "value": "false"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-offline-readable"
+ },
+ {
+  "op": "host",
+  "action": "online"
+ },
+ {
+  "op": "tap",
+  "label": "Task views, project, sort and settings"
+ },
+ {
+  "op": "tap",
+  "label": "Refresh",
+  "ms": 1000
+ },
+ {
+  "op": "state",
+  "field": "online",
+  "value": "true"
+ },
+ {
+  "op": "capture",
+  "name": "tasks-reconnected"
+ }
+]

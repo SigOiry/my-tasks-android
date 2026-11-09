@@ -1,0 +1,8 @@
+[
+ {"op":"tap","label":"Task views, project, sort and settings"},
+ {"op":"tap","label":"Settings"},
+ {"op":"tap","label":"Sign out or change server  ›"},
+ {"op":"tap","label":"Continue","ms":1000},
+ {"op":"await","label":"Task server"},
+ {"op":"capture","name":"signin-native"}
+]

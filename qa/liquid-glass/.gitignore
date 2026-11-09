@@ -1,0 +1,2 @@
+# Native captures may contain the real account baseline; never commit them.
+evidence/

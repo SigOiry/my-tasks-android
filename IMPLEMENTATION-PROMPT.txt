@@ -1,0 +1,123 @@
+/native-android-liquid-glass
+
+Rebuild My Tasks into a native Android application whose in-app interface looks deliberately designed in the spirit of an iOS productivity app using Liquid Glass. Implement the working redesign, not just a concept, cosmetic recolor or website preview.
+
+Repository: https://github.com/SigOiry/my-tasks-android
+Hermes workspace: /opt/data/workspace/my-tasks-android
+Installed skill: native-android-liquid-glass, version 3.0.0
+
+Read this entire brief and the installed skill. Use its bundled previews as the concrete visual target. The earlier APK is the unsuccessful baseline; retaining its layout and adding rounded corners is not a satisfactory result.
+
+1. INSPECT THE VISUAL REFERENCES BEFORE CODING
+
+Read references/visual-fidelity.md, references/materials-motion.md, references/hermes-flows.md and references/runtime-testing.md. Open these actual images with your vision tools, rather than merely listing their filenames:
+
+assets/previews/01-tasks-light.png
+assets/previews/02-details-edit.png
+assets/previews/03-updates-actions.png
+assets/previews/04-chat.png
+assets/previews/05-discussions-project.png
+assets/previews/06-foldable-tasks.png
+assets/previews/06b-foldable-chat.png
+assets/previews/07-dark.png
+assets/previews/08-utilities.png
+
+These nine boards cover nineteen screen/state views. They expand the visual direction I approved. Use their composition, typography hierarchy, spacing, restrained blue, material and conversational rhythm. They are generated design references, not runtime screenshots or backend specifications. Correct incidental text/date/icon inconsistencies and do not copy their presentation margins or captions into the app. The written state contract wins over unsupported illustrative controls or capabilities.
+
+2. COMMIT TO A COHERENT iOS-STYLE PRESENTATION
+
+Use pearl/cool-neutral light mode, graphite dark mode, clear charcoal/white type, thin inset separators, circular completion controls, grouped content, refined value rows, anchored contextual menus and floating glass capsules. Use one fine-line icon family and one restrained Hermes identity. Retain licensed Inter or use the Android system font with precise weights and a consistent hierarchy.
+
+The result should clearly read as an iOS-inspired productivity app throughout Tasks, details, forms, messaging, sign-in and settings. Do not mix that direction with unrelated default Material styling on individual routes.
+
+Put real supported backdrop treatment on navigation, utility controls, selected capsules, contextual surfaces, sheet rims and composers. Keep reading text, forms and message bubbles sharp on stable surfaces. On capable devices, visibly sampled/blurred background content, quiet tint, a fine highlight and restrained elevation should establish the material. A near-opaque gradient renamed glass is not an acceptable primary implementation. Avoid thick outlines, heavy embossed shadows, moving wallpaper, neon and multiple glass layers behind prose.
+
+Use Android-owned system bars, back behavior, keyboard, accessibility and permission flows. Do not draw fake iOS status bars/home indicators or package Apple's proprietary fonts. Verify contrast on the final material composite and honor reduced motion/transparency.
+
+3. MAKE SCREEN SPACE USEFUL
+
+On an ordinary compact viewport around 390 x 844dp, excluding OS bars:
+- Keep title, scopes and filtering/sorting ordinarily within about 120-128dp total.
+- Use a clear 28-32sp main Tasks heading that can collapse when scrolling or height is constrained.
+- Aim for seven ordinary task rows across two groups, normally at least six visible useful rows. Let wrapping, accessibility type and shorter windows expand/reflow appropriately.
+- Use roughly 16sp task titles, 13-14sp context, 16-20dp page gutters, aligned 8/12/16dp spacing and rows around 60-72dp at default text size.
+- Keep native hit targets at least 48dp. Never meet density goals by clipping text, shrinking targets or hiding essential actions.
+- Put the project once in its group header. Do not repeat it below every task, show full descriptions in the list or make a large raised card for each row.
+- Use a small amount of current context, not a greeting, statistics dashboard, badge collection or permanent technical status paragraphs.
+- Expose less-used filters through a clear menu/sheet instead of displaying every option permanently.
+- Keep the final row reachable above floating controls.
+- On compact details/edit and full-screen chat, hide the global tab capsule. Use a clear back route and one relevant action/composer area, not stacked footers.
+- Let short forms and empty states end naturally. Do not invent content just to fill a screen.
+
+Tasks and Discussions are the two global destinations. Settings is a utility. Projects are scopes within Tasks.
+
+4. TASKS, DETAILS AND HERMES UPDATES
+
+Tasks is the default destination. Preserve project grouping/filtering, priority/date sorting, search and the existing Active/Today/Week/All/Trash capabilities in a concise hierarchy.
+
+An ordinary task tap opens beautifully composed details: title, description, project, priority, due date, status, notes and supported sources/activity. Edit exposes all user-editable fields using labelled compact groups, useful selectors and reachable Save/Cancel. Preserve revision checks, unsaved drafts and conflict resolution. Identities/provenance/bookkeeping stay managed.
+
+Long press anchors a useful menu for supported status, priority, project, Edit and recoverable Trash actions. Include an accessible overflow equivalent. Completion-control taps are distinct from opening a row.
+
+When Hermes produces a genuinely new canonical update, show a persistent New update dot/label and two subtle blue accent/edge breaths, roughly 2.0-2.6 seconds per cycle, then settle. Do not animate task text opacity or whole-row size. Polling, row recycling, sorting and revisiting must not replay the same update animation. Batch multiple arrivals and stop offscreen/background effects.
+
+Tapping an unread task first opens the update sheet: concise Context, What's new and optional supplied next steps. Use actual snapshot-bound prose. Offer explicit Mark reviewed, Open task and Ask Hermes paths. Dismissing/opening/animation completion does not acknowledge. Submit only the exact displayed token and clear unread only after confirmation. A newer update during review/acknowledgement remains reviewable. Preserve safe summary rendering and keep source navigation in ordinary details.
+
+5. MAKE HERMES CHAT FEEL LIKE MESSAGING
+
+Use clear incoming/outgoing groups, readable bubbles, quiet timestamps/date separators, selectable text and a polished multiline composer above the IME. Keep top chrome compact and task context visible without a bulky header. No console-style history or a separate form card around every message.
+
+Autoscroll only near the bottom or after my send. Otherwise preserve reading position and offer jump-to-latest. Loading older messages preserves the visible anchor. Preserve drafts through task/thread navigation and folding. Replies must remain in their originating request/thread.
+
+Keep durable admission, idempotency and recovery. Distinguish unsent, accepted, responding and failed/interrupted states. Do not automatically replay ambiguous requests. Show streaming, voice, receipts and tool activity only when genuinely supported.
+
+Discussions provides saved task/free threads, concise previews, timestamps, New conversation and supported rename/archive/reopen/history controls. Search wording must match its actual scope.
+
+Free chat supports general conversation and planning new requests/projects. Where supported, show a structured DRAFT proposal with explicit review/apply through canonical APIs, followed by confirmed success. Do not fake a created project, invent a separate database or widen Hermes's email/calendar/tool authority to make a preview appear functional.
+
+6. DESIGN FOR MY FOLDABLE
+
+Use measured current window dimensions, not a hardcoded phone name. When unfolded, provide a compact glass navigation rail, a useful list master pane and a readable detail/chat pane. A composer belongs to the active chat pane only. Avoid both stretched phone screens and tiny desktop panels.
+
+Pixel_Fold must retain task selection, selected thread, list position and drafts while folding/unfolding, rotating or resizing. Let available width and minimum usable pane sizes determine the transition. Respect actual occlusions and keyboard height. Test both folded and unfolded states; final Samsung-specific behavior is also checked on a physical phone when available.
+
+7. USE A PRESENTATION ARCHITECTURE THAT CAN ACHIEVE THIS
+
+Inspect the repository and actual build. The known baseline uses Java/programmatic Views and a direct SDK build, not an existing Compose/Gradle project.
+
+For this full visual redesign, modern Kotlin/Jetpack Compose with a verified compatible backdrop renderer is a preferred implementation route. You are authorized to migrate the presentation/build support incrementally where needed. Preserve backend contracts, canonical data, authentication/session behavior, package/signing identity and durable conversations. Keeping those does not mean retaining the old UI component hierarchy.
+
+A custom Views solution is acceptable if a representative native render reaches the same target. Smaller diffs or implementation convenience do not justify an unconvincing result. Verify current library APIs, versions, SDK support and renderer performance; do not invent dependencies. Keep this Android assignment focused and reconcile the repository design documentation with the final implementation.
+
+8. BUILD, INSTALL, INSPECT, CORRECT
+
+Use the test environment we already configured:
+- Android MCP server name: android.
+- Linux emulator/MCP host: 192.168.0.133, user simon.
+- Local device: Pixel_Fold; inspect its current API/window state.
+- SSH private key inside Hermes: /opt/data/ssh/android-testing.
+- Known-hosts file: /opt/data/ssh/android-known_hosts.
+- Expected ED25519 host fingerprint: SHA256:WAo2I+lif2eDga16h/1uYQde9rmIlhdaEsKzvDtXXsc.
+- Linux staging APK path: /home/simon/hermes-apks/my-tasks.apk.
+- Normal package: com.simon.mytasks; confirm the exact build/component.
+
+Capture the current app as baseline. Then implement the shared system and Tasks first, in compact/unfolded layouts with realistic synthetic content. Build the revised APK, transfer via the verified key/strict host checking, compare source/destination SHA-256, install through Android MCP using the LINUX path, launch and capture native screenshots.
+
+Compare the actual Tasks render with 01 and 06. State and fix concrete differences in header budget, density, alignment, shape, icon weight, controls, glass and legibility before extending the system. Then repeat that loop for the remaining screens. Use recordings for scrolling under glass, unread emphasis, sheet transitions, keyboard behavior and folding.
+
+The emulator is currently signed in. Preserve its session; routine deployment does not require uninstalling, clearing data or logging out. Use read-only baseline inspection and isolated synthetic records/test backend or a separate QA build for mutation, acknowledgement and message tests. Keep release TLS/authentication intact and credentials/private keys/signing material out of source, screenshots and reports.
+
+Run relevant existing checks and focused tests for changed state/interaction behavior. Verify light/dark, 200% text, narrow/expanded layouts, long names, TalkBack, keyboard-open chat, offline/error states, stale revisions and thread switches during replies. Do not claim real-device frame rates from emulator footage.
+
+9. COMPLETE THE WORK WITH REVIEWABLE EVIDENCE
+
+Proceed through implementation and reversible QA without stopping at a plan or the first successful compilation. If a particular external condition blocks a required check, identify it precisely and continue independent work.
+
+Deliver:
+- The working native source changes and a buildable/installable APK using the authorized identity.
+- Updated reusable design tokens/components and appropriate project documentation.
+- Actual screenshots of Tasks compact/unfolded, project filtering, update review, details/edit, quick actions, Discussions, task/free chat, keyboard-open chat, dark mode and utilities.
+- A short recording of the key motion and adaptive behaviors.
+- Verification results, concrete visual differences corrected and any remaining unverified limitations.
+
+Generated boards, browser mockups and passing tests are not proof of Android runtime visual quality. A fake primary glass material, a clipped composer, broken fold state or unfinished route remains unfinished work. Match the requested visual language and keep the product usable.

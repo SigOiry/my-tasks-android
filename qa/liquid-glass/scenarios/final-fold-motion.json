@@ -1,0 +1,17 @@
+[
+ {"op":"tap","label":"Review the observatory proposal"},
+ {"op":"tap","label":"Open task"},
+ {"op":"tap","label":"Discuss with Hermes","ms":700},
+ {"op":"await","label":"Message Hermès; Send submits this draft"},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":"Recorded fold draft\nretains this task and thread."},
+ {"op":"keyboard","label":"Message Hermès; Send submits this draft","ms":800},
+ {"op":"capture","name":"final-folded-task-chat-ime"},
+ {"op":"host","action":"unfold","ms":900},
+ {"op":"keyboard","label":"Message Hermès; Send submits this draft","ms":800},
+ {"op":"assert","label":"Recorded fold draft\nretains this task and thread."},
+ {"op":"capture","name":"final-unfolded-task-chat-ime"},
+ {"op":"hideKeyboard","ms":600},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":""},
+ {"op":"tap","label":"Back to task details","ms":600},
+ {"op":"capture","name":"final-tasks-unfolded-selected"}
+]

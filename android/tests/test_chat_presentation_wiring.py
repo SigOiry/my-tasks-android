@@ -34,6 +34,34 @@ class ChatPresentationWiringTest(unittest.TestCase):
         self.assertIn('oldHeight,a.dp(72)', source)
         self.assertIn('restoreViewport(wasBottom,anchor)', source)
 
+    def test_compact_native_composer_and_diff_rows(self):
+        source = SOURCE.read_text()
+        composer = source[source.index('LinearLayout composer='):source.index('void composerMenu()')]
+        self.assertIn('a.ui.glassSurface()', composer)
+        self.assertIn('input.setBackgroundColor(android.graphics.Color.TRANSPARENT)', composer)
+        self.assertIn('TYPE_TEXT_FLAG_MULTI_LINE', composer)
+        self.assertIn('ic_chat_send_up', composer)
+        self.assertNotIn('composer.setBackground(a.ui.glass())', composer)
+        self.assertIn('binding.equals(rowBindings.get(id))', source)
+        self.assertIn('ChatRowPolicy.animate(own,bottom,first,prepended,a.ui.motionEnabled())', source)
+        self.assertIn('setDuration(180)', source)
+        self.assertNotIn('outgoing?"You":"Hermès"', source)
+
+    def test_global_entry_does_not_retain_task_overflow_binding(self):
+        source = SOURCE.read_text()
+        global_route = source[source.index('void buildGlobal('):source.index('LinearLayout masterWith(')]
+        self.assertIn('boundTask="";', global_route)
+
+    def test_task_thread_owns_header_and_picker_is_not_permanent(self):
+        source = SOURCE.read_text()
+        task = source[source.index('void buildTask('):source.index('void taskPicker(')]
+        self.assertNotIn('LinearLayout picker=', task)
+        self.assertIn('if(!id.isEmpty()){buildThread(pane,id,true);return;}', task)
+        self.assertIn('Choose saved conversation', task)
+        # Creation is only inside explicit click/menu callbacks, not entering a task.
+        self.assertIn('()->c.create(task,', task)
+        self.assertNotIn('a.chatUtilityChrome.add', task)
+
     def test_search_and_capability_scope_are_disclosed(self):
         source = SOURCE.read_text()
         for token in ('New conversation', 'loaded titles', 'not message history',

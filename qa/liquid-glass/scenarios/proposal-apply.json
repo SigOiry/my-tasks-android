@@ -1,0 +1,13 @@
+[
+ {"op":"tap","label":"Discussions","ms":700},
+ {"op":"tapIfPresent","label":"Back to Discussions","ms":700},
+ {"op":"tap","label":"QA · Free planning","ms":800},
+ {"op":"scroll","dy":50000,"ms":800},
+ {"op":"accessibilityAction","label":"SYNTHETIC QA — fixture provider","actionLabel":"Review as new task"},
+ {"op":"text","label":"Title","text":"SYNTHETIC QA · Reviewed planning draft"},
+ {"op":"text","label":"Project","text":"Research"},
+ {"op":"capture","name":"proposal-explicit-review-before-create"},
+ {"op":"tap","label":"Create task","ms":1000},
+ {"op":"await","label":"Discuss with Hermes"},
+ {"op":"capture","name":"proposal-canonical-create-confirmed"}
+]

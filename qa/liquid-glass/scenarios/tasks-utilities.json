@@ -1,0 +1,12 @@
+[
+ {"op":"await","label":"Active"},
+ {"op":"capture","name":"tasks-compact-display"},
+ {"op":"tap","label":"Task views, project, sort and settings"},
+ {"op":"tap","label":"Settings"},
+ {"op":"capture","name":"settings-compact-display"},
+ {"op":"tap","label":"Close Settings"},
+ {"op":"tap","label":"Book the team planning session"},
+ {"op":"capture","name":"update-review-compact-display"},
+ {"op":"back"},
+ {"op":"capture","name":"task-details-compact-display"}
+]

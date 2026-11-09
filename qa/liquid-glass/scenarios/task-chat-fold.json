@@ -1,0 +1,20 @@
+[
+ {"op":"tap","label":"Review the observatory proposal"},
+ {"op":"tap","label":"Open task"},
+ {"op":"tap","label":"Discuss with Hermes"},
+ {"op":"tap","label":"Choose saved conversation","ms":700},
+ {"op":"tap","label":"QA · Observatory review","ms":800},
+ {"op":"capture","name":"task-chat-compact"},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":"Synthetic task-chat draft\nretained through a fold."},
+ {"op":"keyboard","label":"Message Hermès; Send submits this draft","ms":700},
+ {"op":"capture","name":"task-chat-keyboard-compact"},
+ {"op":"host","action":"unfold","ms":700},
+ {"op":"keyboard","label":"Message Hermès; Send submits this draft","ms":800},
+ {"op":"assert","label":"Synthetic task-chat draft\nretained through a fold."},
+ {"op":"capture","name":"task-chat-keyboard-unfolded"},
+ {"op":"host","action":"fold","ms":700},
+ {"op":"assert","label":"Synthetic task-chat draft\nretained through a fold."},
+ {"op":"hideKeyboard","ms":700},
+ {"op":"capture","name":"task-chat-selection-roundtrip"},
+ {"op":"text","label":"Message Hermès; Send submits this draft","text":""}
+]

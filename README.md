@@ -4,7 +4,7 @@ A private task workspace for native Android and the web, sharing one canonical t
 
 ## Local Android redesign preview
 
-The opt-in native `1.4.0-preview` (code6) includes recycled compact task rows, contextual actions, snapshot-bound update sheets and messaging-style saved conversations. Preview APK: https://github.com/SigOiry/my-tasks-android/releases/download/v1.4.0-preview/my-tasks.apk . Local build output: `android/build/my-tasks.apk`. See `android/REDESIGN.md` for architecture, verification and still-open device gates. Glass is a translucent-highlight approximation, not true backdrop blur. Preview distribution is separate from the stable release; no production backend deployment or stable-release promotion is included.
+The local native `1.5.0-glass-preview` (code 7) rebuilds Tasks, details/editing, update review, messaging and utilities with compact grouped native Views and real bounded sampled/blurred glass controls. It includes deliberate folded/unfolded layouts, IME-safe composition and explicit assistant-text-to-task review. Build output: `android/build/my-tasks.apk`. See `android/REDESIGN.md` for actual Pixel_Fold verification, source architecture and physical-device limits. This local preview is not a stable-release promotion, public publication or production backend deployment.
 
 ## Open or install
 
@@ -43,7 +43,7 @@ Previously discarded stateless chats cannot be reconstructed. Unsent browser dra
 | Task alerts | Polling while the page is open; no closed-browser push | Best-effort periodic background checks, potentially delayed by Doze/vendor policies |
 | Offline reads | Current page memory; offline reload cannot restore tasks | Private task cache after online account verification; cold launch requires verification |
 | Session storage | HttpOnly cookie; no bearer/password in browser storage | Keystore-encrypted opaque session; backup disabled |
-| Presentation | Responsive glass-inspired web controls | Native Android controls/material approximation; the OS owns notification-shade appearance |
+| Presentation | Responsive glass-inspired web controls | Native grouped Views and bounded backdrop glass; the OS owns bars, IME and notification shade |
 | Updates | New bundle on deployment/reload | Verified APK download and user-confirmed Android installer |
 
 Presentation, alert delivery and chat do not change stored task priorities/deadlines or mailbox read flags. There is no hidden offline mutation queue.

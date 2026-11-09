@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory(prefix='redesign-regressions-', dir=scratch) as
     if 'void refresh(boolean ' in source:
         extracted += '\n'+method('MainActivity.java','refresh',r'^ void refresh\(boolean ')
     # Execute the actual confirmed reload action, not a separately invented policy.
-    action = re.search(r'"Reload latest task",\(\)->confirm\([^\n]+?,\(\)->\{(.*?)\}\)\)',source)
+    action = re.search(r'Runnable reloadLatest=\(\)->confirm\([^\n]+?,\(\)->\{(.*?)\}\)',source)
     if not action: raise RuntimeError('Cannot extract confirmed reload action')
     extracted += '\n void confirmedReload(){'+action.group(1)+'}'
     template = template.replace('// MAIN_METHODS', extracted)

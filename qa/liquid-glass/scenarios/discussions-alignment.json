@@ -1,0 +1,6 @@
+[
+ {"op":"tap","label":"Discussions","ms":700},
+ {"op":"tapIfPresent","label":"Back to Discussions","ms":700},
+ {"op":"aligned","label":"New conversation","other":"Discussions, selected"},
+ {"op":"capture","name":"discussions-floating-baseline"}
+]

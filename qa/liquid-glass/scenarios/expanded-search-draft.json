@@ -1,0 +1,13 @@
+[
+ {"op":"host","action":"unfold","ms":700},
+ {"op":"tap","label":"Collect workshop reading notes · QA edited"},
+ {"op":"tap","label":"Edit"},
+ {"op":"text","label":"Notes","text":"Expanded search must preserve this unsaved draft."},
+ {"op":"tap","label":"Search tasks"},
+ {"op":"assert","label":"Expanded search must preserve this unsaved draft."},
+ {"op":"capture","name":"expanded-search-draft-retained"},
+ {"op":"tap","label":"Search tasks"},
+ {"op":"tap","label":"Cancel"},
+ {"op":"tap","label":"Continue"},
+ {"op":"host","action":"fold"}
+]

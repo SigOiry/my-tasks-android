@@ -1,0 +1,6 @@
+[
+ {"op":"tap","label":"Collect workshop reading notes · QA edited"},
+ {"op":"tap","label":"Edit"},
+ {"op":"visibleInput","label":"Notes"},
+ {"op":"capture","name":"editor-compact-density"}
+]

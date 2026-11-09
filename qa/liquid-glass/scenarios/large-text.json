@@ -1,0 +1,6 @@
+[
+ {"op":"capture","name":"tasks-200-percent-top"},
+ {"op":"scroll","dy":2000,"ms":900},
+ {"op":"capture","name":"tasks-200-percent-long-title"},
+ {"op":"unclippedText","label":"Compare the long-term research plan with the updated workshop programme"}
+]
