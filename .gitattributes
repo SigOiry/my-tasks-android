@@ -1,0 +1,4 @@
+# Preserve the exact upstream SIL OFL license bytes, including its trailing space.
+android/res/raw/inter_license.txt whitespace=-blank-at-eol
+server/web/INTER-LICENSE.txt whitespace=-blank-at-eol
+server/web_dist/INTER-LICENSE.txt whitespace=-blank-at-eol
