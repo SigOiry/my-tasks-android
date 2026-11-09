@@ -1,0 +1,9 @@
+.signing/
+build/
+*.apk
+*.idsig
+*.keystore
+*.p12
+local.properties
+__pycache__/
+*.pyc

@@ -32,7 +32,7 @@ bash android/test.sh
 bash android/build.sh
 ```
 
-A local build generates its own private signing identity if none is supplied. It **cannot update the official app** unless it is signed with the same official release key. For an authorized release, supply `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE` and `SIGNING_ALIAS` through your private build environment. Never commit signing material or server credentials.
+An authorized APK build requires an existing private signing identity; the build refuses to create or replace it. Supply `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE` and `SIGNING_ALIAS` through your private build environment. A differently signed build **cannot update the official app**. Never commit signing material or server credentials.
 
 ## Verification boundary
 

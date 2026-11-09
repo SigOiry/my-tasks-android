@@ -1,20 +1,28 @@
 # My Tasks — native Android
 
-Dependency-free Java Android app, package `com.simon.mytasks`, min SDK 26 (Android 8), compile/target SDK 35 (Android 15). The APK is a native Android installable, not a web wrapper. No Gradle, Maven, framework or network dependency resolution is needed to build once the SDK/JDK are installed.
+Native Java Android app, package `com.simon.mytasks`, version **1.1.0 (2)**, min SDK 26 (Android 8), compile/target SDK 35 (Android 15). The APK is a native Android installable, not a web wrapper. No Gradle or app-library dependencies. JVM tests download one checksum-pinned JSON test jar on their first run; no test library is bundled in the APK.
 
 ## Build and install
 
 ```sh
-export JAVA_HOME=/path/to/jdk-17
-export ANDROID_HOME=/path/to/android-sdk
+# JDK 17 and Android SDK must already be installed. Example standard SDK path:
+export ANDROID_HOME="$HOME/Android/Sdk"
+# JAVA_HOME may be supplied, otherwise it is derived from javac on PATH.
+# Select your EXISTING private release identity (not stored in the public repo):
+export SIGNING_KEYSTORE="$HOME/private-signing/mytasks.p12"
+export SIGNING_PASSWORD_FILE="$HOME/private-signing/password"
 bash build.sh
 # On a connected Android device with USB debugging enabled:
 "$ANDROID_HOME/platform-tools/adb" install -r build/my-tasks.apk
 ```
 
-Prerequisites: JDK 17, Python 3, Android platform `android-35`, build-tools `35.0.0` (`aapt2`, `d8`, `zipalign`, `apksigner`). Defaults match the installed toolchain above; `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_BUILD_TOOLS` override them. The build runs the pure Java test suite before compiling, dexing, aligning, signing and verifying the APK. Run only tests with `bash test.sh`.
+Prerequisites: JDK 17, Python 3, Android platform `android-35`, build-tools `35.0.0` (`aapt2`, `d8`, `zipalign`, `apksigner`). `ANDROID_HOME` or `ANDROID_SDK_ROOT` selects the SDK, otherwise `$HOME/Android/Sdk` is used; `ANDROID_BUILD_TOOLS` overrides the build-tools directory. The build runs the JVM/Python test suite before compiling, dexing, aligning, signing and verifying the APK. Run only tests with `bash test.sh` (SDK/signing identity not required).
 
-**Signing:** `.signing/mytasks.p12` and `.signing/password` are generated once with private permissions. Keep both private and backed up separately; updates must use the same key. Never publish `.signing`, put it in source archives, or commit it. `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE` and optional `SIGNING_ALIAS` select an existing PKCS12 identity. A new checkout without the existing identity generates a different certificate and cannot upgrade an existing installation. This is a self-signed local release, not a Play/App Signing distribution identity.
+**Signing:** keep the original private release key backed up separately; updates must use the same identity. Never publish `.signing`, put it in source archives, or commit it. `SIGNING_KEYSTORE`, `SIGNING_PASSWORD_FILE` and optional `SIGNING_ALIAS` select an existing PKCS12 identity; private local `.signing/mytasks.p12` / `.signing/password` remain the fallback. A checkout without an existing key fails rather than generating/replacing an identity. No release key is distributed with public source.
+
+## App updates
+
+Install **1.1.0 manually once** over 1.0.0 using the same package/signature; 1.0.0 has no updater. Thereafter the app checks stable public GitHub releases on the first foreground launch each local day, independently of server settings. **Settings → Check for updates** is always available, even without an account or while task/chat work is pending; internet access is required. Updates require explicit acceptance, cryptographic/package/version/signer verification, Android per-app installation permission, and Android system confirmation. Save unsaved task edits/chat drafts first. Automatic failures are quiet and retry on a different local day; manual checks show errors or up-to-date status. See `UPDATER.md` for metadata generation, the exact public schema, lifecycle/security policy and runtime-verification limitations.
 
 ## Connect
 
@@ -49,8 +57,11 @@ The first event poll establishes a quiet baseline (including paginated history),
 - `PollService.java`: persisted periodic job, initial quiet baseline, notifications and cursor handling.
 - `Core.java`: JVM-testable origin validation, task URL encoding, ordering, explicit notification-tracking decisions, safe chat error copy, and exact UTF-8 chat serialization/history budgeting.
 - `tests/CoreTest.java`: test-first regression checks; no JUnit dependency.
+- `UpdatePolicy.java`, `UpdateRelease.java`, `UpdateIO.java`, `UpdateNetwork.java`, `UpdateState.java`: JVM-testable updater validation, bounded transport and consent/single-flight state.
+- `UpdateManager.java`, `UpdateProvider.java`: foreground Android lifecycle/permission/installer adapter and narrow read-only APK capability provider.
+- `release_metadata.py`: verified signed-APK metadata/checksum generation; no signing secrets read.
 
-The companion contract is `../server/CONTRACT.md`. A single background executor serializes application network requests and account changes. UI callbacks check account epochs, so old-account responses cannot repaint a new account or overwrite its cache.
+The companion backend contract is maintained with the server source; the public Android-only repository does not contain a server or deployment credentials. A single backend executor serializes task/chat network requests and account changes, while app updates have a separate executor. Backend UI callbacks check account epochs, so old-account responses cannot repaint a new account or overwrite its cache.
 
 ## Verification boundary
 

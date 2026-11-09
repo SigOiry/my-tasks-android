@@ -1,0 +1,37 @@
+name: Android policy tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  policy-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Java 17
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Run native-independent policy tests
+        run: bash android/test.sh
+      - name: Reject private material in tracked paths
+        run: |
+          python3 - <<'PY'
+          import pathlib, subprocess
+          paths = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          bad = [name for name in paths if name and (
+              any(part in ('.signing', '.secrets', '__pycache__', 'backups', 'scans', 'state') for part in pathlib.Path(name).parts)
+              or pathlib.Path(name).name in ('.env', 'mobile_token', 'tasks.json')
+              or pathlib.Path(name).suffix in ('.p12', '.jks', '.keystore', '.apk', '.sqlite')
+          )]
+          if bad:
+              raise SystemExit('Forbidden private/generated paths: ' + ', '.join(bad))
+          print('Tracked paths contain no signing, token, runtime-state or APK files.')
+          PY
