@@ -78,6 +78,23 @@ public final class CoreTest {
    ok(heavy.getBytes("UTF-8").length<=60000,"escaped max message plus task_id/mode budgeted");
    if(System.getProperty("chat.fixture")!=null)java.nio.file.Files.write(java.nio.file.Paths.get(System.getProperty("chat.fixture")),Arrays.asList(json,exact,boundary,over,heavy),java.nio.charset.StandardCharsets.UTF_8);
   }
+  if(mode.equals("credentials")||mode.equals("all")){
+   java.lang.reflect.Method normalize, failure;
+   try{normalize=Core.class.getMethod("token",String.class);failure=Core.class.getMethod("credentialSaveFailure",Exception.class);}
+   catch(NoSuchMethodException e){throw new AssertionError("Missing clipboard-token boundary; downloaded trailing newline is rejected before encryption",e);}
+   String clean=repeat("a",64);
+   ok(normalize.invoke(null,clean).equals(clean),"valid token value preserved exactly");
+   for(String padding:new String[]{" ","\t","\n","\r\n"," \r\n\t"})ok(normalize.invoke(null,padding+clean+padding).equals(clean),"only surrounding clipboard whitespace removed");
+   String symbols=clean+"_-+=/:.";
+   ok(normalize.invoke(null,symbols).equals(symbols),"printable token characters are never rewritten");
+   for(String bad:new String[]{null,""," \t\r\n","short",clean+" x",clean+"\nx",clean+"\tx",clean+"\u0000", "\u0000"+clean,clean+"\u007f",clean+"\u00a0",clean+"\u200b",clean+"\ufeff"}){
+    boolean rejected=false;try{normalize.invoke(null,bad);}catch(java.lang.reflect.InvocationTargetException e){rejected=e.getCause() instanceof IllegalArgumentException;}
+    ok(rejected,"invalid token representation rejected without changing its contents");
+   }
+   String message=(String)failure.invoke(null,new java.security.KeyStoreException("SENSITIVE_TEST_TOKEN_MUST_NOT_APPEAR"));
+   ok(message.contains("local")&&message.contains("KeyStoreException"),"local encryption failure provides a useful safe diagnostic");
+   ok(!message.contains("SENSITIVE_TEST_TOKEN_MUST_NOT_APPEAR")&&!message.contains("HTTPS"),"error never echoes exception secret or blames the server");
+  }
   System.out.println("PASS "+checks+" checks ("+mode+")");
  }
 }

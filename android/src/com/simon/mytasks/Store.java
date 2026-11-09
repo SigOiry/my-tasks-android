@@ -37,7 +37,7 @@ final class Store {
   return new Account(origin,new String(cipher.doFinal(Base64.decode(parts[1],Base64.NO_WRAP)),StandardCharsets.UTF_8),prefs.getString("epoch",""));
  }
  void configure(String origin,String token) throws Exception {
-  origin=Core.server(origin);if(token.trim().isEmpty()||token.indexOf('\n')>=0||token.indexOf('\r')>=0)throw new IllegalArgumentException("A valid token is required");
+  origin=Core.server(origin);token=Core.token(token);
   Cipher cipher=Cipher.getInstance("AES/GCM/NoPadding");cipher.init(Cipher.ENCRYPT_MODE,key());cipher.updateAAD(origin.getBytes(StandardCharsets.UTF_8));byte[] encrypted=cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
   synchronized(Store.class){
    if(!prefs.edit().clear().putString("server",origin).putString("epoch",UUID.randomUUID().toString()).putString("secret",Base64.encodeToString(cipher.getIV(),Base64.NO_WRAP)+":"+Base64.encodeToString(encrypted,Base64.NO_WRAP)).commit())throw new IOException("Could not save settings");

@@ -8,6 +8,21 @@ public final class Core {
    String value=u.toASCIIString();return value.endsWith("/")?value.substring(0,value.length()-1):value;
   }catch(Exception e){throw new IllegalArgumentException("Use an HTTPS origin only, e.g. https://tasks.example (no path, credentials, query or fragment).");}
  }
+ public static String token(String value){
+  if(value==null)throw new IllegalArgumentException("Enter the server token.");
+  int first=0,last=value.length();
+  while(first<last&&tokenPadding(value.charAt(first)))first++;
+  while(last>first&&tokenPadding(value.charAt(last-1)))last--;
+  String token=value.substring(first,last);
+  if(token.length()<32)throw new IllegalArgumentException("Paste the complete server token, without a Bearer prefix or other text.");
+  for(int i=0;i<token.length();i++)if(token.charAt(i)<33||token.charAt(i)>126)throw new IllegalArgumentException("Paste only the server token. Spaces, line breaks or invisible characters inside it are not valid.");
+  return token;
+ }
+ private static boolean tokenPadding(char c){return c==' '||c=='\t'||c=='\r'||c=='\n';}
+ public static String credentialSaveFailure(Exception error){
+  String code=error==null?"UnknownError":error.getClass().getSimpleName();
+  return "Could not save credentials locally ("+code+"). No token was sent to the server. If this persists, report this diagnostic code.";
+ }
  public static final class SortKey {public final String id,project,priority,due; public SortKey(String i,String p,String r,String d){id=i;project=p;priority=r;due=d;}}
  public static String path(String id){try{return java.net.URLEncoder.encode(id,"UTF-8").replace("+","%20");}catch(java.io.UnsupportedEncodingException e){throw new IllegalArgumentException("Invalid task ID");}}
  public static int rank(String p){return "high".equals(p)?0:"medium".equals(p)?1:2;}

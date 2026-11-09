@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.1
+
+- Fixed a reproduced credential-save failure when a downloaded token is pasted with a final newline, CRLF, spaces or tabs around it. Only surrounding clipboard whitespace is removed; token contents are preserved and internal whitespace/control/non-ASCII characters remain invalid.
+- Uses the same validation at the settings and encrypted-store boundaries, with separate field errors for the server origin and token.
+- Genuine local credential-storage failures show a safe exception-type diagnostic instead of blaming HTTPS or echoing sensitive exception messages. Android Keystore encryption, key alias and existing encrypted credentials are unchanged; there is no plaintext fallback or key reset.
+- Added22 credential regression assertions. The actual Store input seam changed from rejecting a final-newline synthetic token to accepting it up to the Android-only encryption boundary. A host JVM does not verify device Keystore/storage behavior.
+
+Build verification:255 JVM assertions and6 Python tests passed; versionCode4, original release signer retained. Install over the existing app without uninstalling. Physical phone confirmation remains required.
+
 ## 1.2.0
 
 - Browser workspace at `https://task.oirysimon.com`, sharing the canonical task store and API with Android.
