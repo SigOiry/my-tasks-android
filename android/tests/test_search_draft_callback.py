@@ -36,7 +36,7 @@ class SearchDraftCallbackTest(unittest.TestCase):
    throw new AssertionError("Closing search lost draft or saved it canonically");
  }
 }'''.replace('CALLBACK', callback)
-        with tempfile.TemporaryDirectory(dir='/opt/data/cache/scratch', prefix='search-draft-') as directory:
+        with tempfile.TemporaryDirectory(prefix='search-draft-') as directory:
             path = Path(directory) / 'SearchDraftCallbackHarness.java'
             path.write_text(program)
             subprocess.run([str(JAVA / 'javac'), '--release', '8', str(path)], check=True)

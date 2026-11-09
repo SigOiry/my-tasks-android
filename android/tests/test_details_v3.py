@@ -46,7 +46,7 @@ class ReviewNativeTest {
 }
 '''
 harness=harness.replace('// STATE',method(review,'updateState')).replace('// ACK',callbacks[0]).replace('// OPEN',callbacks[1]).replace('// ASK',callbacks[2])
-with tempfile.TemporaryDirectory(prefix='details-v3-',dir=os.environ.get('TMPDIR','/opt/data/cache/scratch')) as d:
+with tempfile.TemporaryDirectory(prefix='details-v3-') as d:
  p=Path(d);(p/'ReviewNativeTest.java').write_text(harness)
  subprocess.run([str(JAVA/'javac'),'--release','8','-d',d,str(p/'ReviewNativeTest.java')],check=True)
  subprocess.run([str(JAVA/'java'),'-cp',d,'ReviewNativeTest'],check=True)
@@ -61,14 +61,14 @@ anchor_test='''class AnchorTest {
  // ANCHOR
  public static void main(String[] args){MainActivity a=new MainActivity();View row=new View();row.tag="a";a.listPane=row;a.focused=row;a.tasks=new Tasks(new JSONObject("a","Task"));if(findAnchor(a,"Task")!=row)throw new AssertionError("unique visible tagged row anchors");a.tasks=new Tasks(new JSONObject("a","Task"),new JSONObject("b","Task"));if(findAnchor(a,"Task")!=null)throw new AssertionError("ambiguous title cannot anchor a stale focused row");a.tasks=new Tasks(new JSONObject("a","Task"));row.visible=false;if(findAnchor(a,"Task")!=null)throw new AssertionError("offscreen row falls back");row.visible=true;row.shown=false;if(findAnchor(a,"Task")!=null)throw new AssertionError("hidden row falls back");System.out.println("Native menu identity/visibility: 4 checks passed");}
 }'''.replace('// ANCHOR',method(sheets,'findAnchor'))
-with tempfile.TemporaryDirectory(prefix='menu-v3-',dir=os.environ.get('TMPDIR','/opt/data/cache/scratch')) as d:
+with tempfile.TemporaryDirectory(prefix='menu-v3-') as d:
  p=Path(d);(p/'AnchorTest.java').write_text(anchor_test)
  subprocess.run([str(JAVA/'javac'),'--release','8','-d',d,str(p/'AnchorTest.java')],check=True)
  subprocess.run([str(JAVA/'java'),'-cp',d,'AnchorTest'],check=True)
 geometry='class SheetGeometryTest {\n'+method(sheets,'boundedHeight')+'''\nstatic void check(boolean b){if(!b)throw new AssertionError("bounded content height");}
 public static void main(String[] args){check(boundedHeight(210,800)==210);check(boundedHeight(1500,800)==688);check(boundedHeight(900,320)==275);check(boundedHeight(0,800)==1);System.out.println("Native sheet bounds: 4 checks passed");}}
 '''
-with tempfile.TemporaryDirectory(prefix='sheet-v3-',dir=os.environ.get('TMPDIR','/opt/data/cache/scratch')) as d:
+with tempfile.TemporaryDirectory(prefix='sheet-v3-') as d:
  p=Path(d);(p/'SheetGeometryTest.java').write_text(geometry)
  subprocess.run([str(JAVA/'javac'),'--release','8','-d',d,str(p/'SheetGeometryTest.java')],check=True)
  subprocess.run([str(JAVA/'java'),'-cp',d,'SheetGeometryTest'],check=True)

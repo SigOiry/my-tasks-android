@@ -32,7 +32,7 @@ public class GlassPixelsTest {
   System.out.println("GlassPixels: blur diffusion, local edges, constant preservation, bounded allocation PASS");
  }
 }'''
-        with tempfile.TemporaryDirectory(dir=os.environ.get('TMPDIR', '/opt/data/cache/scratch')) as d:
+        with tempfile.TemporaryDirectory() as d:
             harness_path = pathlib.Path(d)/'GlassPixelsTest.java'
             harness_path.write_text(harness)
             subprocess.run([str(JDK/'javac'), '--release', '8', '-d', d, str(source), str(harness_path)], check=True)

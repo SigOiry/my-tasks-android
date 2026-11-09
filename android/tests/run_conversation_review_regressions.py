@@ -41,7 +41,7 @@ if mode != 'menu':
 thread_menu = method('ConversationsUi.java', 'threadMenu')
 assert 'ConversationActionPolicy.threadActions(task,' in thread_menu and 'String action=keys[i]' in thread_menu, 'Production menu must use keyed policy'
 assert not re.search(r'if\(i==', thread_menu), 'Hidden entries must not shift numeric action routes'
-with tempfile.TemporaryDirectory(prefix='conversation-review-', dir=os.environ.get('TMPDIR', '/opt/data/cache/scratch')) as tmp:
+with tempfile.TemporaryDirectory(prefix='conversation-review-') as tmp:
     work = Path(tmp); harness=work/'ConversationReviewHarness.java'; harness.write_text(template)
     subprocess.run([javac,'--release','8','-cp',str(cp),'-d',str(work),str(harness),str(policy)],check=True)
     subprocess.run([java,'-cp',str(work)+os.pathsep+str(cp),'com.simon.mytasks.ConversationReviewHarness',mode],check=True)
