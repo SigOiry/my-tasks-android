@@ -37,7 +37,7 @@ public final class UpdatePolicyTest {
   reject(()->UpdatePolicy.identity("com.simon.mytasks",2,"1.0.0",hash,2,"1.1.0",hash,1));
   reject(()->UpdatePolicy.identity("com.simon.mytasks",2,"1.1.0","0"+hash.substring(1),2,"1.1.0",hash,1));
   reject(()->UpdatePolicy.identity("com.simon.mytasks",2,"1.1.0",hash,2,"1.1.0",hash,2));
-  java.io.File f=java.io.File.createTempFile("update-test-", ".apk",new java.io.File("build/tests"));
+  java.io.File f=java.io.File.createTempFile("update-test-", ".apk",new java.io.File(UpdatePolicyTest.class.getProtectionDomain().getCodeSource().getLocation().toURI()));
   try{java.nio.file.Files.write(f.toPath(),"abc".getBytes("UTF-8"));UpdateIO.verify(f,3,hash);n++;
    try{UpdateIO.verify(f,2,hash);throw new AssertionError("wrong size accepted");}catch(java.io.IOException expected){n++;}
    try{UpdateIO.verify(f,3,"0"+hash.substring(1));throw new AssertionError("wrong hash accepted");}catch(java.io.IOException expected){n++;}
