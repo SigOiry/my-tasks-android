@@ -13,7 +13,7 @@ class ApiTests(unittest.TestCase):
         self.secret.write_text('s' * 48)
         self.secret.chmod(0o600)
         from mobile_api import create_app
-        self.app = create_app(db_path=self.root/'tasks.json', token_file=self.secret, metadata_path=self.root/'meta.sqlite')
+        self.app = create_app(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',session_path=self.root/'web-sessions.sqlite',conversation_path=self.root/'conversations.sqlite',db_path=self.root/'tasks.json', token_file=self.secret, metadata_path=self.root/'meta.sqlite')
         self.client = TestClient(self.app)
         self.auth = {'Authorization': 'Bearer ' + 's'*48}
 
@@ -50,10 +50,17 @@ class ApiTests(unittest.TestCase):
         from hermes_chat import ChatRequest
         from mobile_api import dashboard
         android = Path(__file__).resolve().parents[2]/'android'
-        subprocess.run(['bash',str(android/'test.sh'),'chat-budget'],check=True,capture_output=True,text=True)
+        classes = self.root/'native-legacy-classes'
+        classes.mkdir()
+        # Compile the legacy wire-budget helper only. Never race the native
+        # agent's build/test directories or require a host-default javac.
+        java_home = Path(os.environ.get('JAVA_HOME','/opt/data/cache/android-build/jdk-17.0.2'))
+        subprocess.run([str(java_home/'bin/javac'),'--release','8','-d',str(classes),
+                        str(android/'src/com/simon/mytasks/Core.java'),str(android/'tests/CoreTest.java')],
+                       check=True,capture_output=True,text=True)
         fixture = self.root/'native-chat.jsonl'
-        subprocess.run(['/opt/data/cache/android-build/jdk-17.0.2/bin/java',
-                        '-Dchat.fixture='+str(fixture),'-cp',str(android/'build/tests'),
+        subprocess.run([str(java_home/'bin/java'),
+                        '-Dchat.fixture='+str(fixture),'-cp',str(classes),
                         'com.simon.mytasks.CoreTest','chat-budget'],check=True,capture_output=True,text=True)
         bodies = fixture.read_bytes().splitlines()
         self.assertEqual(len(bodies),5)
@@ -116,7 +123,7 @@ class ApiTests(unittest.TestCase):
         store.edit(first['id'],description='Meaningful external change')
         self.assertEqual(self.client.get('/api/events?after='+str(cursor),headers=self.auth).json()['events'],[])
         second = store.add('Fresh source task')
-        restarted = TestClient(create_app(db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite'))
+        restarted = TestClient(create_app(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',session_path=self.root/'web-sessions.sqlite',conversation_path=self.root/'conversations.sqlite',db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite'))
         more = restarted.get('/api/events?after='+str(cursor),headers=self.auth).json()
         self.assertEqual([(e['task_id'],e['kind']) for e in more['events']],[(second['id'],'created')])
         import sqlite3
@@ -151,7 +158,7 @@ class ApiTests(unittest.TestCase):
         from mobile_api import create_app
         artifacts = self.root/'public'
         artifacts.mkdir()
-        public = TestClient(create_app(db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite',apk_dir=artifacts))
+        public = TestClient(create_app(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',session_path=self.root/'web-sessions.sqlite',conversation_path=self.root/'conversations.sqlite',db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite',apk_dir=artifacts))
         self.assertEqual(public.get('/download/my-tasks.apk').status_code,404)
         (artifacts/'my-tasks.apk').write_bytes(b'PK synthetic APK fixture')
         response = public.get('/download/my-tasks.apk')
@@ -168,7 +175,7 @@ class ApiTests(unittest.TestCase):
         def private_future_route():
             return {'secret':'not mobile'}
         with patch.object(dashboard,'create_router',return_value=router):
-            app = create_app(db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite')
+            app = create_app(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',session_path=self.root/'web-sessions.sqlite',conversation_path=self.root/'conversations.sqlite',db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite')
         self.assertEqual(TestClient(app).get('/api/tasks/admin-secret/deep',headers=self.auth).status_code,404)
 
     def test_unread_external_change_survives_mobile_edit_and_stale_ack(self):
@@ -212,7 +219,7 @@ class ApiTests(unittest.TestCase):
         from mobile_api import create_app
         self.secret.chmod(0o644)
         with self.assertRaises(ValueError):
-            create_app(db_path=self.root/'tasks.json',token_file=self.secret)
+            create_app(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',session_path=self.root/'web-sessions.sqlite',conversation_path=self.root/'conversations.sqlite',db_path=self.root/'tasks.json',token_file=self.secret,metadata_path=self.root/'meta.sqlite')
         self.secret.chmod(0o600)
         malformed = b'{"schema_version":999,"tasks":["never rewrite"]}'
         (self.root/'tasks.json').write_bytes(malformed)

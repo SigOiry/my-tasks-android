@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0
+
+- Durable server-side conversations: multiple selectable threads per task, free discussions, cross-client history, rename/archive/reopen, older pagination and preserved follow-up drafts.
+- Persisted asynchronous message requests, exact-payload idempotency, bounded work, restart interruption and fenced late completions. No automatic replay of uncertain/failed work. Original history survives model-context compaction through real rolling summaries.
+- Username/password sign-in replaces manual token pairing. Private first-activation ownership proof, mandatory initial password replacement, restricted API gates, slow salted password hashes, epoch-based revocation and separate browser/native sessions. Existing Keystore identity and release signer are preserved.
+- Full native sessions remember the device for30 days so unattended task checks do not stop twice daily; browser and restricted activation sessions retain12-hour expiry.
+- Canonical prose notifications show Context, New and optional advice with inert safe Markdown. No original-mail navigation in summaries. Exact task/update acknowledgement, fresh-review conflicts and ordinary-editor source access remain separate.
+- Compact blue light/dark interface inspired by iOS26 control/navigation materials, licensed self-hosted Inter typography, floating capsule navigation, short transitions and reduced-motion/transparency fallbacks. Solid content remains readable; Android system notifications remain OS-rendered.
+- Both native and web chat render safe Markdown while preserving complete original saved text. Old discarded stateless conversations cannot be recovered.
+
+Same-package/same-signature upgrade: install over the current app without uninstalling. Account provisioning and coordinated backend/web deployment are required before activating this client. Hermès remains a no-tools assistant for questions, analysis and drafting, not mail sending or unrestricted agent execution. Native runtime/Keystore/foldable/IME/installer checks still require a device; host tests do not imply phone validation.
+
 ## 1.2.1
 
 - Fixed a reproduced credential-save failure when a downloaded token is pasted with a final newline, CRLF, spaces or tabs around it. Only surrounding clipboard whitespace is removed; token contents are preserved and internal whitespace/control/non-ASCII characters remain invalid.

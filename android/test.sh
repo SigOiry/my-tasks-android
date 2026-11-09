@@ -2,7 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 JAVA_HOME="${JAVA_HOME:-$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")}"
-mkdir -p build/tests build/test-lib
+TEST_BUILD_DIR="${TEST_BUILD_DIR:-build/tests-native}"
+mkdir -p "$TEST_BUILD_DIR" build/test-lib
 # JVM-only JSON test dependency; Android supplies org.json in the APK runtime.
 python3 - <<'PY'
 from pathlib import Path
@@ -15,11 +16,18 @@ if not p.exists():
     p.write_bytes(data)
 if hashlib.sha256(p.read_bytes()).hexdigest()!=expected: raise SystemExit('JSON dependency checksum mismatch')
 PY
-"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d build/tests src/com/simon/mytasks/{Core,PresentationPolicy,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,PresentationPolicyTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
-"$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.CoreTest "${1:-all}"
-"$JAVA_HOME/bin/java" -cp build/tests:build/test-lib/json.jar com.simon.mytasks.PresentationPolicyTest
-"$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.UpdatePolicyTest
-"$JAVA_HOME/bin/java" -cp build/tests:build/test-lib/json.jar com.simon.mytasks.UpdateReleaseTest
-"$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.UpdateNetworkTest
-"$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.UpdateStateTest
+"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR" src/com/simon/mytasks/{Core,PrivateSurfaces,AuthPolicy,AuthClient,SafeMarkdown,NotificationProse,PresentationPolicy,CompactPolicy,ConversationState,ConversationClient,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,PrivateSurfacesTest,AuthPolicyTest,NotificationProseTest,PresentationPolicyTest,CompactPolicyTest,ConversationStateTest,ConversationClientTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
+"$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR" com.simon.mytasks.CoreTest "${1:-all}"
+for test in PrivateSurfacesTest AuthPolicyTest NotificationProseTest PresentationPolicyTest CompactPolicyTest ConversationStateTest ConversationClientTest UpdatePolicyTest UpdateReleaseTest UpdateNetworkTest UpdateStateTest; do
+ "$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR":build/test-lib/json.jar "com.simon.mytasks.$test"
+done
+# Controller behavior with deterministic host-only storage/dispatch/transport seams.
+# Never mix these Android/Store/Api fakes into APK classes or backend test outputs.
+mkdir -p "$TEST_BUILD_DIR/controller"
+"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR/controller" tests/controller-stubs/android/{content,os}/*.java tests/controller-stubs/com/simon/mytasks/*.java src/com/simon/mytasks/{ConversationState,ConversationClient,ConversationController}.java tests/ConversationControllerTest.java
+"$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR/controller":build/test-lib/json.jar com.simon.mytasks.ConversationControllerTest
+# Actual Api authorization gate, with host-only Account and injected transport.
+mkdir -p "$TEST_BUILD_DIR/api"
+"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR/api" tests/api-stubs/com/simon/mytasks/Store.java src/com/simon/mytasks/{Api,Core,AuthPolicy,AuthClient}.java tests/ApiAuthGateTest.java
+"$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR/api":build/test-lib/json.jar com.simon.mytasks.ApiAuthGateTest
 python3 -m unittest discover -s tests -p 'test_*.py'

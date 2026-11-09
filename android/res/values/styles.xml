@@ -1,28 +1,28 @@
 <resources>
  <style name="MyTasks.Light" parent="android:style/Theme.Material.Light.NoActionBar">
-  <item name="android:fontFamily">sans-serif</item>
-  <item name="android:colorAccent">#23674b</item>
-  <item name="android:colorControlActivated">#23674b</item>
-  <item name="android:colorControlNormal">#63746a</item>
+  <item name="android:fontFamily">@font/inter_variable</item>
+  <item name="android:colorAccent">#005ac8</item>
+  <item name="android:colorControlActivated">#005ac8</item>
+  <item name="android:colorControlNormal">#63636b</item>
   <item name="android:colorButtonNormal">#ffffff</item>
-  <item name="android:colorBackground">#f7f8f5</item>
-  <item name="android:windowBackground">#f7f8f5</item>
-  <item name="android:textColorPrimary">#17251f</item>
-  <item name="android:textColorSecondary">#63746a</item>
-  <item name="android:textColorHint">#63746a</item>
+  <item name="android:colorBackground">#f2f2f7</item>
+  <item name="android:windowBackground">#f2f2f7</item>
+  <item name="android:textColorPrimary">#1c1c1e</item>
+  <item name="android:textColorSecondary">#63636b</item>
+  <item name="android:textColorHint">#63636b</item>
   <item name="android:windowActionModeOverlay">true</item>
  </style>
  <style name="MyTasks.Dark" parent="android:style/Theme.Material.NoActionBar">
-  <item name="android:fontFamily">sans-serif</item>
-  <item name="android:colorAccent">#abd8ba</item>
-  <item name="android:colorControlActivated">#abd8ba</item>
-  <item name="android:colorControlNormal">#a7b9ad</item>
-  <item name="android:colorButtonNormal">#1a2820</item>
-  <item name="android:colorBackground">#111b16</item>
-  <item name="android:windowBackground">#111b16</item>
-  <item name="android:textColorPrimary">#eef4ef</item>
-  <item name="android:textColorSecondary">#a7b9ad</item>
-  <item name="android:textColorHint">#a7b9ad</item>
+  <item name="android:fontFamily">@font/inter_variable</item>
+  <item name="android:colorAccent">#66aaff</item>
+  <item name="android:colorControlActivated">#66aaff</item>
+  <item name="android:colorControlNormal">#aaaab3</item>
+  <item name="android:colorButtonNormal">#1c1c1e</item>
+  <item name="android:colorBackground">#0b0d12</item>
+  <item name="android:windowBackground">#0b0d12</item>
+  <item name="android:textColorPrimary">#f5f5f7</item>
+  <item name="android:textColorSecondary">#aaaab3</item>
+  <item name="android:textColorHint">#aaaab3</item>
   <item name="android:windowActionModeOverlay">true</item>
  </style>
 </resources>

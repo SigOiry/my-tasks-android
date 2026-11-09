@@ -17,10 +17,13 @@
  await wait(()=>!$('login').hidden);
  const session=await(await fetch('/auth/session')).json();
  if(session.authenticated)throw new Error('Session not revoked.');
- for(const id of ['project-filter','project-options','projects','detail-context','detail-heading','chat-log','task-list','updates-title','source-links','source-accounts']){
+ if((await fetch('/api/conversations')).status!==401)throw new Error('Durable history must require a new authenticated session.');
+ for(const id of ['discussion-list','task-thread','chat-title','chat-context','chat-status','project-filter','project-options','projects','detail-context','detail-heading','chat-log','task-list','updates-heading','updates-summary','updates-title','rename-error','source-links','source-accounts']){
   if($(id).textContent.trim())throw new Error('Private DOM remains in '+id);
  }
  for(const e of document.querySelectorAll('input,textarea'))if(e.value)throw new Error('Private form value remains.');
+ if(document.querySelector('dialog[open]'))throw new Error('A private dialog remains open.');
+ if($('chat-dialog').dataset.conversationId||$('rename-dialog').dataset.conversationId)throw new Error('Private dialog bindings remain.');
  if(Object.keys(localStorage).some(k=>k.startsWith('mytasks.web.')))throw new Error('Workspace storage remains.');
  return {passed:true,checks:['server revocation','private DOM cleared','form values cleared','workspace cursor/preferences cleared','public login restored']};
 })()

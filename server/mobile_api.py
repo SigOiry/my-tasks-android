@@ -4,6 +4,8 @@ import importlib.util
 import os
 import sqlite3
 import stat
+import asyncio
+from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, Request
 from hermes_chat import ChatRequest, answer
@@ -15,16 +17,36 @@ spec.loader.exec_module(dashboard)
 
 
 def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=None,
-               session_path=None, web_origin=None, cookie_secure=True):
+               session_path=None, web_origin=None, cookie_secure=True, conversation_path=None, account_path=None, allow_legacy_uninitialized=None):
     db_path = Path(db_path or os.environ.get('MOBILE_TASK_DB', '/opt/data/personal-assistant/tasks.json'))
     token_file = Path(token_file or os.environ.get('MOBILE_TOKEN_FILE', '/run/secrets/mobile_token'))
+    metadata_path = Path(metadata_path or os.environ.get('MOBILE_METADATA_DB', '/var/lib/my-tasks-mobile/events.sqlite'))
+    session_path = Path(session_path or metadata_path.with_name('web-sessions.sqlite'))
+    account_path = Path(account_path or os.environ.get('MOBILE_ACCOUNT_DB', str(metadata_path.with_name('account.sqlite'))))
+    conversation_path = Path(conversation_path or os.environ.get('MOBILE_CONVERSATIONS_DB', str(metadata_path.with_name('conversations.sqlite'))))
+    # Resolve every storage identity before any constructor can create a schema,
+    # chmod a file, or recover pending work. Keep original paths for O_NOFOLLOW.
+    paths = (db_path, token_file, metadata_path, session_path, account_path, conversation_path)
+    resolved = [path.resolve() for path in paths]
+    for index, path in enumerate(paths):
+        for previous in range(index):
+            if (resolved[index] == resolved[previous] or
+                    (path.exists() and paths[previous].exists() and path.samefile(paths[previous]))):
+                raise ValueError('Service storage requires distinct dedicated private paths')
     mode = token_file.stat().st_mode
     if not stat.S_ISREG(mode) or mode & 0o077:
         raise ValueError('Mobile token must be a private regular file (0600 or 0400)')
     token = token_file.read_text().strip()
     if len(token) < 32 or not token.isascii() or any(c.isspace() for c in token):
         raise ValueError('Mobile token must contain at least 32 ASCII non-whitespace characters')
-    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+    @asynccontextmanager
+    async def lifespan(application):
+        try:
+            yield
+        finally:
+            await asyncio.to_thread(application.state.conversations.close)
+
+    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None,lifespan=lifespan)
 
     from web_auth import Sessions, COOKIE, SESSION_SECONDS
     from fastapi.responses import JSONResponse
@@ -36,8 +58,16 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
         raise ValueError('Web origin must be an exact HTTP(S) origin without a path')
     if not cookie_secure and parsed_origin.hostname not in {'localhost','127.0.0.1','testserver','::1'}:
         raise ValueError('Insecure cookie override is only for loopback QA')
-    metadata_path = Path(metadata_path or os.environ.get('MOBILE_METADATA_DB', '/var/lib/my-tasks-mobile/events.sqlite'))
-    sessions = Sessions(session_path or metadata_path.with_name('web-sessions.sqlite'), token)
+    sessions = Sessions(session_path, token)
+    from account_auth import AccountStore
+    from account_routes import AccountAuth
+    accounts = AccountStore(account_path)
+    account_auth = AccountAuth(accounts,sessions,token,origin,cookie_secure) if accounts.snapshot() else None
+    if allow_legacy_uninitialized is None:
+        allow_legacy_uninitialized = os.environ.get('MOBILE_ALLOW_LEGACY_UNINITIALIZED') == '1'
+    if account_auth is None and allow_legacy_uninitialized is not True:
+        raise ValueError('Initialize the private account database before starting the service')
+    app.state.accounts = accounts
 
     def require_origin(request):
         if request.headers.get('origin') != origin:
@@ -53,6 +83,8 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
             raise HTTPException(403, 'Valid CSRF header required')
 
     def authorize(request: Request):
+        if account_auth:
+            return account_auth.authorize(request)
         supplied = request.headers.get('authorization')
         if supplied is not None:
             if not hmac.compare_digest(supplied.encode(), ('Bearer ' + token).encode()):
@@ -77,6 +109,11 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
                     if name in seen:
                         raise HTTPException(400, 'Repeated security header')
                     seen.add(name)
+            if account_auth is None and request.url.path.startswith(('/api/','/auth/')) and accounts.snapshot():
+                raise HTTPException(503,'Account initialized; restart service before continuing')
+            if account_auth and request.url.path.startswith('/auth/') and request.method == 'POST' and not request.url.path.endswith('/logout'):
+                if request.headers.get('content-type','').split(';')[0].lower() != 'application/json':
+                    raise HTTPException(415, 'JSON request required')
             if request.url.path.startswith('/api/'):
                 authorize(request)
             if request.url.path.startswith(('/api/', '/auth/')):
@@ -149,9 +186,9 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
 
     @app.api_route('/assets/{name}',methods=['GET','HEAD'])
     def asset(name: str):
-        if name not in {'app.js','app.css','policy.mjs','icon.svg'} or (bundle/name).is_symlink():
+        if name not in {'app.js','app.css','policy.mjs','conversations.mjs','icon.svg','inter-variable.woff2','INTER-LICENSE.txt'} or (bundle/name).is_symlink() or not (bundle/name).is_file():
             raise HTTPException(404,'Asset not found')
-        media = {'js':'text/javascript','mjs':'text/javascript','css':'text/css','svg':'image/svg+xml'}
+        media = {'js':'text/javascript','mjs':'text/javascript','css':'text/css','svg':'image/svg+xml','woff2':'font/woff2','txt':'text/plain'}
         return FileResponse(bundle/name,media_type=media[name.rsplit('.',1)[1]])
 
     @app.get('/health')
@@ -180,7 +217,7 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
             router.add_api_route(route.path, route.endpoint, methods=methods, status_code=route.status_code)
     from event_feed import EventFeed
     from fastapi import Query
-    feed = EventFeed(metadata_path or os.environ.get('MOBILE_METADATA_DB', '/var/lib/my-tasks-mobile/events.sqlite'), dashboard, db_path)
+    feed = EventFeed(metadata_path, dashboard, db_path)
 
     @router.get('/release-status')
     def latest_release():
@@ -201,5 +238,16 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
         task = dashboard.enrich(dashboard.find_task(db,payload.task_id),db)
         return answer(task,payload)
 
+    from conversations import ConversationStore, install_routes
+    conversations = ConversationStore(conversation_path)
+    app.state.conversations = conversations
+
+    def saved_task(task_id):
+        db = dashboard.taskdb.Store(db_path).read()
+        return dashboard.enrich(dashboard.find_task(db,task_id),db)
+
+    install_routes(router,conversations,saved_task)
     app.include_router(router)
+    if account_auth:
+        account_auth.install(app)
     return app

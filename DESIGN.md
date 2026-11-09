@@ -1,32 +1,55 @@
-# My Tasks — shared product UI direction
+# My Tasks — compact Liquid Glass-inspired workspace
 
-## Surface
-Primary **Operate** workspace; secondary **Command/Inspect** details and task-linked Hermes. No marketing hero, ornamental metrics, gradients, glass effects, or generic equal-card grids.
+## Intent
 
-## Composition
-- Desktop: restrained navigation rail (views and projects), task workspace with grouped rows and clear priority/deadline/unread signals, task inspector with Details/Hermes modes.
-- Compact phone: focused single-pane navigation, accessible search and New action, content-first task rows, clear back navigation.
-- Expanded/foldable: list and inspector side by side when window permits; preserve selection, drafts and conversation state through resize.
-- Persistent top-level connection/sync state, not a wall of debug messages. Empty/loading/error/permission states receive the same care as populated states.
+Make tasks immediately scannable and conversations returnable. The home is a working list, not a marketing page: no oversized greeting, redundant metrics or repeated metadata badges. Two primary destinations: **Tasks** and **Discussions**. Settings is a utility.
 
-## Tokens
-Light canvas #f7f8f5; surface #ffffff; ink #17251f; secondary #63746a; border #dde5df; primary forest #23674b; primary-soft #edf5ee. Dark canvas #111b16; surface #1a2820; ink #eef4ef; secondary #a7b9ad; border #31453a; primary #abd8ba. Danger/error may use restrained red, overdue amber/red only where semantically meaningful. Do not rely only on color for priority/status.
+The visual language adapts iOS26 principles to native Android and the web. It does not claim UIKit, Apple's proprietary fonts, iOS optical refraction or control over Android's notification shade.
 
-Use a deliberate humanist/precise sans type system: self-hosted DM Sans if available with its license, or purposeful native sans on Android. Body14–16; task title16; section20–24; app heading24–28; metadata12–13. Avoid tiny text and ornamental oversized headings.
+## Reference patterns
 
-Spacing4/8/12/16/24/32. Interactive corner radius8–12, not giant pill containers everywhere. Hairline containment and slight elevation only for dialogs/popovers; rows should scan as one coherent list. 44px/48dp minimum primary touch targets. Clearly distinguish primary, secondary and destructive actions. Use native platform semantics and input accessibility.
+Apple's official Liquid Glass adoption guidance separates a functional navigation/control layer from readable content, limits custom effects, and preserves reduced-motion/transparency accessibility. The official Things3.22 OS26 article and supplied screenshots informed compact checkbox/title hierarchy, subordinate context, rounded controls, a floating primary action, subtle touch feedback and adaptive windows. References are inspiration, not copied artwork:
 
-## Interaction
-- Search/filter/sort/group/category controls with truthful counts from real tasks.
-- Dates in readable local format, explicit overdue/due signals, unknown due dates clear. Stored priority/deadlines unchanged by sort.
-- Do not render raw provider JSON/evidence dumps; source buttons only supplied trusted URLs.
-- Unread task: readable summary first; exact displayed-token acknowledgement; no silent acknowledgement on open/notification delivery. On conflict keep summary and offer refresh.
-- Editing preserves draft on stale409; never offer unsafe force overwrite. Cancel unsaved navigation asks confirmation.
-- Draft-only Hermes: clear speaker hierarchy, readable responses, copy draft, explicit voice-recognition privacy and editable transcript; never automatically send mail.
-- Settings: theme, notification behavior/permissions, version/update actions, connection account/privacy. Never show tokens in page source, logs, URL or persistent browser storage.
-- Keyboard navigation and focus; native browser dialogs/toplayer, reduced motion, clear errors/retry. Browser notifications supported while app open; do not claim closed-browser delivery without actual push implementation.
+- https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass
+- https://developer.apple.com/videos/play/wwdc2025/219/
+- https://culturedcode.com/things/blog/2025/09/things-for-os-26/
 
-## Deployment and acceptance
-Canonical app/server address is https://task.oirysimon.com. Root webapp and existing /api routes share origin; trusted secure-session login reuses existing token without exposing it to scripts after login. Android should suggest this origin for new setup, but preserve any saved custom server.
+## Composition and density
 
-Parent must inspect real desktop/compact screenshots, operate scratch create/edit/conflict/ack/delete/restore/chat flows, and verify live HTTPS auth/session/root after deployment. Native Android still requires physical-phone QA if emulator remains unavailable. Source/release publication excludes all tokens/signing keys/private task data.
+- Desktop: narrow navigation/sidebar, condensed task toolbar, category/project grouping and title-first rows. Keep description, notes, sources and full editing inside details.
+- Compact: floating capsule navigation and a focused single pane. Search/filter utilities must not consume most of a short window. Keyboard/composer access takes precedence over decorative chrome.
+- Expanded/foldable Android: split list/detail when the current window is wide enough. Do not hardcode a named phone's unverified dimensions. Preserve task/thread selection and drafts through resize.
+- Web task rows target64px; native rows68dp at ordinary font scale, expanding when accessibility text needs it. Titles can wrap to two lines; useful due/project context stays subordinate. Keep44px/48dp actions.
+- No raw provider JSON or evidence/reference dumps in the landing view. Dates and unread/priority indicators must have textual/accessibility meaning, not color alone.
+
+## Materials, typography and motion
+
+Use cool neutral light/dark content, blue functional accents and quiet separators. Normal text/action roles meet4.5:1 contrast in the tested palette; use darker blue for small light-theme labels rather than white-on-bright-blue decoration. Content stays solid; frosted/translucent navigation, capsules and sheet controls form the separate functional layer. Hairline highlights and restrained elevation suggest material depth. Opaque/high-contrast/reduced-transparency fallbacks remain readable.
+
+Self-hosted **Inter** is the licensed cross-client font, with system fallback and OFL attribution in Settings. Do not redistribute Apple's SF Pro. Preserve user font scaling. Hierarchy comes from weight, size and alignment, not oversized headings or constant all-caps copy.
+
+Short purpose-driven transitions and pressed/selected feedback should clarify navigation and status without replaying on every poll. Honor browser reduced motion and Android system animation settings plus explicit preferences. No endless decorative shimmer, heavy continuous effects, or unmeasured frame-rate/battery claims. Native materials are a custom translucent-highlight approximation; no native backdrop-refraction implementation is claimed.
+
+## Updates and task safety
+
+Unread tasks open a readable summary before the editor: **Context**, **New**, and optional **Suggested next steps**, omitting unavailable background/advice. Use canonical snapshot-bound prose, not raw technical diffs. Safe Markdown may emphasize facts or structure paragraphs/lists/code; no active links, images or interpreted HTML in the summary. Original-mail navigation belongs only to ordinary task details.
+
+Acknowledge only the exact displayed task ID/token. A newer update or failed acknowledgement stays visible and requires explicit fresh review. Delivery/open/dismiss is not acknowledgement. Editing uses revisions and preserves stale409 drafts; deletion is recoverable and confirmed. Sorting never changes stored dates/priorities or mailbox read flags.
+
+## Conversations
+
+Every accepted task/free message and reply is durable server history. Task details select among multiple saved threads; Discussions provides all/free/task/archive views, rename/reopen and pagination. Unsent drafts are a separate client concern, never represented as saved turns.
+
+Long model contexts may use genuine persisted summaries; full original messages remain available. Request identity survives ambiguous delivery; never automatically rerun provider work. Navigation, polling, account expiry and logout must not attach a reply to another thread, erase a new follow-up, or recreate scrubbed private UI. Copy preserves original saved text. Voice is explicit, disclosed, reviewable and never auto-submitted. Hermès has no tools or email-sending authority.
+
+## Authentication and privacy
+
+Username/password replaces manual token pairing. First activation requires private ownership proof and forces password replacement before private APIs. Prevent public guessable-default takeover. Never put passwords/session credentials in source, logs, browser storage, query strings or public download URLs; the owner-only one-time activation fragment is transient and stripped before other work. Never fall back to browser cookies after bad Authorization.
+
+Browser cookie sessions expire after12 hours. Full native sessions remember the device for30 days; restricted bootstrap remains12 hours. Logout/password replacement revokes access. Preserve the original Keystore alias/AAD and APK signer. Settings/update checks remain available without task-server credentials.
+
+## Acceptance
+
+Exercise real scratch browser/API flows and inspect desktop/compact screenshots; verify loading/empty/offline/error/conflict/pending/interrupted states as well as happy paths. Run security/worker/pagination regression tests and independent review before publication. Check exact live origin, bundle/artifact hashes, auth gates and remote source/tag/release readbacks after deployment.
+
+Browser screenshots and JVM/SDK builds are not Android runtime proof. Physical launch/upgrade, real Keystore, folding/IME/font rendering, speech, OS notifications and installer consent require a device. Never write test obligations to production or include private state/signing material in public source.

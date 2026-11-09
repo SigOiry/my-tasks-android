@@ -14,8 +14,8 @@ class WebTests(unittest.TestCase):
         secret = self.root/'token'
         secret.write_text(self.token)
         secret.chmod(0o600)
-        self.kwargs = dict(db_path=self.root/'tasks.json', token_file=secret, metadata_path=self.root/'events.sqlite',
-                           session_path=self.root/'sessions.sqlite', web_origin='https://testserver')
+        self.kwargs = dict(allow_legacy_uninitialized=True,account_path=self.root/'account.sqlite',db_path=self.root/'tasks.json', token_file=secret, metadata_path=self.root/'events.sqlite',
+                           session_path=self.root/'sessions.sqlite', conversation_path=self.root/'conversations.sqlite', web_origin='https://testserver')
         self.client = TestClient(create_app(**self.kwargs), base_url='https://testserver')
         self.origin = {'Origin':'https://testserver'}
 

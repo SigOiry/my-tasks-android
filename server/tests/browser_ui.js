@@ -52,6 +52,9 @@
  document.querySelector('[data-view=active]').click();change('#search',title);
  assert(document.querySelectorAll('.task-row').length===1,'search filters actual tasks');
  change('#search','');
+ const focused=document.querySelector('.task-row .task-open');focused.focus();const focusedId=focused.closest('[data-task-id]').dataset.taskId;
+ $('refresh').click();await new Promise(r=>setTimeout(r,900));
+ assert(document.activeElement?.closest('[data-task-id]')?.dataset.taskId===focusedId,'background refresh preserves task keyboard focus');
  assert(document.documentElement.scrollWidth<=innerWidth,'responsive layout has no horizontal overflow');
  const forbidden=[];
  for(const key of Object.keys(localStorage)){

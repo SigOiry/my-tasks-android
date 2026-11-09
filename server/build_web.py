@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-ASSETS = ('index.html','app.css','app.js','policy.mjs','icon.svg')
+ASSETS = ('index.html','app.css','app.js','policy.mjs','conversations.mjs','icon.svg','inter-variable.woff2','INTER-LICENSE.txt')
 
 def build():
     output = ROOT/'web_dist'

@@ -1,46 +1,59 @@
 # My Tasks
 
-A private task workspace for the web and native Android, with a shared warm-neutral/forest design system, project/category organization, safe task editing, update summaries and task-linked Hermes assistance.
+A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
 ## Open or install
 
 - **Browser workspace:** https://task.oirysimon.com
-- **Android APK:** download `my-tasks.apk` from the latest stable GitHub Release.
-- **Android server address:** `https://task.oirysimon.com` (suggested for new setup; saved custom servers are preserved).
+- **Android APK:** `my-tasks.apk` in the latest stable GitHub Release.
+- **Android server:** `https://task.oirysimon.com` is suggested for new setup. Saved custom server addresses are preserved.
 
-Use your private access token to sign in or pair the Android app. No token is embedded in this source, public HTML or APK. Version1.0.0 has no updater: install the latest updater-enabled APK once over the existing app **without uninstalling**. Subsequent Android releases can be offered in-app and always require user/Android installation confirmation.
+Install an update **over the existing app without uninstalling**. Official releases retain the original package and signing identity. Version1.0.0 needs one manual upgrade; updater-enabled versions check once per local day at first foreground launch and manually from Settings. Download and Android installation always require consent.
+
+## Sign in
+
+Use your username and password, not a pasted service token. First activation requires an already trusted configured device/browser or a privately supplied, one-time activation link. The initial session cannot access tasks or chats until the owner replaces the provisional password. A guessable initial password alone cannot take over the public account.
+
+The application never persists your password. The browser uses an opaque HttpOnly/Secure/Strict cookie; Android encrypts its issued session with the existing Android Keystore identity. Browser/bootstrap sessions last12 hours; full native sessions remember the device for30 days, unless revoked earlier by logout or password replacement. The updater works independently of account sign-in.
+
+Server operators must provision the private owner account **before** starting the new backend; see `server/AUTH-v1.3.md`. Never enable the uninitialized legacy fixture override in production, publish activation links, or reset authentication by deleting the account database.
 
 ## Features
 
-- Active/Today/Week/All/Trash views, project/category filters, search, priority/deadline sorting and unread badges.
-- Create/edit/complete, notes, trustworthy supplied source links, confirmation-backed recoverable deletion and restore.
-- Optimistic revisions preserve unsaved edits when a task changes elsewhere. Updates show a readable summary and acknowledge only the exact version explicitly reviewed.
-- Task-linked Hermes questions and email drafts; **no email sending or unrestricted agent execution**.
-- Optional reviewed speech transcription, with platform/browser availability and privacy notice.
-- Coordinated light/dark themes and compact/expanded layouts. Android adapts to window width, not guessed foldable-device dimensions.
-- Android updater: first foreground launch per local calendar day plus Settings → Check for updates; latest stable release, integer versionCode, bounded HTTPS download, size/SHA-256 and actual package/version/current-signer checks.
+- Compact Active/Today/Week/All/Trash views, project/category filters, search, priority/deadline sorting and unread indicators.
+- Create/edit/complete, notes, reliable source links in ordinary task details, and confirmation-backed recoverable trash/restore.
+- Optimistic revisions preserve unsaved edits when a task changes elsewhere.
+- Prose-first update summaries: **Context**, **New**, and optional **Suggested next steps**. Safe Markdown supports emphasis, lists and code without raw HTML, active source links or images. Acknowledgement applies only to the exact displayed update; conflicts require reviewing the newer summary.
+- Multiple saved conversations per task, plus a **Discussions** destination for task-bound and free chats. Select, rename, archive/reopen and load older messages. Sent history is stored privately on the server and shared by web and Android.
+- Durable, idempotent message admission: a response can finish after leaving its screen; reopening recovers request status and saved replies. Failed/interrupted requests are visible and never automatically replayed. Long model contexts use persisted rolling summaries while original messages remain available.
+- Hermès questions, analysis and email drafting, with **no agent tools, email sending or task execution**. This is not an unrestricted gateway into terminal/dashboard agent sessions.
+- Optional reviewable speech transcription where the platform supports it; no automatic submission of dictation.
+- Light/dark themes, reduced-motion/transparency controls and width-adaptive compact/expanded layouts. Glass-inspired controls are distinct from solid readable content. This is not native iOS optical-refraction rendering.
+
+Previously discarded stateless chats cannot be reconstructed. Unsent browser drafts are page-memory only; durable history starts with accepted messages, not unsubmitted text. Discussion search filters the loaded metadata; use pagination to load more.
 
 ### Platform differences
 
 | Capability | Browser | Android |
 | --- | --- | --- |
-| Task alerts | Foreground polling while page is open; no closed-browser push | Best-effort background jobs, at least15 minutes apart and potentially delayed further |
-| Offline reads | Current page's memory; offline reload cannot restore tasks | App-private persisted read-only task cache |
-| Credentials | Token used for a bounded opaque HttpOnly/Secure/Strict session; no bearer token in browser storage | Android Keystore-encrypted token; backup disabled |
-| Updates | New web bundle on reload/deployment | User-approved APK update check/download and Android installer |
+| Task alerts | Polling while the page is open; no closed-browser push | Best-effort periodic background checks, potentially delayed by Doze/vendor policies |
+| Offline reads | Current page memory; offline reload cannot restore tasks | Private task cache after online account verification; cold launch requires verification |
+| Session storage | HttpOnly cookie; no bearer/password in browser storage | Keystore-encrypted opaque session; backup disabled |
+| Presentation | Responsive glass-inspired web controls | Native Android controls/material approximation; the OS owns notification-shade appearance |
+| Updates | New bundle on deployment/reload | Verified APK download and user-confirmed Android installer |
 
-Sorting and notification delivery never alter task priority, deadline, status or mailbox read flags. No hidden offline mutation queue is used.
+Presentation, alert delivery and chat do not change stored task priorities/deadlines or mailbox read flags. There is no hidden offline mutation queue.
 
-## Source layout
+## Source and deployment
 
-- `android/`: dependency-free native Java app, resources, updater, release-metadata generator and tests.
-- `server/`: browser source/built bundle, authenticated API adapter, session handling and isolated synthetic QA tooling.
+- `android/`: native Java application, resources, updater, metadata generator and tests.
+- `server/`: browser source/bundle, task adapter, password/session auth, conversation worker/store and scratch QA tooling.
 - `DESIGN.md`: shared interaction and visual direction.
-- `RELEASING.md`: source/tag/APK publication checklist.
+- `RELEASING.md`: verified source/tag/binary publication checklist.
 
-The companion server integrates with an existing compatible Hermes My Tasks canonical Store/dashboard plugin. It does not initialize a second task database. See `server/README.md` and `server/WEB.md` for integration prerequisites, security and deployment configuration. `compose.example.yaml` is generic; private deployment environment/state are not published.
+The backend integrates with an existing compatible Hermes My Tasks Store/dashboard plugin; it does not introduce another task database. Account, conversation, event and session metadata use dedicated private persistent files. See `server/README.md`, `server/AUTH-v1.3.md`, `server/CONTRACT.md` and `server/WEB-v1.3.md`. Generic compose examples contain no credentials or private runtime data.
 
-## Android build
+## Build Android
 
 Install JDK17 and Android SDK platform35/build-tools35.0.0:
 
@@ -48,7 +61,7 @@ Install JDK17 and Android SDK platform35/build-tools35.0.0:
 export JAVA_HOME=/path/to/jdk-17
 export ANDROID_HOME=/path/to/android-sdk
 bash android/test.sh
-# Supply an EXISTING authorized signing identity privately:
+# Supply the existing authorized signing identity privately:
 export SIGNING_KEYSTORE=/private/path/release.p12
 export SIGNING_PASSWORD_FILE=/private/path/password
 export SIGNING_ALIAS=mytasks
@@ -57,10 +70,10 @@ python3 android/release_metadata.py android/build/my-tasks.apk \
   --expected-certificate a30330e687f078beaa6870254c2f5ce47d22c6e4e9e970ef4b2abc087d3137da
 ```
 
-The build refuses to create or replace a release identity. A differently signed build cannot update the official app. Never commit keys/passwords or upload them to GitHub. CI runs policy tests only and has no official release-signing key.
+The build refuses to create or replace the release identity. Do not commit keys/passwords or upload them to Actions. CI checks native-independent policies, browser behavior and reproducible web assets; it has no official APK signing key. Full adapter integration additionally requires the compatible installed canonical plugin and is exercised with isolated synthetic stores.
 
 ## Verification boundary
 
-The project has real JVM/Python/JavaScript tests, signed APK packaging/signature checks, browser interaction tests and independent source review. Browser flows are exercised against an isolated synthetic database, not by creating production obligations. See each component's testing documentation.
+Tests cover native-independent policies/HTTP clients, account security, durable history/recovery, revisions and exact acknowledgements, browser flows, APK integrity/package/signature and independent code review. QA writes use synthetic scratch data, not production obligations. See component testing documents for actual execution evidence and limits.
 
-**Android physical-device appearance, fold/unfold/IME behavior, microphone recognition, notifications and the package-installer self-update flow remain device-QA requirements.** Compilation and pure-policy tests do not prove native runtime behavior. Browser microphone availability also depends on the browser/device. No credentials, canonical task data, mailbox/calendar content, runtime databases or private screenshots are included in this repository.
+**Physical Android launch/upgrade, Keystore, fold/unfold/IME, voice, notifications and installer behavior remain separate device-QA requirements.** Compilation, browser screenshots and JVM tests do not prove native runtime appearance or behavior. No passwords, private activation links, signing material, canonical tasks, mailbox/calendar content or runtime databases belong in this repository.

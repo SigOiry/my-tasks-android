@@ -30,6 +30,7 @@ final class Store {
   return (javax.crypto.SecretKey)ks.getKey(ALIAS,null);
  }
  synchronized Account account() throws Exception {
+  if(prefs.getBoolean("signing_out",false))return null;
   String origin=prefs.getString("server","");if(origin.isEmpty())return null;
   String encrypted=prefs.getString("secret","");String[] parts=encrypted.split(":");
   if(parts.length!=2)throw new IOException("Credentials unavailable. Re-enter settings.");
@@ -42,10 +43,24 @@ final class Store {
   synchronized(Store.class){
    if(!prefs.edit().clear().putString("server",origin).putString("epoch",UUID.randomUUID().toString()).putString("secret",Base64.encodeToString(cipher.getIV(),Base64.NO_WRAP)+":"+Base64.encodeToString(encrypted,Base64.NO_WRAP)).commit())throw new IOException("Could not save settings");
    new AtomicFile(new File(context.getFilesDir(),"tasks.json")).delete();
+   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();
    ((android.app.NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
   }
  }
- boolean current(Account a){return a!=null&&a.epoch.equals(prefs.getString("epoch",""));}
+ void session(String origin,String issued)throws Exception{configure(origin,AuthPolicy.sessionToken(issued));}
+ String server(){return prefs.getString("server",context.getSharedPreferences("connection",Context.MODE_PRIVATE).getString("last_server","https://task.oirysimon.com"));}
+ Account invalidateWork(Account a)throws IOException{synchronized(Store.class){if(!current(a))return null;String next=UUID.randomUUID().toString();if(!prefs.edit().putString("epoch",next).commit())throw new IOException("Could not invalidate account work");return new Account(a.server,a.token,next);}}
+ void beginLogout()throws IOException{synchronized(Store.class){if(!prefs.edit().putBoolean("signing_out",true).commit())throw new IOException("Could not gate local account");}}
+ boolean current(Account a){return a!=null&&!prefs.getBoolean("signing_out",false)&&a.epoch.equals(prefs.getString("epoch",""));}
+ void disconnect()throws IOException{
+  synchronized(Store.class){
+   String origin=prefs.getString("server","");if(!origin.isEmpty())context.getSharedPreferences("connection",Context.MODE_PRIVATE).edit().putString("last_server",origin).commit();
+   if(!prefs.edit().clear().commit())throw new IOException("Could not clear local account");
+   new AtomicFile(new File(context.getFilesDir(),"tasks.json")).delete();
+   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();
+   ((android.app.NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
+  }
+ }
  JSONObject cached(){
   synchronized(Store.class){try{
    AtomicFile file=new AtomicFile(new File(context.getFilesDir(),"tasks.json"));

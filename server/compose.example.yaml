@@ -16,6 +16,10 @@ services:
       MOBILE_TASK_DB: /opt/data/personal-assistant/tasks.json
       MOBILE_WEB_ORIGIN: https://task.oirysimon.com
       MOBILE_METADATA_DB: /opt/data/workspace/my-tasks-mobile/server/state/events.sqlite
+      MOBILE_ACCOUNT_DB: /opt/data/workspace/my-tasks-mobile/server/state/account.sqlite
+      MOBILE_CONVERSATIONS_DB: /opt/data/workspace/my-tasks-mobile/server/state/conversations.sqlite
+      # Initialize account.sqlite locally using account_admin.py before exposing traffic.
+      # Password and activation inputs are private files, never environment values.
       MOBILE_APK_DIR: /opt/data/workspace/my-tasks-mobile/server/public
       TMPDIR: /opt/data/cache/scratch
     read_only: true

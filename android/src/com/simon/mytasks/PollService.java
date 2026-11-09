@@ -47,8 +47,8 @@ public final class PollService extends JobService {
        PendingIntent pi=PendingIntent.getActivity(c,0,intent,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
        Notification publicVersion=new Notification.Builder(c,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle("My Tasks").setContentText("A task has an update").build();
        String headline=n.optBoolean("unread")?n.optString("headline","Task updated"):"Task "+event.optString("kind","updated");
-       String summary=summary(n);summary=summary.isEmpty()?task.optString("title","Task updated"):summary;
-       Notification notification=new Notification.Builder(c,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(task.optString("title","Task updated")).setContentText(headline).setStyle(new Notification.BigTextStyle().bigText(summary)).setVisibility(Notification.VISIBILITY_PRIVATE).setPublicVersion(publicVersion).setContentIntent(pi).setAutoCancel(true).setOnlyAlertOnce(true).build();
+       CharSequence summary=MarkdownText.render(summary(n));summary=summary.length()==0?task.optString("title","Task updated"):summary;
+       Notification.Builder builder=new Notification.Builder(c,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(task.optString("title","Task updated")).setContentText(headline).setStyle(new Notification.BigTextStyle().bigText(summary)).setVisibility(Notification.VISIBILITY_PRIVATE).setPublicVersion(publicVersion).setContentIntent(pi).setAutoCancel(true).setOnlyAlertOnce(true);if(Build.VERSION.SDK_INT>=29)builder.setAllowSystemGeneratedContextualActions(false);Notification notification=builder.build();
        nm.notify(taskId,0,notification);
       }
      }
@@ -61,7 +61,7 @@ public final class PollService extends JobService {
    }
   }
  }
- static String summary(JSONObject n){JSONArray a=n.optJSONArray("summary");StringBuilder b=new StringBuilder();if(a!=null)for(int i=0;i<a.length();i++){if(i>0)b.append('\n');b.append(a.optString(i));}return b.toString();}
+ static String summary(JSONObject n){return NotificationProse.markdown(n);}
  @Override public boolean onStartJob(JobParameters p){final Run run=new Run();currentRun=run;Api.IO.execute(()->{boolean retry=false;try{Store s=new Store(this);Store.Account a=s.account();if(a!=null)poll(this,s,a,()->run.stopped);}catch(Exception e){retry=true;}final boolean again=retry;new Handler(Looper.getMainLooper()).post(()->{if(!run.stopped&&currentRun==run)jobFinished(p,again);});});return true;}
  @Override public boolean onStopJob(JobParameters p){if(currentRun!=null)currentRun.stopped=true;return true;}
 }
