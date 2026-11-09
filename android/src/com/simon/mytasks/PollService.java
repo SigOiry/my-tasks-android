@@ -49,7 +49,13 @@ public final class PollService extends JobService {
        String headline=n.optBoolean("unread")?n.optString("headline","Task updated"):"Task "+event.optString("kind","updated");
        CharSequence summary=MarkdownText.render(summary(n));summary=summary.length()==0?task.optString("title","Task updated"):summary;
        Notification.Builder builder=new Notification.Builder(c,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(task.optString("title","Task updated")).setContentText(headline).setStyle(new Notification.BigTextStyle().bigText(summary)).setVisibility(Notification.VISIBILITY_PRIVATE).setPublicVersion(publicVersion).setContentIntent(pi).setAutoCancel(true).setOnlyAlertOnce(true);if(Build.VERSION.SDK_INT>=29)builder.setAllowSystemGeneratedContextualActions(false);Notification notification=builder.build();
-       nm.notify(taskId,0,notification);
+       String tag=NotificationIdentity.tag(account.epoch,taskId,n.optString("token",""));
+       // Only supersede this account/task's exact, versioned identities. Legacy
+       // task-id tags have unknown epoch/token and are never cancelled by ACK.
+       for(android.service.notification.StatusBarNotification active:nm.getActiveNotifications()){
+        if(active.getId()==0&&NotificationIdentity.sameTask(active.getTag(),account.epoch,taskId)&&!tag.equals(active.getTag()))nm.cancel(active.getTag(),0);
+       }
+       nm.notify(tag,0,notification);
       }
      }
     }

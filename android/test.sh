@@ -16,9 +16,9 @@ if not p.exists():
     p.write_bytes(data)
 if hashlib.sha256(p.read_bytes()).hexdigest()!=expected: raise SystemExit('JSON dependency checksum mismatch')
 PY
-"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR" src/com/simon/mytasks/{Core,PrivateSurfaces,AuthPolicy,AuthClient,SafeMarkdown,NotificationProse,PresentationPolicy,CompactPolicy,ConversationState,ConversationClient,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,PrivateSurfacesTest,AuthPolicyTest,NotificationProseTest,PresentationPolicyTest,CompactPolicyTest,ConversationStateTest,ConversationClientTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
+"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR" src/com/simon/mytasks/{Core,PrivateSurfaces,AuthPolicy,AuthClient,SafeMarkdown,NotificationProse,ChatPresentationPolicy,UpdateEmphasis,UpdateReviewPolicy,TaskActionPolicy,UiReadGate,PresentationPolicy,CompactPolicy,ConversationState,ConversationClient,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,PrivateSurfacesTest,AuthPolicyTest,NotificationProseTest,ChatPresentationPolicyTest,UpdateEmphasisTest,UpdateReviewPolicyTest,TaskActionPolicyTest,UiReadGateTest,PresentationPolicyTest,CompactPolicyTest,ConversationStateTest,ConversationClientTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
 "$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR" com.simon.mytasks.CoreTest "${1:-all}"
-for test in PrivateSurfacesTest AuthPolicyTest NotificationProseTest PresentationPolicyTest CompactPolicyTest ConversationStateTest ConversationClientTest UpdatePolicyTest UpdateReleaseTest UpdateNetworkTest UpdateStateTest; do
+for test in PrivateSurfacesTest AuthPolicyTest NotificationProseTest ChatPresentationPolicyTest UpdateEmphasisTest UpdateReviewPolicyTest TaskActionPolicyTest UiReadGateTest PresentationPolicyTest CompactPolicyTest ConversationStateTest ConversationClientTest UpdatePolicyTest UpdateReleaseTest UpdateNetworkTest UpdateStateTest; do
  "$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR":build/test-lib/json.jar "com.simon.mytasks.$test"
 done
 # Controller behavior with deterministic host-only storage/dispatch/transport seams.
@@ -31,3 +31,5 @@ mkdir -p "$TEST_BUILD_DIR/api"
 "$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d "$TEST_BUILD_DIR/api" tests/api-stubs/com/simon/mytasks/Store.java src/com/simon/mytasks/{Api,Core,AuthPolicy,AuthClient}.java tests/ApiAuthGateTest.java
 "$JAVA_HOME/bin/java" -cp "$TEST_BUILD_DIR/api":build/test-lib/json.jar com.simon.mytasks.ApiAuthGateTest
 python3 -m unittest discover -s tests -p 'test_*.py'
+# Actual Activity/presenter/poll methods with synthetic host seams, no Android runtime claim.
+JAVA_HOME="$JAVA_HOME" python3 tests/run_redesign_regressions.py

@@ -2,6 +2,10 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Local Android redesign preview
+
+The opt-in native `1.4.0-preview` (code6) includes recycled compact task rows, contextual actions, snapshot-bound update sheets and messaging-style saved conversations. Preview APK: https://github.com/SigOiry/my-tasks-android/releases/download/v1.4.0-preview/my-tasks.apk . Local build output: `android/build/my-tasks.apk`. See `android/REDESIGN.md` for architecture, verification and still-open device gates. Glass is a translucent-highlight approximation, not true backdrop blur. Preview distribution is separate from the stable release; no production backend deployment or stable-release promotion is included.
+
 ## Open or install
 
 - **Browser workspace:** https://task.oirysimon.com

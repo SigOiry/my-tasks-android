@@ -10,13 +10,21 @@ import android.widget.*;
 
 /** Restrained navigation materials over opaque content; no optical-refraction claim. */
 final class WorkspaceUi {
+ // dp/sp and millisecond semantic scales; keep legacy methods source-compatible.
+ static final int SPACE_UNIT=4, PAGE_GUTTER=20, ROW_MIN=72, ACTION_MIN=48;
+ static final int TYPE_TITLE=16, TYPE_CONTEXT=13, TYPE_HEADING=24;
+ static final int RADIUS_ROW=12, RADIUS_CONTROL=24, RADIUS_SHEET=28;
+ static final int ELEVATION_FLOATING=6, ELEVATION_SHEET=12;
+ static final long MOTION_FEEDBACK=140L, MOTION_NAVIGATION=220L, MOTION_SHEET=280L;
  final Context context;final Typeface font;
  final int canvas,surface,ink,secondary,border,primary,soft,danger,onPrimary;
+ final int unread,focus,separator;
  WorkspaceUi(Context c,boolean dark){
   context=c;Typeface loaded;try{loaded=c.getResources().getFont(R.font.inter_variable);}catch(Exception e){loaded=Typeface.create("sans-serif",Typeface.NORMAL);}font=loaded;
-  canvas=color(dark?"#0b0d12":"#f2f2f7");surface=color(dark?"#1c1c1e":"#ffffff");
+  canvas=color(dark?"#101318":"#f3f4f7");surface=color(dark?"#1c2028":"#ffffff");
   ink=color(dark?"#f5f5f7":"#1c1c1e");secondary=color(dark?"#aaaab3":"#63636b");border=color(dark?"#34363d":"#d9d9df");
   primary=color(dark?"#66aaff":"#005ac8");soft=color(dark?"#202e46":"#e8f0ff");danger=color(dark?"#ffb4ab":"#a3322c");onPrimary=color(dark?"#0b0d12":"#ffffff");
+  unread=primary;focus=primary;separator=border;
  }
  static int color(String s){return Color.parseColor(s);}
  boolean motionEnabled(){return !context.getSharedPreferences("appearance",Context.MODE_PRIVATE).getBoolean("reduce_motion",false)&&android.animation.ValueAnimator.areAnimatorsEnabled()&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,1)>0&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,1)>0;}
