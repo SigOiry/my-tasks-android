@@ -1,4 +1,4 @@
-name: Android policy tests
+name: Source checks
 on:
   push:
     branches: [main]
@@ -21,6 +21,14 @@ jobs:
           java-version: '17'
       - name: Run native-independent policy tests
         run: bash android/test.sh
+      - name: Test browser policy and deferred chat behavior
+        run: |
+          node --check server/web/app.js
+          node --test server/tests/web_*.test.mjs
+      - name: Verify reproducible web bundle
+        run: |
+          python3 server/build_web.py
+          git diff --exit-code -- server/web_dist
       - name: Reject private material in tracked paths
         run: |
           python3 - <<'PY'

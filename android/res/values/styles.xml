@@ -1,0 +1,28 @@
+<resources>
+ <style name="MyTasks.Light" parent="android:style/Theme.Material.Light.NoActionBar">
+  <item name="android:fontFamily">sans-serif</item>
+  <item name="android:colorAccent">#23674b</item>
+  <item name="android:colorControlActivated">#23674b</item>
+  <item name="android:colorControlNormal">#63746a</item>
+  <item name="android:colorButtonNormal">#ffffff</item>
+  <item name="android:colorBackground">#f7f8f5</item>
+  <item name="android:windowBackground">#f7f8f5</item>
+  <item name="android:textColorPrimary">#17251f</item>
+  <item name="android:textColorSecondary">#63746a</item>
+  <item name="android:textColorHint">#63746a</item>
+  <item name="android:windowActionModeOverlay">true</item>
+ </style>
+ <style name="MyTasks.Dark" parent="android:style/Theme.Material.NoActionBar">
+  <item name="android:fontFamily">sans-serif</item>
+  <item name="android:colorAccent">#abd8ba</item>
+  <item name="android:colorControlActivated">#abd8ba</item>
+  <item name="android:colorControlNormal">#a7b9ad</item>
+  <item name="android:colorButtonNormal">#1a2820</item>
+  <item name="android:colorBackground">#111b16</item>
+  <item name="android:windowBackground">#111b16</item>
+  <item name="android:textColorPrimary">#eef4ef</item>
+  <item name="android:textColorSecondary">#a7b9ad</item>
+  <item name="android:textColorHint">#a7b9ad</item>
+  <item name="android:windowActionModeOverlay">true</item>
+ </style>
+</resources>

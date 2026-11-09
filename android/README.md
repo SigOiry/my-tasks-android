@@ -1,6 +1,6 @@
 # My Tasks — native Android
 
-Native Java Android app, package `com.simon.mytasks`, version **1.1.0 (2)**, min SDK 26 (Android 8), compile/target SDK 35 (Android 15). The APK is a native Android installable, not a web wrapper. No Gradle or app-library dependencies. JVM tests download one checksum-pinned JSON test jar on their first run; no test library is bundled in the APK.
+Native Java Android app, package `com.simon.mytasks`, version **1.2.0 (3)**, min SDK 26 (Android 8), compile/target SDK 35 (Android 15). The APK is a native Android installable, not a web wrapper. No Gradle or app-library dependencies. JVM tests download one checksum-pinned JSON test jar on their first run; no test library is bundled in the APK.
 
 ## Build and install
 
@@ -22,11 +22,11 @@ Prerequisites: JDK 17, Python 3, Android platform `android-35`, build-tools `35.
 
 ## App updates
 
-Install **1.1.0 manually once** over 1.0.0 using the same package/signature; 1.0.0 has no updater. Thereafter the app checks stable public GitHub releases on the first foreground launch each local day, independently of server settings. **Settings → Check for updates** is always available, even without an account or while task/chat work is pending; internet access is required. Updates require explicit acceptance, cryptographic/package/version/signer verification, Android per-app installation permission, and Android system confirmation. Save unsaved task edits/chat drafts first. Automatic failures are quiet and retry on a different local day; manual checks show errors or up-to-date status. See `UPDATER.md` for metadata generation, the exact public schema, lifecycle/security policy and runtime-verification limitations.
+Install **1.1.0 or later manually once** over 1.0.0 using the same package/signature; 1.0.0 has no updater. Thereafter the app checks stable public GitHub releases on the first foreground launch each local day, independently of server settings. **Settings → Check for updates** is always available, even without an account or while task/chat work is pending; internet access is required. Updates require explicit acceptance, cryptographic/package/version/signer verification, Android per-app installation permission, and Android system confirmation. Save unsaved task edits/chat drafts first. Automatic failures are quiet and retry on a different local day; manual checks show errors or up-to-date status. See `UPDATER.md` for metadata generation, the exact public schema, lifecycle/security policy and runtime-verification limitations.
 
 ## Connect
 
-1. Open **Settings**, enter an HTTPS origin such as `https://tasks.example` and the companion server bearer token.
+1. Open **Settings**, use the suggested `https://task.oirysimon.com` origin or enter your custom HTTPS origin (saved servers are never replaced by the suggestion) and the companion server bearer token.
 2. Use a publicly trusted or device-trusted TLS certificate. HTTP, URL credentials, paths, fragments, queries and automatic redirects are rejected. There is deliberately no cleartext developer bypass.
 3. Save and reconnect. Changing connection settings clears cached tasks, notification cursors and current chat/drafts, even when changing token on the same server. This avoids cross-account data leakage.
 4. Enable notifications explicitly in Settings. Android 13+ asks for notification runtime permission. Denial does not prevent using tasks; you can enable notifications later in system settings.
@@ -35,13 +35,15 @@ The token is AES-GCM encrypted using a non-exportable Android Keystore key with 
 
 ## Use
 
-- Search and **Active / Today / Week / All / Trash** views. Today includes overdue tasks; Week includes overdue tasks through the server's `week_end`. Dates and week boundary come from the server rather than the phone clock.
-- Tasks are grouped by project/category, then high / medium / low priority, then deadline (undated last). Unread updates get a badge and an explicit exact-token **Mark this update read** action after the summary is displayed.
+- Search and visibly selected **Active / Today / Week / All / Trash** views. Today includes overdue tasks; Week includes overdue tasks through the current local Sunday. Views and readable date labels use the phone’s local calendar; stored dates are never rewritten. Filter by project, and choose Project, Priority, or Due date sorting.
+- Default grouping is project/category, then high / medium / low priority and deadline (undated last). Rows show explicit priority, status, due and unread labels. Unread summaries appear before task content, with an exact-token **Mark displayed update read** action. A stale acknowledgement keeps the summary/draft and offers Refresh summary; opening a task never acknowledges it.
 - At widths **720dp and above**, list and detail panes appear side-by-side. Narrow layouts use task navigation. Rotation, resizing and light/dark changes rebuild the native layout while keeping selection, edits, search, filter, scroll, chat text/history and in-flight requests. Saved instance state supports ordinary process recreation; it does not store credentials.
 - Edit title, description, private notes, status, priority, date and project; create, complete, soft-delete after confirmation, or restore from Trash. A revision is sent on every existing-task mutation. On HTTP 409, the unsaved draft stays visible; copy needed fields and choose **Reload latest** before editing again. There is no forced overwrite.
 - Offline cache is **read-only**. A successful refresh is required before editing or chat. There is no hidden mutation queue. GETs have one bounded retry; writes and chat are never automatically replayed because their result can be ambiguous after a network failure. Refresh before deciding to retry a write.
-- **Ask Hermes** provides task-linked text questions and email drafts through `/api/chat`, with up to 12 prior turns and an exact 60,000-byte UTF-8 serialized body budget. Oldest whole turns are evicted as needed, including JSON framing/escaping, task ID, mode and the full current message. Prior turns outside the server schema (such as an oversized provider reply) are omitted whole. Your current message is independently checked at 1–8,000 Unicode codepoints and is never silently shortened. HTTP 413 explains that input must change and identical resubmission is blocked within the activity. Chat read timeout is 200 seconds; a timeout or interrupted activity does not prove server/provider cancellation. Copy warns that the original provider request may still be running; chat is never automatically replayed, and manual re-send may duplicate provider work. Nothing in the app sends email. Provider errors are displayed, not replaced with fabricated replies.
-- **Voice input** launches the installed platform speech recognizer only after a privacy notice. That recognizer may transmit audio to its own provider. My Tasks requests no microphone permission and records no audio itself. The returned transcript is editable and is **never sent automatically**. Missing recognizers are handled with a type-instead message.
+- Distinct **Details / Hermes** modes separate task inspection/editing from conversation. Details show readable source/account context, not raw evidence/provider JSON; only supplied safe HTTPS source links are offered, with browser confirmation and no server credential. Reading and editing are separate states, with a primary Save, secondary completion, discard confirmation and separated destructive Trash action. System/Light/Dark themes share native forest-accent components.
+- **Hermes** provides task-linked text questions and email drafts through `/api/chat`, with up to 12 prior turns and an exact 60,000-byte UTF-8 serialized body budget. Oldest whole turns are evicted as needed, including JSON framing/escaping, task ID, mode and the full current message. Prior turns outside the server schema (such as an oversized provider reply) are omitted whole. Your current message is independently checked at 1–8,000 Unicode codepoints and is never silently shortened. HTTP 413 explains that input must change and identical resubmission is blocked within the activity. Chat read timeout is 200 seconds; a timeout or interrupted activity does not prove server/provider cancellation. Copy warns that the original provider request may still be running; chat is never automatically replayed, and manual re-send may duplicate provider work. Nothing in the app sends email. Provider errors are displayed, not replaced with fabricated replies.
+- Hermes responses are selectable and offer **Copy response / draft**. The clipboard is user-controlled and may be visible to the OS/other authorized apps.
+- **Review voice input** launches the installed platform speech recognizer only after a privacy notice. That recognizer may transmit audio to its own provider. My Tasks requests no microphone permission and records no audio itself. The returned transcript is editable and is **never sent automatically**. Missing recognizers are handled with a type-instead message.
 
 ## Notification contract and limitations
 
@@ -51,7 +53,10 @@ The first event poll establishes a quiet baseline (including paginated history),
 
 ## Code
 
-- `MainActivity.java`: native responsive home/detail/editor/chat/settings/voice UI.
+- `MainActivity.java`: native responsive workspace, reading/editor/Hermes modes, settings and voice UI.
+- `WorkspaceUi.java`: shared theme tokens, native buttons/inputs/badges/ripple states and icon treatments.
+- `PresentationPolicy.java` / `tests/PresentationPolicyTest.java`: 46 pure JVM checks for local dates, views/search/project filters, nonmutating sort, readable source context, supplied-link safety and acknowledgement-conflict copy.
+- `res/values/styles.xml`, `res/drawable/ic_*.xml`: harmonious light/dark native themes and monochrome vector assets.
 - `Store.java`: encrypted credentials, account epochs, atomic app-private cache, durable cursors.
 - `Api.java`: serialized background execution, timeout-bound HTTPS JSON, no redirects, safe errors and limited GET retries.
 - `PollService.java`: persisted periodic job, initial quiet baseline, notifications and cursor handling.
@@ -65,7 +70,7 @@ The companion backend contract is maintained with the server source; the public 
 
 ## Verification boundary
 
-The project was compiled and signed with the installed JDK/SDK, and the resulting APK passed `apksigner verify`, `zipalign -c` and `aapt2 dump badging`. JVM tests were executed. There is **no connected device, emulator or KVM here**: installation, launch, layout appearance, runtime Keystore, rotation, actual notification delivery, recognizer availability and Android HTTPS integration still require device QA. See `TESTING.md`. No live task mutations were performed for Android verification.
+The project was compiled and signed with the installed JDK/SDK, and the resulting APK passed `apksigner verify`, `zipalign -c` and `aapt2 dump badging`. JVM tests were executed. There is **no connected device, emulator or KVM here**: installation, launch, layout appearance, runtime Keystore, rotation, actual notification delivery, recognizer availability and Android HTTPS integration still require device QA. See `TESTING.md` and `UI-ACCEPTANCE.md`. No live task mutations were performed for Android verification.
 
 ## Official Android references consulted
 

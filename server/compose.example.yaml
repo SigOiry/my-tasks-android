@@ -1,0 +1,66 @@
+services:
+  my-tasks-mobile:
+    image: nousresearch/hermes-agent:latest
+    user: "10000:10000"
+    working_dir: /opt/data/workspace/my-tasks-mobile/server
+    entrypoint: ["/opt/hermes/.venv/bin/python", "-m", "uvicorn"]
+    command: ["mobile_api:create_app", "--factory", "--host", "0.0.0.0", "--port", "9120", "--workers", "1", "--no-access-log", "--no-proxy-headers", "--limit-concurrency", "32"]
+    restart: unless-stopped
+    ports:
+      - "${MOBILE_BIND_ADDRESS:-127.0.0.1}:9120:9120"
+    environment:
+      HERMES_HOME: /opt/data
+      PYTHONPATH: /opt/hermes
+      PYTHONDONTWRITEBYTECODE: "1"
+      MOBILE_TOKEN_FILE: /opt/data/workspace/my-tasks-mobile/server/.secrets/mobile_token
+      MOBILE_TASK_DB: /opt/data/personal-assistant/tasks.json
+      MOBILE_WEB_ORIGIN: https://task.oirysimon.com
+      MOBILE_METADATA_DB: /opt/data/workspace/my-tasks-mobile/server/state/events.sqlite
+      MOBILE_APK_DIR: /opt/data/workspace/my-tasks-mobile/server/public
+      TMPDIR: /opt/data/cache/scratch
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 1g
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    volumes:
+      # Existing credential pool may need atomic OAuth refresh writes. No host tools are exposed.
+      - type: volume
+        source: hermes_data
+        target: /opt/data
+      - type: volume
+        source: hermes_data
+        target: /opt/data/plugins/personal-tasks
+        read_only: true
+        volume:
+          subpath: plugins/personal-tasks
+      - type: volume
+        source: hermes_data
+        target: /opt/data/workspace/my-tasks-mobile/server
+        read_only: true
+        volume:
+          subpath: workspace/my-tasks-mobile/server
+      - type: volume
+        source: hermes_data
+        target: /opt/data/workspace/my-tasks-mobile/server/state
+        volume:
+          subpath: workspace/my-tasks-mobile/server/state
+      # Set to the Docker HOST's actual shared-volume path + /personal-assistant/taskdb.py.
+      # Required to enforce readonly canonical code without preventing task JSON atomic replace.
+      - type: bind
+        source: ${TASKDB_HOST_PATH:?Set exact Docker host path to canonical personal-assistant/taskdb.py}
+        target: /opt/data/personal-assistant/taskdb.py
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", "/opt/hermes/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9120/health',timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  hermes_data:
+    external: true
+    name: ${HERMES_DATA_VOLUME:?Set the existing Hermes data volume name}

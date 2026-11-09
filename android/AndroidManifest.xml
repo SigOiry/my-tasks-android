@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.simon.mytasks" android:versionCode="2" android:versionName="1.1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.simon.mytasks" android:versionCode="3" android:versionName="1.2.0">
  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35"/>
  <uses-permission android:name="android.permission.INTERNET"/>
  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -9,7 +9,7 @@
   <intent><action android:name="android.speech.action.RECOGNIZE_SPEECH"/></intent>
   <intent><action android:name="android.intent.action.INSTALL_PACKAGE"/><data android:scheme="content" android:mimeType="application/vnd.android.package-archive"/></intent>
  </queries>
- <application android:label="My Tasks" android:theme="@android:style/Theme.Material.NoActionBar" android:icon="@drawable/ic_tasks" android:allowBackup="false" android:fullBackupContent="false" android:usesCleartextTraffic="false" android:supportsRtl="true" android:resizeableActivity="true">
+ <application android:label="My Tasks" android:theme="@style/MyTasks.Light" android:icon="@drawable/ic_tasks" android:allowBackup="false" android:fullBackupContent="false" android:usesCleartextTraffic="false" android:supportsRtl="true" android:resizeableActivity="true">
   <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize" android:launchMode="singleTop" android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|uiMode">
    <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
   </activity>

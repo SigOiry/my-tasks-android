@@ -32,7 +32,7 @@ Exact JSON contract (real values must come from the script, not this illustratio
 
 ## User flow
 
-1. **Install 1.1.0 manually once over 1.0.0**, without uninstalling. Version 1.0.0 has no updater. Installation must retain the same package and signing identity.
+1. **Install the latest updater-enabled release (1.2.0 or later) manually once over 1.0.0**, without uninstalling. Version 1.0.0 has no updater. The updater was introduced in the 1.1.0 source; installation must retain the same package and signing identity.
 2. On the first foreground/resume each local calendar day, 1.1.0 queries the public endpoint `https://api.github.com/repos/SigOiry/my-tasks-android/releases/latest`. It works before configuring a task server. No background poll/job is added for app updates.
 3. Stable means `draft=false`, `prerelease=false`, and a valid `published_at` timestamp. Only an integer metadata version code **greater** than the actually installed version is offered; version names never determine order. Equal or older releases report "up to date" when checked manually.
 4. A newer release shows its version and bounded **plain-text** notes, with **Update / Later**. The warning asks the user to save unsaved task fields and chat drafts before installing. No HTML, WebView, auto-clicked links or release-supplied intents are used.

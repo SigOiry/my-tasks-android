@@ -1,0 +1,26 @@
+/* Destructive only to the scratch browser session; never to task data. */
+(async()=>{
+ if(location.origin!=='http://127.0.0.1:9138')throw new Error('Scratch loopback browser only.');
+ const $=id=>document.getElementById(id);
+ for(const d of document.querySelectorAll('dialog[open]'))d.close();
+ // Open an ordinary task so its private category is populated in the inspector.
+ document.querySelector('[data-view=active]').click();
+ const row=Array.from(document.querySelectorAll('.task-row')).find(e=>!e.classList.contains('unread'));
+ if(!row)throw new Error('A read task is required.');
+ row.querySelector('.task-open').click();
+ const wait=async f=>{for(let i=0;i<80;i++){if(f())return;await new Promise(r=>setTimeout(r,50));}throw new Error('Timeout');};
+ await wait(()=>$('task-dialog').open);
+ if(!$('detail-context').textContent)throw new Error('Inspector was not populated.');
+ $('task-dialog').querySelector('.close-dialog').click();
+ const settings=innerWidth<=700?$('mobile-settings'):$('settings-button');settings.click();
+ await wait(()=>$('settings-dialog').open);$('logout').click();
+ await wait(()=>!$('login').hidden);
+ const session=await(await fetch('/auth/session')).json();
+ if(session.authenticated)throw new Error('Session not revoked.');
+ for(const id of ['project-filter','project-options','projects','detail-context','detail-heading','chat-log','task-list','updates-title','source-links','source-accounts']){
+  if($(id).textContent.trim())throw new Error('Private DOM remains in '+id);
+ }
+ for(const e of document.querySelectorAll('input,textarea'))if(e.value)throw new Error('Private form value remains.');
+ if(Object.keys(localStorage).some(k=>k.startsWith('mytasks.web.')))throw new Error('Workspace storage remains.');
+ return {passed:true,checks:['server revocation','private DOM cleared','form values cleared','workspace cursor/preferences cleared','public login restored']};
+})()

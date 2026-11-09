@@ -15,8 +15,9 @@ if not p.exists():
     p.write_bytes(data)
 if hashlib.sha256(p.read_bytes()).hexdigest()!=expected: raise SystemExit('JSON dependency checksum mismatch')
 PY
-"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d build/tests src/com/simon/mytasks/{Core,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
+"$JAVA_HOME/bin/javac" --release 8 -cp build/test-lib/json.jar -d build/tests src/com/simon/mytasks/{Core,PresentationPolicy,UpdatePolicy,UpdateIO,UpdateRelease,UpdateNetwork,UpdateState}.java tests/{CoreTest,PresentationPolicyTest,UpdatePolicyTest,UpdateReleaseTest,UpdateNetworkTest,UpdateStateTest}.java
 "$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.CoreTest "${1:-all}"
+"$JAVA_HOME/bin/java" -cp build/tests:build/test-lib/json.jar com.simon.mytasks.PresentationPolicyTest
 "$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.UpdatePolicyTest
 "$JAVA_HOME/bin/java" -cp build/tests:build/test-lib/json.jar com.simon.mytasks.UpdateReleaseTest
 "$JAVA_HOME/bin/java" -cp build/tests com.simon.mytasks.UpdateNetworkTest

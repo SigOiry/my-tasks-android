@@ -1,12 +1,18 @@
 # Verification
 
+## Version 1.2.0 / code 3 UI handoff
+
+The signed code-3 APK was rebuilt with JDK 17 / Android SDK 35. Full output is in `build/build-v1.2.0.log`; package/version/min/target, v2/v3 signature and alignment checks passed. The signer matches the original code-2 APK. No connected device (`adb devices -l` is empty) or `/dev/kvm` is available: no native screenshots or runtime claims are made. See `UI-ACCEPTANCE.md` for composition, exact artifacts and the remaining physical-device matrix.
+
+Presentation tests were run RED for missing date/filter/sort/source behavior, unsafe percent-encoded source controls, and missing acknowledgement-conflict copy, then GREEN after implementation. Reviewed corrections also ran RED/GREEN for exact Work/work project enumeration and Trash-only project inclusion; tests exercise selecting each exact identity, reset, view membership and stable ordering. Python XML-topology tests ran RED for missing scroll-safe resources, then GREEN for one compact header/controls/rows scroll and the preserved expanded layout. They inspect the actual layout XML resources used by the Activity, not Java source substrings, but do not inflate or measure Android views or prove gestures/focus/IME behavior. JVM tests run real pure presentation policy with deterministic dates/locales and synthetic in-memory test objects; no task server or live task data is accessed.
+
 ## Executed here
 
 - Pure JVM test-first URL-origin cycle: initial implementation threw `IllegalArgumentException: Not implemented`; after implementation, `PASS 8 checks (url)`.
 - Ordering cycle: initial constant comparator failed `AssertionError: project then priority then due; missing last`; implemented comparator passed.
 - Cursor/event cycle: initial no-op cursor failed `AssertionError: advance on handled event`; implemented monotonic handling and bootstrap/permission decisions passed.
 - Task path encoding cycle: initial identity function failed `AssertionError: task ID never changes URL path or query`; encoded segment implementation passed.
-- Current suite: `bash test.sh` → **Core 50, updater policy 51, release parsing 18, transport 15, consent/single-flight state 30 assertions; Python metadata generator 4 tests**. Tests run real policy/parser/stream code; transport tests inject deterministic HTTP connections. The JSON JVM-only dependency is checksum-pinned and not bundled in the APK.
+- Current suite: `bash test.sh` → **233 JVM assertions: Core 50, UI presentation 69, updater policy 51, release parsing 18, transport 15, consent/single-flight state 30; Python metadata generator 4 tests plus layout topology 2 tests**. Tests run real policy/parser/stream code; transport tests inject deterministic HTTP connections. The JSON JVM-only dependency is checksum-pinned and not bundled in the APK.
 - Full APK build: `bash build.sh` → Java compilation, D8, aapt2 resource/manifest packaging, zipalign, persistent local signing and verification succeeded.
 - APK v2/v3 signatures verified by SDK `apksigner`; minSdk 26 and targetSdk 35 reported by SDK `aapt2 dump badging`.
 - No live task mutation was used for Android tests.
