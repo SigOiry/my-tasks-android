@@ -1,0 +1,2 @@
+package com.simon.mytasks;
+public class EmailReplyDiffTest{public static void main(String[] x){String diff=EmailReplyDiffPolicy.compare("Hello old friend","Hello new friend");if(!diff.equals("Hello [-old-]{+new+} friend"))throw new AssertionError(diff);if(!EmailReplyDiffPolicy.compare("same","same").equals("No text changes."))throw new AssertionError();System.out.println("EmailReplyDiffTest passed");}}

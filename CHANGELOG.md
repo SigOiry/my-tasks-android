@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.6.2
+
+- Add contextual Reply to email-driven task updates and task details without acknowledging the update. Explicit selection resolves historical/multiple sources; future reviewed origins are bound to the exact task snapshot.
+- Add dedicated durable email drafts with optimistic saves, reopening, original-thread/account/Reply-To/Reply-all handling and sender/recipient/context review. Send requires an immutable confirmation and durable identity; uncertain transport outcomes never resend automatically.
+- Add optional AI drafting, writing improvement diffs and persistent draft-specific discussion. All AI work is tool-free; proposals require explicit revision-safe Apply, and never send or overwrite newer writing.
+- Add adaptive native phone/inner-display and desktop editor/assistant workspaces with state, keyboard and selection preservation.
+- Persist source receipts separately from immutable assistant content; render compact citations, private email context, unavailable references and provenance warnings. Preserve parenthesized source URLs and safe Markdown formatting.
+- Add asynchronous subject titles with topic-change cadence and permanent manual-title ownership.
+- Close pre-release races involving stale thread review, late dialogs, duplicate assistant admission and cross-source request identities.
+- Preserve the canonical task/account/conversation stores, original Android signer, exact acknowledgement and bounded public-chat research. Dedicated confirmed sending is not an AI tool.
+- Android version `1.6.2`, code `12`. Physical Samsung/One UI and real external-mail delivery remain separate acceptance checks; development uses isolated fixture transports.
+
 ## 1.6.1
 
 Android visibility fixes and independently reviewed shared-chat public research routing. The final backend privacy gate passed after adding indirect-writing/gerund, opt-out modifier/apostrophe and social/capability regressions. Release assets retain the original signer and standard updater metadata.

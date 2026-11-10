@@ -13,6 +13,10 @@ from fastapi.testclient import TestClient
 
 class ConversationTests(unittest.TestCase):
     def setUp(self):
+        from unittest.mock import patch
+        title_patch = patch('conversations.generate_title', False)
+        title_patch.start()
+        self.addCleanup(title_patch.stop)
         self.tmp = tempfile.TemporaryDirectory(dir='/opt/data/cache/scratch')
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -62,7 +66,8 @@ class ConversationTests(unittest.TestCase):
             self.assertEqual(response.status_code, 202)
             final = self.wait(thread['id'], payload['request_id'])
             self.assertEqual(final['status'], 'succeeded')
-            self.assertIn(source, final['assistant_message']['content'])
+            self.assertEqual(final['assistant_message']['content'], 'Evidence-backed answer')
+            self.assertEqual(final['assistant_message']['citation_metadata']['sources'][0]['url'],source)
             self.assertIsNone(final['web_phase'])
             replay = self.client.post('/api/conversations/'+thread['id']+'/messages', headers=self.auth, json=payload)
             self.assertEqual(replay.json()['request']['assistant_message'], final['assistant_message'])
@@ -71,7 +76,7 @@ class ConversationTests(unittest.TestCase):
             self.assertEqual(phases, ['answering'])
         from conversations import ConversationStore
         reopened = ConversationStore(self.root/'conversations.sqlite')
-        self.assertIn(source, reopened.request(thread['id'], payload['request_id'])['assistant_message']['content'])
+        self.assertEqual(source, reopened.request(thread['id'], payload['request_id'])['assistant_message']['citation_metadata']['sources'][0]['url'])
         script = 'from conversations import ConversationStore; import sys,json; print(json.dumps(ConversationStore(sys.argv[1]).request(sys.argv[2],sys.argv[3])))'
         fresh = subprocess.run([sys.executable, '-c', script, str(self.root/'conversations.sqlite'), thread['id'], payload['request_id']], capture_output=True, text=True, check=True)
         self.assertEqual(json.loads(fresh.stdout)['assistant_message'], final['assistant_message'])

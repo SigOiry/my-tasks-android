@@ -53,6 +53,10 @@ def call_llm(**kwargs):
         raise RuntimeError('Configured model unavailable') from None
 
 
+# Distinct injectable boundary keeps title work out of reply mock call counts.
+call_title_llm = call_llm
+
+
 def _provider_main():
     logging.disable(logging.CRITICAL)
     try:

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "review_id": "deleg_5768a8d4",
+  "summary": "Final focused backend/web re-review passed: fresh-context confirmation fencing, citation warnings/unresolved references, late-review cancellation, durable assistant admission identity, Nantes source mapping and packaged asset parity.",
+  "tests": {"email_backend":25,"web_complete":135,"backend_complete":164,"citation_storage_integration":3},
+  "reviewer_source_edits": false,
+  "reviewer_live_provider_calls": false,
+  "reviewer_production_writes": false,
+  "web_bundle": "web-a4563f6caad0"
+}

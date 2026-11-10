@@ -1,0 +1,1 @@
+    topResumedActivity=ActivityRecord{184728979 u0 com.simon.mytasks/.MainActivity t61}

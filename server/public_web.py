@@ -196,7 +196,8 @@ def request_urls(prompt):
     Direct input is narrower than discovered public links: one URL, no query or
     fragment, no account/contact/opaque-token path. Never send it to search.
     """
-    return [match.group(0).rstrip('.,;!) ]}') for match in REQUEST_URL.finditer(prompt)]
+    from citations import trim_url
+    return [trim_url(match.group(0)) for match in REQUEST_URL.finditer(prompt)]
 
 
 def _safe_request_url(url):
@@ -311,7 +312,12 @@ def normal_answer(messages, call_llm, *, current_request, progress=lambda phase:
         return call_llm(task='mobile_tasks', messages=context, tools=tools, max_tokens=1800, timeout=timeout).choices[0].message
     if decision != 'public':
         text = _text(ask(messages, []))
-        return ('Public web access was not used: privacy guard requires a short, non-personal public topic.\n\n' if decision == 'private' else '') + text
+        from citations import CitedText, empty_metadata
+        metadata = empty_metadata()
+        warning = 'Public web access was not used: privacy guard requires a short, non-personal public topic.'
+        if decision == 'private':
+            metadata['warnings'] = [warning]
+        return CitedText(text,metadata,(warning+'\n\n' if decision=='private' else '')+text)
     deadline = time.monotonic() + 145
     sources, evidence, failures = {}, [], []
     def remaining(limit):
@@ -454,12 +460,17 @@ def normal_answer(messages, call_llm, *, current_request, progress=lambda phase:
         payload = render(low)
     context[-1]['content'] += separator + payload
     text = _text(ask(context, [], timeout=max(1, min(45, deadline - time.monotonic()))))
+    original = text
+    from citations import CitedText, public_metadata, trim_url
     def grounded_link(match):
-        url = match.group(0).rstrip('.,;:')
+        url = trim_url(match.group(0))
         return match.group(0) if url in sources else '[unverified URL omitted]'
-    text = re.sub(r'https?://[^\s\)\]>]+', grounded_link, text)
+    text = re.sub(r'https?://[^\s\]<>]+', grounded_link, text)
     footer = '\n\nSources:\n' + '\n'.join(label + ': ' + url for url, label in sources.items()) if sources else ''
-    return ('\n'.join(dict.fromkeys(failures)) + '\n\n' if failures else '') + text + footer
+    metadata = public_metadata(sources)
+    if failures:
+        metadata['warnings'] = list(dict.fromkeys(failures))
+    return CitedText(original, metadata, ('\n'.join(dict.fromkeys(failures)) + '\n\n' if failures else '') + text + footer)
 
 
 def _main():

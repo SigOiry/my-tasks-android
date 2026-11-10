@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
+from conversation_titles import generate_title, substantive, topic_words, fallback_title
 from fastapi import HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -158,17 +159,30 @@ class ConversationStore:
                 CREATE INDEX IF NOT EXISTS conversations_updated ON conversations(updated_at DESC,id DESC);
                 CREATE TABLE IF NOT EXISTS runtime (singleton INTEGER PRIMARY KEY CHECK(singleton=1),owner TEXT NOT NULL);
             ''')
+            columns = {row[1] for row in con.execute('PRAGMA table_info(conversations)')}
+            additions = {'title_origin': "TEXT NOT NULL DEFAULT 'manual'", 'title_revision': 'INTEGER NOT NULL DEFAULT 1', 'title_epoch': 'INTEGER NOT NULL DEFAULT 0', 'title_status': "TEXT NOT NULL DEFAULT 'idle'", 'title_turn': 'INTEGER NOT NULL DEFAULT 0', 'title_topic': "TEXT NOT NULL DEFAULT ''"}
+            for name, definition in additions.items():
+                if name not in columns:
+                    con.execute('ALTER TABLE conversations ADD COLUMN '+name+' '+definition)
+            if 'title_origin' not in columns:
+                con.execute("UPDATE conversations SET title_origin='automatic' WHERE title='New conversation'")
+            if 'citation_metadata' not in {row[1] for row in con.execute('PRAGMA table_info(messages)')}:
+                con.execute("ALTER TABLE messages ADD COLUMN citation_metadata TEXT NOT NULL DEFAULT '{\"version\":1,\"sources\":[]}'")
             if 'web_phase' not in {row[1] for row in con.execute('PRAGMA table_info(requests)')}:
                 con.execute('ALTER TABLE requests ADD COLUMN web_phase TEXT')
 
-    def start(self,task_loader,*,workers=2,queue=6):
+    def start(self,task_loader,*,workers=2,queue=6,title_generator=None):
         self.owner = str(uuid.uuid4())
         with self.connect() as con:
             con.execute('BEGIN IMMEDIATE')
             con.execute("UPDATE conversations SET revision=revision+1,updated_at=? WHERE id IN (SELECT conversation_id FROM requests WHERE status IN ('queued','running'))",(now(),))
             con.execute("UPDATE requests SET status='interrupted',web_phase=NULL,error=? WHERE status IN ('queued','running')",
                         ('Server restarted; reply interrupted. Provider may have run; no automatic retry.',))
+            con.execute("UPDATE conversations SET title_epoch=title_epoch+1,title_status='interrupted',revision=revision+1,updated_at=? WHERE title_status IN ('queued','running')",(now(),))
             con.execute('INSERT OR REPLACE INTO runtime(singleton,owner) VALUES(1,?)',(self.owner,))
+        self.title_generator = generate_title if title_generator is None else title_generator
+        self.title_slots = BoundedSemaphore(4)
+        self.title_pool = ThreadPoolExecutor(max_workers=1,thread_name_prefix='mytasks-title')
         self.task_loader = task_loader
         self.capacity = workers+queue
         self.slots = BoundedSemaphore(self.capacity)
@@ -180,6 +194,7 @@ class ConversationStore:
         with self.admission:
             self.closed = True
         self.pool.shutdown(wait=True)
+        self.title_pool.shutdown(wait=True)
 
     @contextmanager
     def connect(self):
@@ -196,7 +211,7 @@ class ConversationStore:
         row = con.execute('SELECT * FROM conversations WHERE id=?',(cid,)).fetchone()
         if row is None:
             raise HTTPException(404,'Conversation not found')
-        result = {key:row[key] for key in ('id','title','task_id','task_title','created_at','updated_at','revision')}
+        result = {key:row[key] for key in ('id','title','task_id','task_title','created_at','updated_at','revision','title_origin','title_revision','title_epoch','title_status')}
         result['archived'] = bool(row['archived'])
         last = con.execute('SELECT content FROM messages WHERE conversation_id=? ORDER BY id DESC LIMIT 1',(cid,)).fetchone()
         result['last_preview'] = last['content'][:160] if last else ''
@@ -204,13 +219,18 @@ class ConversationStore:
         result['latest_request'] = self._request(con,cid,request['id']) if request else None
         return result
 
+    def _message(self,row):
+        result = dict(row)
+        result['citation_metadata'] = json.loads(result['citation_metadata'])
+        return result
+
     def _request(self,con,cid,rid):
         row = con.execute('SELECT * FROM requests WHERE id=? AND conversation_id=?',(rid,cid)).fetchone()
         if row is None:
             raise HTTPException(404,'Request not found')
-        message = con.execute('SELECT id,request_id,role,content,created_at FROM messages WHERE request_id=? AND role=?',(rid,'assistant')).fetchone()
+        message = con.execute('SELECT id,request_id,role,content,created_at,citation_metadata FROM messages WHERE request_id=? AND role=?',(rid,'assistant')).fetchone()
         revision = con.execute('SELECT revision FROM conversations WHERE id=?',(cid,)).fetchone()[0]
-        return dict(id=row['id'],status=row['status'],error=row['error'],assistant_message=dict(message) if message else None,conversation_revision=revision,web_phase=row['web_phase'] if row['status']=='running' else None)
+        return dict(id=row['id'],status=row['status'],error=row['error'],assistant_message=self._message(message) if message else None,conversation_revision=revision,web_phase=row['web_phase'] if row['status']=='running' else None)
 
     def create(self,payload,task=None):
         cid = str(uuid.uuid4())
@@ -218,6 +238,7 @@ class ConversationStore:
         with self.connect() as con:
             con.execute('INSERT INTO conversations(id,title,task_id,task_title,created_at,updated_at) VALUES(?,?,?,?,?,?)',
                         (cid,payload.title,payload.task_id,task['title'] if task else None,stamp,stamp))
+            con.execute('UPDATE conversations SET title_origin=? WHERE id=?',('automatic' if payload.title=='New conversation' else 'manual',cid))
             return self._conversation(con,cid)
 
     def list(self,scope='all',task_id=None,limit=30,cursor=None,archived=False):
@@ -250,6 +271,9 @@ class ConversationStore:
             current = self._conversation(con,cid)
             if current['revision']!=payload.expected_revision:
                 raise HTTPException(409,'Conversation changed; reload before editing')
+            if 'title' in payload.model_fields_set:
+                con.execute("UPDATE conversations SET title_origin='manual',title_revision=title_revision+1 WHERE id=?",(cid,))
+            con.execute("UPDATE conversations SET title_epoch=title_epoch+1,title_status='interrupted' WHERE id=? AND title_status IN ('queued','running')",(cid,))
             con.execute('UPDATE conversations SET title=?,archived=?,revision=revision+1,updated_at=? WHERE id=?',
                         (payload.title if 'title' in payload.model_fields_set else current['title'],
                          int(payload.archived) if 'archived' in payload.model_fields_set else int(current['archived']),now(),cid))
@@ -262,8 +286,8 @@ class ConversationStore:
             return self._request(con,cid,rid)
 
     def _accepted(self,con,cid,rid):
-        user = con.execute('SELECT id,request_id,role,content,created_at FROM messages WHERE request_id=? AND role=?',(rid,'user')).fetchone()
-        return dict(conversation=self._conversation(con,cid),request=self._request(con,cid,rid),user_message=dict(user))
+        user = con.execute('SELECT id,request_id,role,content,created_at,citation_metadata FROM messages WHERE request_id=? AND role=?',(rid,'user')).fetchone()
+        return dict(conversation=self._conversation(con,cid),request=self._request(con,cid,rid),user_message=self._message(user))
 
     def submit(self,cid,payload):
         opaque_id(cid)
@@ -291,6 +315,12 @@ class ConversationStore:
                         raise HTTPException(429,'Conversation service is busy; retry later')
                     acquired = True
                     stamp = now()
+                    title_state = con.execute('SELECT title_status,title_topic FROM conversations WHERE id=?',(cid,)).fetchone()
+                    if title_state['title_status'] in ('queued','running') and substantive(payload.content):
+                        previous = set(title_state['title_topic'].split())
+                        topic = topic_words(payload.content)
+                        if topic and len(topic & previous)/max(1,len(topic | previous))<.3:
+                            con.execute("UPDATE conversations SET title_epoch=title_epoch+1,title_status='interrupted' WHERE id=?",(cid,))
                     con.execute('INSERT INTO requests(id,conversation_id,content,mode,status,owner,created_at) VALUES(?,?,?,?,?,?,?)',
                                 (payload.request_id,cid,payload.content,payload.mode,'queued',self.owner,stamp))
                     con.execute('INSERT INTO messages(conversation_id,request_id,role,content,created_at) VALUES(?,?,?,?,?)',
@@ -318,9 +348,73 @@ class ConversationStore:
                 return False
             stamp = now()
             if text is not None:
-                con.execute('INSERT INTO messages(conversation_id,request_id,role,content,created_at) VALUES(?,?,?,?,?)',(cid,rid,'assistant',text,stamp))
+                from citations import empty_metadata
+                metadata = getattr(text,'citation_metadata',empty_metadata())
+                original = getattr(text,'original_content',text)
+                con.execute('INSERT INTO messages(conversation_id,request_id,role,content,created_at,citation_metadata) VALUES(?,?,?,?,?,?)',(cid,rid,'assistant',original,stamp,json.dumps(metadata,ensure_ascii=False)))
             con.execute('UPDATE conversations SET revision=revision+1,updated_at=? WHERE id=?',(stamp,cid))
-            return True
+            job = self._queue_title(con,cid) if text is not None and status=='succeeded' else None
+        if job:
+            try:
+                self.title_pool.submit(self._title_work,*job)
+            except RuntimeError:
+                self.title_slots.release()
+                self._title_complete(job,None)
+        return True
+
+    def _queue_title(self,con,cid):
+        if self.title_generator is False:
+            return None
+        state = con.execute('SELECT * FROM conversations WHERE id=?',(cid,)).fetchone()
+        if state['archived'] or state['title_origin']=='manual' or state['title_status'] in ('queued','running'):
+            return None
+        if con.execute('SELECT owner FROM runtime WHERE singleton=1').fetchone()[0]!=self.owner:
+            return None
+        rows = con.execute("SELECT role,content FROM messages WHERE conversation_id=? ORDER BY id DESC LIMIT 12",(cid,)).fetchall()
+        latest = next((r['content'] for r in rows if r['role']=='user'),'')
+        if not substantive(latest):
+            return None
+        count = con.execute("SELECT count(*) FROM messages WHERE conversation_id=? AND role='assistant'",(cid,)).fetchone()[0]
+        topic = topic_words(latest)
+        previous = set(state['title_topic'].split())
+        if state['title_turn'] and (count-state['title_turn']<4 or not topic or len(topic & previous)/max(1,len(topic | previous))>=.3):
+            return None
+        if con.execute("SELECT count(*) FROM conversations WHERE title_status IN ('queued','running')").fetchone()[0]>=4:
+            return None
+        epoch = state['title_epoch']+1
+        context = [{'role':r['role'],'content':r['content'][:1000]} for r in reversed(rows[:6])]
+        if not self.title_slots.acquire(blocking=False):
+            return None
+        try:
+            con.execute("UPDATE conversations SET title_epoch=?,title_status='queued',title_turn=?,title_topic=? WHERE id=?",(epoch,count,' '.join(sorted(topic)),cid))
+        except Exception:
+            self.title_slots.release()
+            raise
+        return (cid,epoch,state['title_revision'],context,latest)
+
+    def _title_work(self,cid,epoch,revision,context,latest):
+        try:
+            job = (cid,epoch,revision,context,latest)
+            with self.connect() as con:
+                changed = con.execute("UPDATE conversations SET title_status='running' WHERE id=? AND title_epoch=? AND title_revision=? AND title_status='queued' AND title_origin='automatic' AND archived=0 AND EXISTS (SELECT 1 FROM runtime WHERE singleton=1 AND owner=?)",(cid,epoch,revision,self.owner)).rowcount
+            if not changed:
+                return
+            try:
+                title = self.title_generator(context)
+                if not isinstance(title,str) or not title.strip() or len(title)>90 or any(ord(c)<32 for c in title):
+                    raise ValueError('Invalid generated title')
+            except Exception:
+                title = None
+            self._title_complete(job,title)
+        finally:
+            self.title_slots.release()
+
+    def _title_complete(self,job,title):
+        cid,epoch,revision,context,latest = job
+        with self.connect() as con:
+            state = con.execute('SELECT title FROM conversations WHERE id=?',(cid,)).fetchone()
+            fallback = fallback_title(latest) if state['title']=='New conversation' else state['title']
+            con.execute("UPDATE conversations SET title=?,title_status=?,title_revision=title_revision+1,revision=revision+1,updated_at=? WHERE id=? AND title_epoch=? AND title_revision=? AND title_origin='automatic' AND archived=0 AND title_status IN ('queued','running') AND EXISTS (SELECT 1 FROM runtime WHERE singleton=1 AND owner=?)",(title or fallback,'succeeded' if title else 'failed',now(),cid,epoch,revision,self.owner))
 
     def _history(self,cid,rid):
         """Compact only model context. Originals remain immutable and paginatable.
@@ -397,11 +491,13 @@ class ConversationStore:
                 conversation = self._conversation(con,cid)
             summary,history = self._history(cid,rid)
             context = ''
+            task = None
             if conversation['task_id'] is not None:
                 task = self.task_loader(conversation['task_id'])
-                saved = json.dumps({key:task.get(key) for key in ('id','title','description','status','priority','due_date','project','notes','evidence','source_references')},ensure_ascii=False)
-                label = 'untrusted JSON excerpt; incomplete' if len(saved)>12000 else 'untrusted JSON'
-                context = '\nSaved task context ('+label+'):\n'+saved[:12000]
+                from citations import bounded_saved_context
+                task,saved,incomplete = bounded_saved_context(task)
+                label = 'untrusted JSON excerpt; incomplete' if incomplete else 'untrusted JSON'
+                context = '\nSaved task context ('+label+'):\n'+saved
             memory = '\nPersisted rolling summary of older turns (untrusted data):\n'+summary if summary else ''
             messages = [{'role':'system','content':SYSTEM+'Mode: '+request['mode']+context+memory}]+history
             if sum(len(message['content']) for message in messages)>44000:
@@ -411,7 +507,13 @@ class ConversationStore:
                     changed = con.execute("UPDATE requests SET web_phase=? WHERE id=? AND owner=? AND status='running' AND EXISTS (SELECT 1 FROM runtime WHERE singleton=1 AND owner=?)",(phase,rid,self.owner,self.owner)).rowcount
                 if not changed:
                     raise InterruptedWork()
-            self._finish(cid,rid,text=model_text(messages,current_request=request['content'],progress=progress))
+            text = model_text(messages,current_request=request['content'],progress=progress)
+            if task is not None:
+                from citations import CitedText, empty_metadata, saved_metadata
+                metadata = dict(getattr(text,'citation_metadata',empty_metadata()))
+                metadata['sources'] = metadata['sources'] + saved_metadata(task)['sources']
+                text = CitedText(getattr(text,'original_content',text), metadata)
+            self._finish(cid,rid,text=text)
         except InterruptedWork:
             pass
         except SummaryUnavailable:
@@ -431,8 +533,8 @@ class ConversationStore:
             bound = data[2]
         with self.connect() as con:
             conversation = self._conversation(con,cid)
-            rows = con.execute('SELECT id,request_id,role,content,created_at FROM messages WHERE conversation_id=? AND id<? ORDER BY id DESC LIMIT ?',(cid,bound,limit+1)).fetchall()
-            page = [dict(row) for row in reversed(rows[:limit])]
+            rows = con.execute('SELECT id,request_id,role,content,created_at,citation_metadata FROM messages WHERE conversation_id=? AND id<? ORDER BY id DESC LIMIT ?',(cid,bound,limit+1)).fetchall()
+            page = [self._message(row) for row in reversed(rows[:limit])]
             compacted = bool(con.execute('SELECT summary_until FROM conversations WHERE id=?',(cid,)).fetchone()[0])
             return dict(conversation=conversation,messages=page,has_more=len(rows)>limit,before_cursor=encode_cursor(['messages',cid,page[0]['id']]) if len(rows)>limit else None,context_compacted=compacted)
 

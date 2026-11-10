@@ -17,16 +17,18 @@ spec.loader.exec_module(dashboard)
 
 
 def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=None,
-               session_path=None, web_origin=None, cookie_secure=True, conversation_path=None, account_path=None, allow_legacy_uninitialized=None):
+               session_path=None, web_origin=None, cookie_secure=True, conversation_path=None, account_path=None, allow_legacy_uninitialized=None,
+               email_path=None, email_provider=None, email_llm=None):
     db_path = Path(db_path or os.environ.get('MOBILE_TASK_DB', '/opt/data/personal-assistant/tasks.json'))
     token_file = Path(token_file or os.environ.get('MOBILE_TOKEN_FILE', '/run/secrets/mobile_token'))
     metadata_path = Path(metadata_path or os.environ.get('MOBILE_METADATA_DB', '/var/lib/my-tasks-mobile/events.sqlite'))
     session_path = Path(session_path or metadata_path.with_name('web-sessions.sqlite'))
     account_path = Path(account_path or os.environ.get('MOBILE_ACCOUNT_DB', str(metadata_path.with_name('account.sqlite'))))
     conversation_path = Path(conversation_path or os.environ.get('MOBILE_CONVERSATIONS_DB', str(metadata_path.with_name('conversations.sqlite'))))
+    email_path = Path(email_path or os.environ.get('MOBILE_EMAIL_DB', str(metadata_path.with_name('email.sqlite'))))
     # Resolve every storage identity before any constructor can create a schema,
     # chmod a file, or recover pending work. Keep original paths for O_NOFOLLOW.
-    paths = (db_path, token_file, metadata_path, session_path, account_path, conversation_path)
+    paths = (db_path, token_file, metadata_path, session_path, account_path, conversation_path, email_path)
     resolved = [path.resolve() for path in paths]
     for index, path in enumerate(paths):
         for previous in range(index):
@@ -44,7 +46,9 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
         try:
             yield
         finally:
-            await asyncio.to_thread(application.state.conversations.close)
+            await asyncio.gather(
+                asyncio.to_thread(application.state.conversations.close),
+                asyncio.to_thread(application.state.email_workspace.close))
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None,lifespan=lifespan)
 
@@ -186,7 +190,7 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
 
     @app.api_route('/assets/{name}',methods=['GET','HEAD'])
     def asset(name: str):
-        if name not in {'app.js','app.css','policy.mjs','conversations.mjs','icon.svg','inter-variable.woff2','INTER-LICENSE.txt'} or (bundle/name).is_symlink() or not (bundle/name).is_file():
+        if name not in {'app.js','app.css','policy.mjs','conversations.mjs','email-workspace.mjs','citations.mjs','icon.svg','inter-variable.woff2','INTER-LICENSE.txt'} or (bundle/name).is_symlink() or not (bundle/name).is_file():
             raise HTTPException(404,'Asset not found')
         media = {'js':'text/javascript','mjs':'text/javascript','css':'text/css','svg':'image/svg+xml','woff2':'font/woff2','txt':'text/plain'}
         return FileResponse(bundle/name,media_type=media[name.rsplit('.',1)[1]])
@@ -244,10 +248,28 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
 
     def saved_task(task_id):
         db = dashboard.taskdb.Store(db_path).read()
-        return dashboard.enrich(dashboard.find_task(db,task_id),db)
+        task = dashboard.find_task(db,task_id)
+        enriched = dashboard.enrich(task,db)
+        # Exact causal email references are separately reviewed, snapshot-bound
+        # metadata. Legacy accumulated source references are never causal proof.
+        origin = db.get('dashboard', {}).get('notification_origins', {}).get(task_id)
+        if isinstance(origin, dict) and origin.get('snapshot') == dashboard.meaningful_snapshot(task):
+            entries = origin.get('origins', [])
+            if isinstance(entries, list):
+                enriched['email_origins'] = [row['reference'] for row in entries[:32]
+                                             if isinstance(row, dict) and row.get('role') == 'trigger'
+                                             and isinstance(row.get('reference'), str)
+                                             and row['reference'] in task.get('source_references', [])]
+        return enriched
 
     install_routes(router,conversations,saved_task)
     app.include_router(router)
+    from email_workspace import EmailWorkspace
+    from email_routes import install_routes as install_email_routes
+    email_workspace = EmailWorkspace(email_path, saved_task, provider=email_provider, call_llm=email_llm)
+    app.state.email_workspace = email_workspace
+    email_workspace.start()
+    install_email_routes(app, email_workspace)
     if account_auth:
         account_auth.install(app)
     return app

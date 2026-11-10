@@ -6,7 +6,6 @@ service. Run from server: python public_web_smoke.py --output <report.json>
 import argparse
 import json
 import logging
-import re
 import tempfile
 import time
 import uuid
@@ -66,13 +65,15 @@ def smoke():
                             raise RuntimeError('Smoke exceeded deadline')
                         time.sleep(.05)
                     text = (request.get('assistant_message') or {}).get('content', '')
+                    metadata = (request.get('assistant_message') or {}).get('citation_metadata', {'version':1,'sources':[]})
                     count_before_replay = (len(calls), len(searches), len(reads))
                     replay = store.submit(c['id'], payload)
                     reopened = ConversationStore(path).request(c['id'], payload.request_id)
                     case = {'kind': kind, 'prompt': prompt, 'status': request['status'], 'reply': text,
                             'seconds': round(time.monotonic()-start, 3), 'phases': phases,
                             'provider_calls': calls[before[0]:], 'searches': searches[before[1]:], 'reads': reads[before[2]:],
-                            'source_urls': list(dict.fromkeys(re.findall(r'https?://[^\s)\]>]+', text))),
+                            'citation_metadata': metadata,
+                            'source_urls': [source['url'] for source in metadata['sources'] if source.get('url')],
                             'replay_no_new_calls': count_before_replay == (len(calls), len(searches), len(reads)),
                             'reopen_exact_reply': reopened['assistant_message'] == request['assistant_message']}
                     report['cases'].append(case)
@@ -81,7 +82,7 @@ def smoke():
                     if kind == 'current':
                         assert case['searches'] and case['source_urls'] and case['reads'], 'No real current-information page evidence'
                     elif kind == 'failure_injected':
-                        assert 'Public web search failed' in text and not case['source_urls']
+                        assert any('Public web search failed' in warning for warning in metadata.get('warnings',[])) and not case['source_urls']
                     else:
                         assert not case['searches'] and not case['reads']
                         assert all(not call['tools'] for call in case['provider_calls'])

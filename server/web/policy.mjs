@@ -133,6 +133,7 @@ export function passwordError(value,confirmation) {
 // Restricted presentation AST: no HTML interpretation, attributes, URLs or active links.
 export function safeMarkdown(value) {
  const el=(tag,children)=>({tag,children});
+ function closingMark(text,mark,start){if(mark==='`')return text.indexOf(mark,start);const stack=[];for(let p=start;p<text.length;){if(text[p]==='\\'){p+=2;continue;}if(text[p]==='`'){const end=text.indexOf('`',p+1);if(end!==-1){p=end+1;continue;}}if(text[p]!=='*'){p++;continue;}let token=text.startsWith('**',p)?'**':'*';if(stack.at(-1)==='*'&&text.startsWith('***',p))token='*';if(!stack.length&&token===mark)return p;if(stack.at(-1)===token)stack.pop();else stack.push(token);p+=token.length;}return -1;}
  function inline(text,depth=0) {
   if(depth>8)return [text];
   const out=[];let plain='';
@@ -146,17 +147,25 @@ export function safeMarkdown(value) {
      if(level===0){flush();out.push(...inline(text.slice(start+1,end),depth+1));i=close+1;continue;}}
    }
    const mark=text.startsWith('**',i)?'**':text[i]==='*'?'*':text[i]==='`'?'`':null;
-   if(mark){const end=text.indexOf(mark,i+mark.length);if(end>i+mark.length){flush();const content=text.slice(i+mark.length,end);out.push(el(mark==='`'?'code':mark==='**'?'strong':'em',mark==='`'?[content]:inline(content,depth+1)));i=end+mark.length;continue;}}
+   if(mark){const end=closingMark(text,mark,i+mark.length);if(end>i+mark.length){flush();const content=text.slice(i+mark.length,end);out.push(el(mark==='`'?'code':mark==='**'?'strong':'em',mark==='`'?[content]:inline(content,depth+1)));i=end+mark.length;continue;}}
    plain+=text[i++];
   }
   flush();return out;
  }
  const lines=String(value??'').replace(/\r\n?/g,'\n').split('\n'),out=[];
+ const listMatch=line=>line.match(/^(\s*)(?:([-+*])|(\d+)\.)\s+(.+)$/);
+ function listAt(index,indent,depth=0){const first=listMatch(lines[index]),tag=first[2]?'ul':'ol',items=[];let i=index;
+  while(i<lines.length){const m=listMatch(lines[i]);if(!m||m[1].length!==indent||(m[2]?'ul':'ol')!==tag)break;const children=inline(m[4]);i++;
+   while(i<lines.length){const nested=listMatch(lines[i]);if(!nested||nested[1].length<=indent||depth>=8)break;const result=listAt(i,nested[1].length,depth+1);children.push(result.element);i=result.next;}
+   items.push(el('li',children));
+  }
+  const element=el(tag,items);if(tag==='ol'){const start=Number(first[3]);if(Number.isSafeInteger(start)&&start>=0&&start<=1000000&&start!==1)element.start=start;}return {element,next:i};
+ }
  for(let i=0;i<lines.length;){
   if(!lines[i].trim()){i++;continue;}
   if(lines[i].startsWith('```')){const end=lines.findIndex((line,j)=>j>i&&/^```\s*$/.test(line));if(end!==-1){out.push(el('pre',[el('code',[lines.slice(i+1,end).join('\n')])]));i=end+1;continue;}}
-  const list=lines[i].match(/^\s*(?:([-+*])|\d+\.)\s+(.+)$/);
-  if(list){const tag=list[1]?'ul':'ol',items=[];while(i<lines.length){const m=lines[i].match(/^\s*(?:([-+*])|\d+\.)\s+(.+)$/);if(!m||(m[1]?'ul':'ol')!==tag)break;items.push(el('li',inline(m[2])));i++;}out.push(el(tag,items));continue;}
+  const list=listMatch(lines[i]);
+  if(list){const result=listAt(i,list[1].length);out.push(result.element);i=result.next;continue;}
   const paragraph=[lines[i++]];while(i<lines.length&&lines[i].trim()&&!/^\s*(?:[-+*]|\d+\.)\s+/.test(lines[i])&&!lines[i].startsWith('```'))paragraph.push(lines[i++]);out.push(el('p',inline(paragraph.join('\n'))));
  }
  return out;

@@ -1,0 +1,45 @@
+{
+  "synthetic_mail": true,
+  "real_configured_model": true,
+  "real_generated_title": "Polite Reply About Revised Workshop Schedule",
+  "mail_transports_called": 0,
+  "jobs": [
+    {
+      "intent": "draft",
+      "status": "succeeded",
+      "replay_no_new_work": true
+    },
+    {
+      "intent": "discuss",
+      "status": "succeeded",
+      "replay_no_new_work": true
+    },
+    {
+      "intent": "improve",
+      "status": "succeeded",
+      "replay_no_new_work": true
+    }
+  ],
+  "calls": [
+    {
+      "provider": "openai-codex",
+      "tools": []
+    },
+    {
+      "provider": "openai-codex",
+      "tools": []
+    },
+    {
+      "provider": "openai-codex",
+      "tools": []
+    }
+  ],
+  "generated_text_was_preview_only": true,
+  "explicit_apply_worked": true,
+  "discussion_did_not_edit": true,
+  "stale_improvement_rejected": true,
+  "source_sha256": {
+    "email_workspace.py": "37ccba116f7387f285cadd6bedb8f6c339503699aa5a451c94407cda63b2fcf1",
+    "conversations.py": "0feb5b1520ec46c6ea822bfcc16a039977f3994df2d82be93c26fdc6737ccd24"
+  }
+}

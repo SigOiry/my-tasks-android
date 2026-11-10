@@ -1,0 +1,114 @@
+[
+  {
+    "op": "capture",
+    "name": "portrait-before"
+  },
+  {
+    "op": "host",
+    "action": "rotate-landscape"
+  },
+  {
+    "op": "capture",
+    "name": "landscape"
+  },
+  {
+    "op": "host",
+    "action": "rotate-portrait"
+  },
+  {
+    "op": "capture",
+    "name": "portrait-after"
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Discuss only: explain the workshop schedule and give detailed numbered considerations 0"
+  },
+  {
+    "op": "tap",
+    "label": "Ask \u00b7 discuss",
+    "ms": 1100
+  },
+  {
+    "op": "wait",
+    "ms": 600
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Discuss only: explain the workshop schedule and give detailed numbered considerations 1"
+  },
+  {
+    "op": "tap",
+    "label": "Ask \u00b7 discuss",
+    "ms": 1100
+  },
+  {
+    "op": "wait",
+    "ms": 600
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Discuss only: explain the workshop schedule and give detailed numbered considerations 2"
+  },
+  {
+    "op": "tap",
+    "label": "Ask \u00b7 discuss",
+    "ms": 1100
+  },
+  {
+    "op": "wait",
+    "ms": 600
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Discuss only: explain the workshop schedule and give detailed numbered considerations 3"
+  },
+  {
+    "op": "tap",
+    "label": "Ask \u00b7 discuss",
+    "ms": 1100
+  },
+  {
+    "op": "wait",
+    "ms": 600
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Discuss only: explain the workshop schedule and give detailed numbered considerations 4"
+  },
+  {
+    "op": "tap",
+    "label": "Ask \u00b7 discuss",
+    "ms": 1100
+  },
+  {
+    "op": "wait",
+    "ms": 600
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Final QA unsent instruction retained through folding."
+  },
+  {
+    "op": "host",
+    "action": "unfold"
+  },
+  {
+    "op": "capture",
+    "name": "unfolded-before-scroll"
+  },
+  {
+    "op": "scroll",
+    "dy": 1500,
+    "ms": 700
+  },
+  {
+    "op": "capture",
+    "name": "unfolded-after-scroll"
+  }
+]

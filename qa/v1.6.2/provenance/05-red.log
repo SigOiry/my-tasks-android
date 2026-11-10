@@ -1,0 +1,78 @@
+test_atomic_replace_failure_rolls_back_task_and_origins_then_recovers (test_notification_origins.ProvenanceTests.test_atomic_replace_failure_rolls_back_task_and_origins_then_recovers) ... ok
+test_cross_source_update_existing_thread_preserves_explicit_roles (test_notification_origins.ProvenanceTests.test_cross_source_update_existing_thread_preserves_explicit_roles) ... ok
+test_deleted_candidate_is_suppressed_without_provenance (test_notification_origins.ProvenanceTests.test_deleted_candidate_is_suppressed_without_provenance) ... ok
+test_disposition_hash_link_and_semantic_decision_are_required (test_notification_origins.ProvenanceTests.test_disposition_hash_link_and_semantic_decision_are_required) ... ok
+test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay) ... ok
+test_future_template_requires_explicit_exact_message_review (test_notification_origins.ProvenanceTests.test_future_template_requires_explicit_exact_message_review) ... ok
+test_installer_dry_run_idempotence_and_fail_closed (test_notification_origins.ProvenanceTests.test_installer_dry_run_idempotence_and_fail_closed) ... ok
+test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) ... ok
+test_manual_override_blocks_attachment_even_when_evidence_changes (test_notification_origins.ProvenanceTests.test_manual_override_blocks_attachment_even_when_evidence_changes) ... ok
+test_nantes_trigger_and_gmail_context_do_not_follow_primary_source (test_notification_origins.ProvenanceTests.test_nantes_trigger_and_gmail_context_do_not_follow_primary_source) ... ok
+test_omitted_origins_never_infers_or_replaces_historical_record (test_notification_origins.ProvenanceTests.test_omitted_origins_never_infers_or_replaces_historical_record) ... ok
+test_original_workflow_regression_suite_runs_on_private_patched_copy (test_notification_origins.ProvenanceTests.test_original_workflow_regression_suite_runs_on_private_patched_copy) ... FAIL
+test_receipt_crash_recovers_provenance_exactly_once (test_notification_origins.ProvenanceTests.test_receipt_crash_recovers_provenance_exactly_once) ... ok
+test_references_in_prose_or_other_items_are_not_structured_proof (test_notification_origins.ProvenanceTests.test_references_in_prose_or_other_items_are_not_structured_proof) ... ok
+test_structured_known_references_still_reject_encoded_injection (test_notification_origins.ProvenanceTests.test_structured_known_references_still_reject_encoded_injection) ... FAIL
+test_terminal_status_blocks_attachment (test_notification_origins.ProvenanceTests.test_terminal_status_blocks_attachment) ... ok
+test_unchanged_snapshot_cannot_replace_provenance (test_notification_origins.ProvenanceTests.test_unchanged_snapshot_cannot_replace_provenance) ... ok
+
+======================================================================
+FAIL: test_original_workflow_regression_suite_runs_on_private_patched_copy (test_notification_origins.ProvenanceTests.test_original_workflow_regression_suite_runs_on_private_patched_copy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 317, in test_original_workflow_regression_suite_runs_on_private_patched_copy
+    self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : test_another_process_cannot_prepare_while_command_lock_is_held (test_sync_workflow.WorkflowTests.test_another_process_cannot_prepare_while_command_lock_is_held) ... FAIL
+test_cli_status_json_abort_and_renew_safe_lease_protocol (test_sync_workflow.WorkflowTests.test_cli_status_json_abort_and_renew_safe_lease_protocol) ... ok
+test_collection_wall_budget_fails_closed_without_hanging (test_sync_workflow.WorkflowTests.test_collection_wall_budget_fails_closed_without_hanging) ... ok
+test_commit_requires_complete_review_then_preserves_manual_and_exact_backup (test_sync_workflow.WorkflowTests.test_commit_requires_complete_review_then_preserves_manual_and_exact_backup) ... ok
+test_crash_after_canonical_commit_recovers_once_and_updates_checkpoint (test_sync_workflow.WorkflowTests.test_crash_after_canonical_commit_recovers_once_and_updates_checkpoint) ... ok
+test_deleted_backup_identities_and_aliases_suppress_recreation (test_sync_workflow.WorkflowTests.test_deleted_backup_identities_and_aliases_suppress_recreation) ... ok
+test_existing_key_cannot_be_renamed_to_duplicate_and_reference_not_identity (test_sync_workflow.WorkflowTests.test_existing_key_cannot_be_renamed_to_duplicate_and_reference_not_identity) ... ok
+test_failure_no_checkpoint_and_expired_lease_recovers_without_overlap (test_sync_workflow.WorkflowTests.test_failure_no_checkpoint_and_expired_lease_recovers_without_overlap) ... ok
+test_future_review_template_requests_semantic_summaries (test_sync_workflow.WorkflowTests.test_future_review_template_requests_semantic_summaries) ... ok
+test_invalid_candidate_rejected_even_when_identity_is_tombstoned (test_sync_workflow.WorkflowTests.test_invalid_candidate_rejected_even_when_identity_is_tombstoned) ... ok
+test_malformed_review_and_candidate_fail_with_validation_not_attribute_error (test_sync_workflow.WorkflowTests.test_malformed_review_and_candidate_fail_with_validation_not_attribute_error) ... ok
+test_notification_summary_validation_rejects_bad_mapping_without_db_write (test_sync_workflow.WorkflowTests.test_notification_summary_validation_rejects_bad_mapping_without_db_write) ... ok
+test_only_successfully_reviewed_unchanged_payload_can_skip_semantic_review (test_sync_workflow.WorkflowTests.test_only_successfully_reviewed_unchanged_payload_can_skip_semantic_review) ... ok
+test_policy_changes_invalidate_successful_source_skips (test_sync_workflow.WorkflowTests.test_policy_changes_invalidate_successful_source_skips) ... ok
+test_prepare_creates_timestamped_review_with_overlap_and_all_task_states (test_sync_workflow.WorkflowTests.test_prepare_creates_timestamped_review_with_overlap_and_all_task_states) ... ok
+test_prepare_supplies_unreviewed_template_and_machine_coverage (test_sync_workflow.WorkflowTests.test_prepare_supplies_unreviewed_template_and_machine_coverage) ... ok
+test_prepared_manifest_cannot_be_replaced_by_empty_manifest (test_sync_workflow.WorkflowTests.test_prepared_manifest_cannot_be_replaced_by_empty_manifest) ... ok
+test_semantic_notification_commits_atomically_and_is_snapshot_bound (test_sync_workflow.WorkflowTests.test_semantic_notification_commits_atomically_and_is_snapshot_bound) ... ok
+test_soft_deleted_and_deletion_during_review_remain_suppressed (test_sync_workflow.WorkflowTests.test_soft_deleted_and_deletion_during_review_remain_suppressed) ... ok
+test_soft_deleted_tombstone_not_enriched_or_reopened (test_sync_workflow.WorkflowTests.test_soft_deleted_tombstone_not_enriched_or_reopened) ... ok
+test_summary_and_task_rollback_together_when_atomic_replace_fails (test_sync_workflow.WorkflowTests.test_summary_and_task_rollback_together_when_atomic_replace_fails) ... ok
+test_summary_context_rejects_obviously_more_than_three_sentences (test_sync_workflow.WorkflowTests.test_summary_context_rejects_obviously_more_than_three_sentences) ... ok
+test_summary_does_not_claim_a_change_blocked_by_manual_override (test_sync_workflow.WorkflowTests.test_summary_does_not_claim_a_change_blocked_by_manual_override) ... ok
+test_two_new_keys_for_same_normalized_identity_fail_closed (test_sync_workflow.WorkflowTests.test_two_new_keys_for_same_normalized_identity_fail_closed) ... ok
+
+======================================================================
+FAIL: test_another_process_cannot_prepare_while_command_lock_is_held (test_sync_workflow.WorkflowTests.test_another_process_cannot_prepare_while_command_lock_is_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/cache/scratch/tmprzb32no5/test_sync_workflow.py", line 375, in test_another_process_cannot_prepare_while_command_lock_is_held
+    self.assertEqual(result.returncode,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 24 tests in 2.264s
+
+FAILED (failures=1)
+
+
+======================================================================
+FAIL: test_structured_known_references_still_reject_encoded_injection (test_notification_origins.ProvenanceTests.test_structured_known_references_still_reject_encoded_injection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 307, in test_structured_known_references_still_reject_encoded_injection
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 17 tests in 3.845s
+
+FAILED (failures=2)

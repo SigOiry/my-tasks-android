@@ -504,3 +504,68 @@ dialog[open] { animation: sheet-in 280ms cubic-bezier(.2, .8, .2, 1); }
   .task-row.unread { border-left: 3px solid Highlight; }
   .check-circle { border-color: ButtonText; }
 }
+
+/* v1.6.2 reply workspace — scoped; no changes to task layout. */
+dialog.email-workspace { width: min(1180px, calc(100vw - 48px)); max-width: none; height: min(850px, calc(var(--visual-height, 100dvh) - 48px)); max-height: calc(var(--visual-height, 100dvh) - 32px); padding: 0; overflow: hidden; border-radius: 24px; background: var(--surface); color: var(--ink); }
+.email-workspace[open] { display: flex; flex-direction: column; }
+.email-header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--separator); }
+.email-header h2 { flex: 1; margin: 0; font-size: 20px; }
+.email-save-state { font-size: 12px; color: var(--muted); }
+.email-workspace > .error { margin: 0; padding: 8px 20px; max-height: 100px; overflow: auto; }
+.email-layout { display: flex; flex: 1; min-height: 0; overflow: hidden; --assistant-width: 36%; }
+.email-editor-pane { flex: 1; min-width: 0; padding: 22px 28px; overflow: auto; overscroll-behavior: contain; }
+.email-editor-pane > button { margin: 8px 6px 8px 0; font-size: 12px; }
+.email-metadata { display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: 5px 12px; font-size: 13px; }
+.email-metadata strong { color: var(--muted); font-weight: 500; }
+.email-metadata span { overflow-wrap: anywhere; }
+.email-context { margin: 8px 0 14px; padding: 12px 0; border-top: 1px solid var(--separator); border-bottom: 1px solid var(--separator); color: var(--muted); }
+.email-context summary { cursor: pointer; min-height: 28px; font-size: 13px; }
+.email-context article { padding-top: 12px; }
+.email-context pre, .email-review pre, .email-proposal pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; color: var(--ink); max-height: 280px; overflow: auto; }
+.email-toolbar { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding: 4px; }
+.email-toolbar button { flex-shrink: 0; border-radius: 999px; background: var(--soft); color: var(--primary); font-size: 12px; }
+.email-editor-pane > textarea { min-height: 320px; width: 100%; max-width: 76ch; border: 0; padding: 10px 4px; resize: vertical; font-size: 16px; line-height: 1.75; border-radius: 4px; }
+.email-assistant { flex: 0 0 var(--assistant-width); min-width: 290px; overflow: auto; overscroll-behavior: contain; background: var(--canvas); border-left: 1px solid var(--separator); padding: 20px; }
+.email-assistant > h3 { margin-top: 16px; }
+.email-assistant > textarea { margin: 12px 0; font-size: 14px; }
+.email-ai-log article { border-bottom: 1px solid var(--separator); padding: 16px 0 4px; }
+.email-ai-log p { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+.email-proposal { padding: 16px; margin: 16px 0; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.email-proposal button { margin: 6px 5px 0 0; font-size: 12px; }
+.email-diff { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+.email-diff del { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.email-diff ins { color: var(--primary); background: var(--soft); text-decoration: underline; text-underline-offset: 3px; }
+.email-splitter { flex: 0 0 20px; width: 20px; overflow: hidden; writing-mode: vertical-rl; font-size: 10px; color: var(--muted); padding: 12px 0; }
+.email-splitter input { writing-mode: vertical-lr; direction: rtl; width: 20px; min-width: 0; height: 110px; padding: 0; }
+.email-footer { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--separator); background: var(--surface); }
+.email-footer button { font-size: 12px; }
+.email-source-chooser { padding: 24px; overflow: auto; }
+.email-source-chooser:empty { display: none; }
+.email-source-choice { display: flex; flex-direction: column; align-items: start; text-align: left; width: 100%; margin-top: 12px; padding: 16px; }
+.email-recovery { border: 1px solid var(--warning); padding: 12px; border-radius: 12px; }
+.email-recovery button { margin-right: 6px; }
+dialog.email-review { width: min(720px, calc(100vw - 32px)); max-height: calc(var(--visual-height, 100dvh) - 32px); padding: 24px; overflow: auto; background: var(--surface); color: var(--ink); }
+.email-review > button { margin: 16px 8px 0 0; }
+.email-review pre { max-height: none; margin-top: 24px; }
+.citation-sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.citation-source { position: relative; max-width: 100%; }
+.citation-source > summary { display: block; cursor: pointer; padding: 5px 10px; border-radius: 999px; font-size: 11px; border: 1px solid var(--border); background: var(--soft); color: var(--primary); overflow-wrap: anywhere; }
+.citation-source > summary:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.citation-source[open] { flex-basis: 100%; }
+.citation-panel { margin-top: 6px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); max-width: 540px; }
+.citation-panel p { font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; margin: 8px 0; }
+@media (max-width: 899px) {
+ dialog.email-workspace { width: 100%; height: var(--visual-height, 100dvh); max-height: var(--visual-height, 100dvh); max-width: 100%; margin: 0; border-radius: 0; top: var(--visual-top, 0px); border: 0; }
+ .email-header { padding: 10px 12px; gap: 8px; }
+ .email-header h2 { font-size: 16px; }
+ .email-header .email-save-state { order: 4; width: 100%; }
+ .email-header button { padding: 8px 12px; }
+ .email-editor-pane { padding: 16px; }
+ .email-editor-pane > textarea { min-height: 45dvh; }
+ .email-workspace[data-assistant=true] .email-editor-pane, .email-splitter { display: none; }
+ .email-assistant { flex: 1; min-width: 0; border-left: 0; }
+ .email-footer { padding: 10px 12px max(10px, env(safe-area-inset-bottom)); }
+ .email-toolbar { margin-left: -4px; }
+}
+@media (prefers-reduced-motion: reduce) { .email-workspace *, .email-review *, .citation-sources * { animation: none !important; transition: none !important; } }
+:root[data-motion=reduce] :is(.email-workspace, .email-review, .citation-sources) * { animation: none !important; transition: none !important; }

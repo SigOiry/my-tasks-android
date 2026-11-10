@@ -1,0 +1,6 @@
+test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.116s
+
+OK

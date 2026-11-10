@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "review_id": "deleg_07a8616e/task-1",
+  "summary": "Final native gate passed: visible warnings and unavailable markers, conservative source navigation, excerpt disambiguation, measured adaptive layout, parked draft/task/epoch isolation, CAS and explicit confirmed sending.",
+  "verification": ["Actual production methods and native JVM harnesses including OEM Consumer variant passed", "Actual Java HTTP client against isolated API/store passed; one synthetic send and one tool-free AI call"],
+  "suggestions": ["Extend queued-callback epoch regression coverage", "Extend parked-draft selection and request-identity regression vectors"],
+  "physical_fold8_verified": false,
+  "reviewer_source_edits": false,
+  "reviewer_production_writes": false
+}

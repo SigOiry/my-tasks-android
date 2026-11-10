@@ -16,7 +16,7 @@ final class ChatPresentationPolicy {
  static boolean nearBottom(int contentHeight,int y,int viewportHeight,int threshold){return (long)y+viewportHeight>=contentHeight-Math.max(0,threshold);}
  static int restoreY(int anchorTop,int relativeOffset,int fallback){return Math.max(0,anchorTop<0?fallback:anchorTop-relativeOffset);}
  static String messageSignature(JSONArray messages){
-  JSONArray values=new JSONArray();for(int i=0;i<messages.length();i++){JSONObject m=messages.optJSONObject(i);if(m!=null)values.put(new JSONArray().put(m.optLong("id")).put(m.optString("role")).put(m.optString("content")).put(m.optString("created_at")));}return values.toString();
+  JSONArray values=new JSONArray();for(int i=0;i<messages.length();i++){JSONObject m=messages.optJSONObject(i);if(m!=null)values.put(new JSONArray().put(m.optLong("id")).put(m.optString("role")).put(m.optString("content")).put(m.optString("created_at")).put(m.optJSONObject("citation_metadata")));}return values.toString();
  }
  static int countAfter(JSONArray messages,long seen){
   java.util.HashSet<Long> ids=new java.util.HashSet<>();for(int i=0;i<messages.length();i++){JSONObject m=messages.optJSONObject(i);if(m!=null&&m.optLong("id")>seen)ids.add(m.optLong("id"));}return ids.size();

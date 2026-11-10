@@ -1,5 +1,7 @@
 import {localCalendarDate,projectPalette,UpdateBreaths,selectTasks,groupTasks,statuses,active,safeSource,shouldNotify,updateGate,acknowledged,editPayload,passwordError,safeMarkdown} from './policy.mjs';
 import {ConversationStore,pendingRequest} from './conversations.mjs';
+import {mountEmailWorkspace} from './email-workspace.mjs';
+import {renderCitations} from './citations.mjs';
 
 // Consume ownership proof before any asynchronous work; never persist or log it.
 let activationCode=null;
@@ -18,6 +20,7 @@ const writeLocal = (key,value) => { try { localStorage.setItem(storagePrefix+key
 const removeLocal = key => { try { localStorage.removeItem(storagePrefix+key); } catch { /* Optional persistence. */ } };
 const state = {authenticated:false,csrf:'',epoch:0,editorGeneration:0,data:null,view:'active',project:'',selected:null,gate:null,dirty:false,snapshot:'',online:true,cursor:null,cursorKey:null,polling:false,mutating:false,own:new Map(),emphasis:new Map(),notices:new Set(),controllers:new Set(),info:null,recognition:null};
 const chats = new ConversationStore(request);
+const emailWorkspace=typeof mountEmailWorkspace==='function'?mountEmailWorkspace({request,copy:copyText}):null;
 const discussion = {destination:'tasks',active:null,rows:[],cursor:null,loading:false,generation:0,taskGeneration:0,taskId:null,taskRows:[],taskCursor:null};
 let pollTimer, chatTimer, toastTimer, accentObserver, taskOpening=false;
 const breaths=new UpdateBreaths(2);
@@ -98,6 +101,7 @@ async function request(path,{method='GET',body,timeout=25000}={}) {
 
 function clearPrivate(reason='') {
  state.epoch++;
+ emailWorkspace?.clear();
  taskOpening=false;
  for(const id of ['delete-confirm','restore-task'])$(id).disabled=false;
  state.authenticated=false;
@@ -268,7 +272,7 @@ async function openTask(id) {
  } catch(error) {if(currentSession(epoch))toast(errorText(error));} finally {if(currentSession(epoch))taskOpening=false;}
 }
 function markdownNodes(text) {
- const render=part=>{if(typeof part==='string')return document.createTextNode(part);const element=node(part.tag);element.append(...part.children.map(render));return element;};
+ const render=part=>{if(typeof part==='string')return document.createTextNode(part);const element=node(part.tag);if(part.tag==='ol'&&Number.isSafeInteger(part.start))element.setAttribute('start',String(part.start));element.append(...part.children.map(render));return element;};
  return safeMarkdown(text).map(render);
 }
 function showUpdates(task) {
@@ -357,6 +361,7 @@ function showTask(task=null) {
  }
  if (!$('source-links').children.length) $('source-links').append(node('p',{class:'hint'},task?.source==='manual'||!task?'Manually created tasks have no linked source.':'No reliable source link is available. Source identifiers are retained on the server.'));
  message('source-accounts',(task?.source_accounts||[]).join(' · '));
+ show('detail-reply',!!task&&!task.deleted&&task.source!=='manual');
  switchPanel('details');
  presentTaskDialog();
  $('task-dialog').scrollTop=0;
@@ -521,10 +526,12 @@ function syncChatLatest() {const log=$('chat-log'),e=conversation();if(e)e.nearB
 function renderChat(restoreDraft=false) {
  const e=conversation();if(!e)return;
  const c=e.conversation,r=c?.latest_request,log=$('chat-log');
+ if(discussion.destination==='discussions')renderDiscussions();
+ for(const option of $('task-thread').children){const metadata=chats.entries.get(option.value)?.conversation;if(metadata)option.textContent=metadata.title;}
  paletteStyle($('chat-dialog'),state.data?.tasks.find(task=>task.id===c?.task_id)||{});
  message('chat-title',c?.title||'Loading discussion…');message('chat-context',c?.task_id?'Task · '+(c.task_title||'Saved task'):'FREE DISCUSSION');
  if(restoreDraft||$('chat-message').value!==e.draft){$('chat-message').value=e.draft;resizeComposer();}$('chat-mode').value=e.mode;
- const signature=discussion.active+':'+e.messages.map(m=>m.id).join(',');
+ const signature=discussion.active+':'+e.messages.map(m=>m.id+':'+JSON.stringify(m.citation_metadata??null)).join(',');
  if(log.dataset.signature!==signature) {
   const bottom=log.scrollHeight-log.scrollTop-log.clientHeight<70,top=log.scrollTop,height=log.scrollHeight;
   const sameThread=log.dataset.threadId===discussion.active;
@@ -537,10 +544,15 @@ function renderChat(restoreDraft=false) {
   for(const item of previous)if(!wanted.has(item.dataset.messageId))log.removeChild(item);
   for(const [index,turn] of e.messages.entries()) {
    let item=existing.get(String(turn.id));
+   const turnSignature=JSON.stringify([turn.content,turn.citation_metadata??null]);
+   if(item&&item.dataset.contentSignature!==turnSignature){log.removeChild(item);item=null;}
    if(!item){
     item=node('article',{class:'chat-turn '+turn.role+(sameThread&&previous.length&&!prepended&&bottom&&index>=e.messages.length-2?' is-new':''),'data-message-id':turn.id});
-    const content=node('div',{class:'message'});content.append(...markdownNodes(turn.content));
+    item.dataset.contentSignature=turnSignature;
+    const epoch=state.epoch,citations=typeof renderCitations==='function'?renderCitations(turn,{request,alive:()=>currentSession(epoch)}):null;
+    const content=node('div',{class:'message'});content.append(...markdownNodes(citations?.text??turn.content));
     item.append(node('span',{class:'speaker'},turn.role==='user'?'You':'Hermès'),content);
+    if(citations?.element.children.length)item.append(citations.element);
     if(turn.created_at){const stamp=new Date(turn.created_at);if(!Number.isNaN(stamp.getTime()))item.append(node('time',{class:'message-time',datetime:turn.created_at},new Intl.DateTimeFormat(undefined,{hour:'2-digit',minute:'2-digit'}).format(stamp)));}
     const copy=node('button',{type:'button',class:'copy-message','aria-label':'Copy '+(turn.role==='user'?'your message':'Hermès response')},'Copy');copy.addEventListener('click',()=>copyText(turn.content));item.append(copy);
    }
@@ -570,13 +582,13 @@ function renderChat(restoreDraft=false) {
  if(e.followLatest){log.scrollTop=log.scrollHeight;e.followLatest=false;}syncChatLatest();syncVisualViewport();
 }
 function scheduleChatPoll() {
- clearTimeout(chatTimer);const id=discussion.active,e=conversation();if(!id||!$('chat-dialog').open||document.hidden||!pendingRequest(e?.conversation?.latest_request)||!state.online)return;
+ clearTimeout(chatTimer);const id=discussion.active,e=conversation();if(!id||!$('chat-dialog').open||document.hidden||!state.online)return;
  chatTimer=setTimeout(async()=>{
   if(discussion.active!==id||!$('chat-dialog').open||document.hidden||!state.authenticated)return;
-  try{await chats.poll(id);if(discussion.active===id&&state.authenticated)renderChat();}
+  try{if(pendingRequest(e?.conversation?.latest_request))await chats.poll(id);else await chats.load(id);if(discussion.active===id&&state.authenticated)renderChat();}
   catch(error){if(discussion.active===id&&state.authenticated){chats.entry(id).error=errorText(error);renderChat();}}
   scheduleChatPoll();
- },1800);
+ },pendingRequest(e?.conversation?.latest_request)?1800:8000);
 }
 async function refreshConversation() {
  const id=discussion.active;if(!id)return;const epoch=state.epoch;
@@ -739,6 +751,8 @@ $('updates-close').addEventListener('click',()=>{$('updates-dialog').close();sta
 $('updates-dialog').addEventListener('cancel',()=>{state.gate=null;});
 $('updates-dialog').addEventListener('close',()=>{if(!$('updates-dialog').open)state.gate=null;});
 $('updates-ack').addEventListener('click',acknowledge);
+$('updates-reply').addEventListener('click',()=>{if(state.gate)emailWorkspace?.open(state.gate.id,state.gate.token);});
+$('detail-reply').addEventListener('click',()=>{if(state.selected)emailWorkspace?.open(state.selected.id);});
 $('updates-open').addEventListener('click',()=>openReviewedTask());$('updates-discuss').addEventListener('click',()=>openReviewedTask(true));
 $('updates-refresh').addEventListener('click',async()=>{const epoch=state.epoch;if(!currentSession(epoch)||!state.gate)return;try{const task=await request('/api/tasks/'+encodeURIComponent(state.gate.id));if(!currentSession(epoch))return;if(task.notification?.unread)showUpdates(task);else{$('updates-dialog').close();showTask(task);}}catch(error){if(currentSession(epoch))message('updates-error',errorText(error));}});
 $('delete-task').addEventListener('click',()=>{$('confirm-dialog').showModal();});
@@ -793,7 +807,7 @@ document.addEventListener('keydown',event=>{
  if(event.key.toLowerCase()==='n'){event.preventDefault();showTask();}
 });
 document.addEventListener('pointerdown',event=>{for(const filters of document.querySelectorAll('details.filters[open],details.discussion-utilities[open]'))if(!filters.contains(event.target)&&!event.target.closest('#search-toggle'))filters.open=false;});
-window.addEventListener('beforeunload',event=>{if(state.dirty){event.preventDefault();event.returnValue='';}});
+window.addEventListener('beforeunload',event=>{if(state.dirty||emailWorkspace?.store.dirty){event.preventDefault();event.returnValue='';}});
 window.addEventListener('offline',()=>{setConnection(false);if(state.data)render();});
 window.addEventListener('online',backgroundRefresh);
 window.addEventListener('pagehide',()=>{state.recognition?.abort();for(const notice of state.notices)notice.close();});

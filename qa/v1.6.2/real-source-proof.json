@@ -1,0 +1,18 @@
+{
+  "gmail": {
+    "readable": true,
+    "exact_reference_preserved": true,
+    "has_rfc_message_id": true,
+    "thread_context_available": true,
+    "account_identity_available": true
+  },
+  "nantes": {
+    "readable": true,
+    "exact_reference_preserved": true,
+    "has_rfc_message_id": true,
+    "thread_context_available": true,
+    "account_identity_available": true
+  },
+  "scope": "Read-only exact messages, no mailbox flags changed, no model or send called",
+  "source_sha256": "080b9c2eb4efcd050717cbaa2647e187887d732a4cce384d5681b91903de0dd3"
+}

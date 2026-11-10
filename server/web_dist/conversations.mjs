@@ -11,7 +11,15 @@ export class ConversationStore {
  setMode(id,value){this.entry(id).mode=value;}
  metadata(conversation) {
   const e=this.entry(conversation.id);
-  if(!e.conversation||conversation.revision>=e.conversation.revision)e.conversation=conversation;
+  const previous=e.conversation;
+  if(!previous){e.conversation=conversation;return e;}
+  const next=conversation.revision>=previous.revision?{...previous,...conversation}:{...previous};
+  // Title workers have their own revision; a higher chat revision cannot revive an old title.
+  const titleNewer=(conversation.title_revision??-1)>(previous.title_revision??-1);
+  const manualWins=previous.title_origin==='manual'&&conversation.title_origin!=='manual';
+  if(manualWins||(!titleNewer&&(conversation.title_revision??-1)<(previous.title_revision??-1))){for(const key of ['title','title_revision','title_origin'])if(key in previous)next[key]=previous[key];}
+  else if(titleNewer){for(const key of ['title','title_revision','title_origin'])if(key in conversation)next[key]=conversation[key];}
+  e.conversation=next;
   return e;
  }
  merge(e,messages) {

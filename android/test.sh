@@ -33,3 +33,5 @@ mkdir -p "$TEST_BUILD_DIR/api"
 python3 -m unittest discover -s tests -p 'test_*.py'
 # Actual Activity/presenter/poll methods with synthetic host seams, no Android runtime claim.
 JAVA_HOME="$JAVA_HOME" python3 tests/run_redesign_regressions.py
+# Actual reply draft/client/controller, citation/title and reported-hinge regressions.
+JAVA_HOME="$JAVA_HOME" python3 tests/run_email_reply_tests.py

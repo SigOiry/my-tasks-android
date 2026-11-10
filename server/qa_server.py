@@ -68,7 +68,7 @@ def prepare(root, port, *, seed=False, copy_db=None, seed_conversations=False, a
             with os.fdopen(fd,'w') as stream:
                 stream.write(secrets.token_urlsafe(32))
             provision(db=root/'account.sqlite',activation_file=root/'qa-activation',origin=f'http://127.0.0.1:{port}',username='qa-owner',password_file=password_file)
-    return dict(db_path=db,token_file=token,metadata_path=root/'events.sqlite',session_path=root/'sessions.sqlite',conversation_path=root/'conversations.sqlite',allow_legacy_uninitialized=not account,account_path=root/'account.sqlite',web_origin=f'http://127.0.0.1:{port}',cookie_secure=False)
+    return dict(db_path=db,token_file=token,metadata_path=root/'events.sqlite',session_path=root/'sessions.sqlite',conversation_path=root/'conversations.sqlite',email_path=root/'email.sqlite',allow_legacy_uninitialized=not account,account_path=root/'account.sqlite',web_origin=f'http://127.0.0.1:{port}',cookie_secure=False)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

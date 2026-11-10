@@ -1,0 +1,2 @@
+INSTRUMENTATION_RESULT: result=FAIL AssertionError: Timed out waiting for Choose which workshop message to answer
+INSTRUMENTATION_CODE: 0

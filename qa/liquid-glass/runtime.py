@@ -20,12 +20,14 @@ from qa_server import prepare, SCRATCH
 
 
 class Fixture:
-    def __init__(self, root, port=9147):
+    def __init__(self, root, port=9147, *, email_provider=None, email_llm=None):
         self.root = Path(root).resolve()
         if not self.root.is_relative_to(SCRATCH) or self.root == SCRATCH:
             raise ValueError('Fresh private scratch child required')
         self.port = port
         self.provider_calls = 0
+        self.email_provider = email_provider
+        self.email_llm = email_llm
 
     def __enter__(self):
         marker = self.root/'liquid-glass-synthetic.json'
@@ -35,6 +37,7 @@ class Fixture:
         fresh = not marker.exists()
         config['web_origin'] = f'https://127.0.0.1:{self.port}'
         config['cookie_secure'] = True
+        config.update(email_provider=self.email_provider, email_llm=self.email_llm)
         if fresh:
             import subprocess
             subprocess.run(['openssl','req','-x509','-newkey','rsa:2048','-sha256','-days','14','-nodes',
@@ -70,6 +73,7 @@ class Fixture:
 
     def __exit__(self, *args):
         self.app.state.conversations.close()
+        self.app.state.email_workspace.close()
         self.provider.stop()
 
     def client(self):

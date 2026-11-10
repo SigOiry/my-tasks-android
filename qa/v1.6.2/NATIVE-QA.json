@@ -1,0 +1,215 @@
+{
+  "scope": "Actual isolated native QA; no production mutation, no external mail, no deployment/commit",
+  "packages": [
+    {
+      "package": "com.simon.mytasks.qav162",
+      "sha256": "467446a5b02f91f663594086919aa2f0639e19e247897877a6faa752f2dbfc36",
+      "installedPath": "/data/app/~~jbq2FcH-HelBkEfuQFHgsg==/com.simon.mytasks.qav162-mEAa6GKBYqVOQExoD0CfGQ==/base.apk"
+    },
+    {
+      "package": "com.simon.mytasks.uiqav162",
+      "sha256": "7c2dd854e16f2ff141c9ea09cfae6b8a257d3cc9bbc3bed26a9f28a244e25073",
+      "installedPath": "/data/app/~~0-wxljVAQY2CmUpO9ylicQ==/com.simon.mytasks.uiqav162-JvXIDt1Stz2uRQ53dd4wGw==/base.apk"
+    }
+  ],
+  "viewports": {
+    "native-manual-folded-light": {
+      "widthDp": 411,
+      "heightDp": 797,
+      "density": 2.625,
+      "fontScale": 1,
+      "theme": "System"
+    },
+    "native-compose-unfolded-light": {
+      "widthDp": 841,
+      "heightDp": 701,
+      "density": 2.625,
+      "fontScale": 1,
+      "theme": "System"
+    },
+    "native-folded-dark": {
+      "widthDp": 411,
+      "heightDp": 797,
+      "density": 2.625,
+      "fontScale": 1,
+      "theme": "System"
+    },
+    "native-unfolded-dark": {
+      "widthDp": 841,
+      "heightDp": 701,
+      "density": 2.625,
+      "fontScale": 1,
+      "theme": "System"
+    }
+  },
+  "checks": [
+    {
+      "case": "QA-only fresh build, strict SSH transfer, installed hash readback",
+      "result": "PASS"
+    },
+    {
+      "case": "Folded update Reply leaves exact task unread through send",
+      "result": "PASS",
+      "evidence": "native-after-close.json; native-server-readback.json"
+    },
+    {
+      "case": "Multiline manual writing and autosave",
+      "result": "PASS",
+      "evidence": "native-manual-folded-light.json"
+    },
+    {
+      "case": "Draft with AI proposal preview and explicit Apply",
+      "result": "PASS",
+      "evidence": "native-ai-draft-preview.json; native-applied-body.json"
+    },
+    {
+      "case": "Improve writing preview and Dismiss",
+      "result": "PASS",
+      "evidence": "native-improve-preview.json"
+    },
+    {
+      "case": "Ask AI discussion persists after close/reopen",
+      "result": "PASS",
+      "evidence": "native-server-readback.json; native-reopened.json",
+      "note": "Server confirms all six messages; last discussion response outside visible history viewport."
+    },
+    {
+      "case": "Explicit review, confirm, send once and fixture receipt",
+      "result": "PASS",
+      "evidence": "native-send-review.json; native-send-receipt.json; native-server-readback.json"
+    },
+    {
+      "case": "Fold/unfold retains active instruction and saved draft",
+      "result": "PASS",
+      "evidence": "native-compose-unfolded-light.json; native-unfolded-dark.json; native-applied-body.json"
+    },
+    {
+      "case": "Outer dedicated assistant switch and keyboard usable",
+      "result": "PASS",
+      "evidence": "native-assistant-folded-ime-display.png"
+    },
+    {
+      "case": "Unfolded two-pane editor/assistant",
+      "result": "FAIL",
+      "evidence": "native-compose-unfolded-light-display.png; native-unfolded-dark-display.png",
+      "repro": "At 841dp unfolded (2208x1840 px, density 2.625), assistant occupies whole width. 64/36 pane minima require >=833.34 usable dp; padding takes viewport below that."
+    },
+    {
+      "case": "Historical source disambiguation",
+      "result": "FAIL",
+      "evidence": "native-ambiguous-chooser-display.png",
+      "repro": "Choose which workshop message to answer > Reply to email: both candidates have identical visible labels; no excerpt/reference shown."
+    },
+    {
+      "case": "Source chooser task-specific status",
+      "result": "FAIL",
+      "evidence": "native-ambiguous-chooser-display.png",
+      "repro": "After sending first task, close and open another task Reply: chooser incorrectly displays prior Sent receipt state."
+    },
+    {
+      "case": "Citation metadata.warnings rendering",
+      "result": "FAIL_SOURCE_INSPECTION",
+      "evidence": "android/src/com/simon/mytasks/CitationUi.java",
+      "note": "No metadata.warnings read/render path. Not runtime-warning-injection tested."
+    }
+  ],
+  "untested": [
+    "Rotation and cursor-selection preservation assertions",
+    "Physical Samsung/One UI and hinge occlusion",
+    "Recording/motion timing (no recording launched)",
+    "Unavailable-source recovery, conflict/offline, backend late-context refresh",
+    "Real AI provider or external mail: intentionally synthetic only",
+    "TalkBack/large text and process-death recovery"
+  ],
+  "receipt_count": 1,
+  "receipt_id": "synthetic-receipt-1",
+  "ai_message_count": 6,
+  "unread_retained": true,
+  "initial_harness_retries": [
+    "Initial Reply waits for body before explicit source selection; corrected scenario",
+    "Back-to-tasks step absent after Close returned directly to Tasks; corrected scenario"
+  ],
+  "visually_inspected": [
+    "native-compose-unfolded-light-display.png",
+    "native-assistant-folded-ime-display.png",
+    "native-folded-dark-display.png",
+    "native-unfolded-dark-display.png",
+    "native-send-receipt-display.png",
+    "native-ambiguous-chooser-display.png"
+  ],
+  "evidence_sha256": {
+    "native-ai-applied-display.png": "07a44a48fa478f9f15d1ddc5fa0c38ec4cc4bb2a488ae36d9d8d0f598a7f5a67",
+    "native-ambiguous-chooser.png": "d2cc7be446d5ea9d6bc57394ce68d689a600e295e30245109813baa2ea0b88b6",
+    "native-compose-selected.png": "9758055878e1b1fdeac728a8a100683add608201fcb9a44723599464de70f729",
+    "native-compose-unfolded-light.png": "0f661f77afbe05627aa1974f6cec2ce58de39407ec41ed6733483a2c47f570df",
+    "native-ai-draft-preview.json": "c6b691a724e48e0f02d7038303783fa2b1cdae54615e3c31196bec4551e00f6d",
+    "native-applied-body-display.png": "38d88e0e4795d1c2fe64fd4a25589a9185f15eb2f42eeeb24db8a0ad7269342d",
+    "native-discussion.png": "aff632ea1247235e95b93500198de30ea725b62848c785ba8806ab2dcf095253",
+    "native-reopened-display.png": "15866e79be6776b43410e7b256169c597ae7f76fc9c95d846b9094fccb234965",
+    "native-manual-folded-light-display.png": "a9b1790a68984bab0d85367d237e83f9e973faa043ca5c2514554d6ec9717091",
+    "native-improve-preview.json": "48f1b08fd0ac4e8d554feaba4dfdfe109010859bd7b91c1e4b5499eb9979d516",
+    "native-rest-result.txt": "bf188b3db0f262a3f5da6df0019cc667fe7d2b236ba25b67b4728c926eec2f10",
+    "native-compose-selected.json": "de39f33a73f616baf3a139d690be2e3342e17910b2695ed18c968ae746f2dfbb",
+    "native-improve-preview.png": "2d4f795fbd6433cf0cb0ea37a80eb1511bc156456781c24bf2ba1b0a181a67b7",
+    "native-failure.json": "42934631d67a131b41b4b7b43a9fafdb787432098c9ca5b7ca374ac70152167d",
+    "native-chooser2-result.txt": "5473eb735ceeb2f197d7ce6168004e026ef140c97344e8a6b45341519177b97e",
+    "native-unfolded-dark.png": "ddc981d522d31042ade0f48f3eca5437953ebdac8d63a7d9963c9924c3f6dc62",
+    "native-ambiguous-chooser.json": "3c61792163f43801834c51e696c26ed5f575605a54ccfae7ef6f0815aabb9cfd",
+    "native-after-close-result.txt": "916210ff1d51d2f3b3aa025b720a34f417978f86af5c1b1fee3c7f4ba25c80b6",
+    "native-update-folded-light.png": "d37841d0b7ea055bb10bd9dc9552e5df2e3f354889e8a0497fceaf451c858f20",
+    "native-send-review.json": "5a70bf285d800fa7306edb5ad8382beb88baee9bb5479e3004828c10a6235114",
+    "native-chooser2.json": "3c61792163f43801834c51e696c26ed5f575605a54ccfae7ef6f0815aabb9cfd",
+    "native-rest.json": "08b67a16687a13f2a6fd03d92bf6bf07c8222027ae0a8d4689d28370323345bd",
+    "native-assistant-folded-ime.json": "7fba0ef2b8fea571c18b577e63eafd722dba38852d8f053a14c58077e17934ff",
+    "native-send-review-display.png": "45e94c345660bc063b1b02c70677f517f85c1bfefbfbb90e295e17045e829461",
+    "native-login-result.txt": "b51ff04b33052567a45d47fa31455aebe87220b6c9d88644250c1ddf0fb049bb",
+    "native-reopened.png": "aff632ea1247235e95b93500198de30ea725b62848c785ba8806ab2dcf095253",
+    "native-failure.png": "40d851c93302594fab4c0174cf55043f6d147ad50064092f55a0f15e0bac20d0",
+    "native-folded-dark.png": "9fec56ecf6c976b66a5b21b2ad08a80e85343a30cf43785fc9d11e46b13e67e6",
+    "native-reopened.json": "08b67a16687a13f2a6fd03d92bf6bf07c8222027ae0a8d4689d28370323345bd",
+    "native-after-close.json": "df66ed17e466c42919dae825411e253677837c85e5f0cbe90c1782dd167be369",
+    "native-send-receipt-display.png": "96c0e9b093e3365cbc6788924870f5fa5333f8c107b3bf1bebb3d73a570ad50b",
+    "native-ai-draft-preview.png": "8fc32c8bb75b5817ad0182aab1d71f7df0f147f75b4f04fabe5470e935c1277e",
+    "native-folded-dark.json": "6dfc4094076a85ebef96e0352f34c1785971dc47fe59df7d54d91c4e5c9ed0a9",
+    "native-ai-draft-preview-display.png": "5e0c72a4317f169005ee4e854a3d75578b0c5efac49962e855027e84a122ee3a",
+    "native-update-folded-light.json": "5ffd7d99c7d034a727851c0679c9cc0400b4a0604fcaff4f2ade2ca5045e7d40",
+    "native-send-receipt.json": "259f342de928a74069ea390216d1353091bc21229c0d33231f6eeeee45f95a44",
+    "installed.json": "b650964336c7e7f5be4a64d75b6e9e1393091a6cc2393a6408ede609c2335625",
+    "native-manual-folded-light.png": "7669267740a3907b3ec8730a2c537be775f0294aa036bb0816c137374cab3cbc",
+    "native-compose-result.txt": "56fa6797f1de1c749592da41fa217a64c0bdb3a2879e5ef10973f0fe6d2beb7c",
+    "native-improve-preview-display.png": "fd9d842b491f04db2a597cd758dab24faaedb65b5e0599c9b5d866576d09122b",
+    "native-folded-dark-display.png": "271fd85fa03bcfa65c29d383c6834976d72bd839a1638edfb15b07dd1423354e",
+    "native-unfolded-dark.json": "df923e77e7a669366cb107e75dde6fb9eaf40e469b5c7a677ad6bc8567c1c0e4",
+    "native-after-close.png": "f59cdaceba56a4622a077609ed2d08671b8923149227485b36e4b2e47003172c",
+    "native-assistant-folded-ime-display.png": "3f4eb708e31c6412d3f94fdb6e4ff487e975d4bc418000f82092375a171e4a4c",
+    "native-server-readback.json": "1135c8068d3d8abc0d031607d8c639fc0415aa8249ed37fb6fe18ac36b034cbf",
+    "native-compose-selected-result.txt": "5667f14f2832dd4f03356febb2bd1ae790f8715a24c004e8aeafca8298c30050",
+    "native-compose-unfolded-light.json": "d62508e6ef31a2dc5c8eb7c018f73243363e8b9804a00fef0e821bf6f5866f70",
+    "native-chooser-result.txt": "c899cf801caf610b91ce57a98e092fe39dd6a06191568019d2c6d730f32744bc",
+    "native-open.png": "bd045db5ece5a32e0c9a2221834df6a9209bd75f3db99ea436000f0cbcf9272c",
+    "native-login.png": "d53f4831a9b785e3e5d91dbd832dbc60100b701e18cdacf88ef62dee38e1d423",
+    "native-assistant-folded-ime.png": "359810f33afe25eb4bbc64ddefa656f426c60cde9efedb15f98e874830e5b186",
+    "native-chooser2.png": "33b04a664947a0857ffd183367f8485ad0e56b0094ce595123a1ef6680a4d436",
+    "native-ai-applied.png": "0d598888d7fe1846b35a55e0dd9b621383937189eefde53764ec3a44961cea44",
+    "native-send.png": "ed75143628433cfa86799b722ea399426fe350b16c2a7ce41ebd740a4fc15b73",
+    "native-discussion-display.png": "47caeca90674654e8c7ab6f91dcf0ec39081ffc35f1f0f3ba9412f18b7b36791",
+    "native-ai-applied.json": "de39f33a73f616baf3a139d690be2e3342e17910b2695ed18c968ae746f2dfbb",
+    "native-unfolded-dark-display.png": "ae1c728090c781c04d5a17531806c60355f819b767410dfde7e0059b12a00b49",
+    "native-open-result.txt": "acecb0c565d8005691ed4b881cf2c922023e1815e184172fad07c0e87fc8e530",
+    "native-send.json": "259f342de928a74069ea390216d1353091bc21229c0d33231f6eeeee45f95a44",
+    "native-rest.png": "a176a5eb36b6fa762f93b4c492983d501f12253aeea366812318c35cff846333",
+    "native-compose-unfolded-light-display.png": "e0ecd3d0f6b5dfc50f8a99edfb843e0e33926a03618917e057ae31e6fc1fce62",
+    "native-manual-folded-light.json": "e5ea2ea65f3200989c926183dae020c841a67335eeb855d6e926aaae70905111",
+    "native-send-review.png": "942b39eb333ff948cb05040e671187c3283cc8bc34fb07a5daed1de582709a56",
+    "native-update-folded-light-display.png": "49d6512354f39ccc2b610ac0522fb5a4d31beca2115353571d2b076494cb0222",
+    "native-ambiguous-chooser-display.png": "8900cce5c3d394d7e2b9d35c7517015cec14c883f096ad80282e5965ad76dbe6",
+    "native-discussion.json": "df923e77e7a669366cb107e75dde6fb9eaf40e469b5c7a677ad6bc8567c1c0e4",
+    "native-applied-body.json": "bd3abd0f71390b780e9ea9b8a255798b470552760e82873492735eb691686a4a",
+    "native-applied-body.png": "3b65e1c3678310ed331761cdc01f2dfea0e35173bb9574c312dde50b6d82d0c8",
+    "native-login.json": "df66ed17e466c42919dae825411e253677837c85e5f0cbe90c1782dd167be369",
+    "native-send-result.txt": "9b8ea1ff29c584029f5d1c37ac9a152a5e76a4a05fbc6a70ef11300010e66f5c",
+    "native-send-receipt.png": "ed75143628433cfa86799b722ea399426fe350b16c2a7ce41ebd740a4fc15b73",
+    "native-open.json": "5ffd7d99c7d034a727851c0679c9cc0400b4a0604fcaff4f2ade2ca5045e7d40",
+    "native-failure-result.txt": "e5b4b333bb45cef041514c09694f412c44c27e81a823cc6502d6d4f4d226b61d"
+  }
+}

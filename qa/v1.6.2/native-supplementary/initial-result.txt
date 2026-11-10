@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: evidence=/storage/emulated/0/Android/data/com.simon.mytasks.qav162/files/evidence/initial
+INSTRUMENTATION_RESULT: result=PASS snapshot
+INSTRUMENTATION_CODE: -1

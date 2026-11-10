@@ -1,0 +1,18 @@
+[
+  {
+    "op": "host",
+    "action": "unfold"
+  },
+  {
+    "op": "capture",
+    "name": "assistant-scroll-before"
+  },
+  {
+    "op": "host",
+    "action": "swipe-assistant"
+  },
+  {
+    "op": "capture",
+    "name": "assistant-scroll-after"
+  }
+]

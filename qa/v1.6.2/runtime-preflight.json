@@ -1,0 +1,11 @@
+{
+  "scope": "read-only probe in actual my-tasks-mobile container; no email sent or mailbox changed",
+  "uid": 10000,
+  "gmail_client_available": true,
+  "gmail_profile_readable": true,
+  "nantes_config_readable": true,
+  "smtp_library_available": true,
+  "deployment_controls_authenticated": true,
+  "persistent_state_mount_verified": true,
+  "canonical_task_mount_verified": true
+}

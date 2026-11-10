@@ -43,7 +43,7 @@ final class Store {
   synchronized(Store.class){
    if(!prefs.edit().clear().putString("server",origin).putString("epoch",UUID.randomUUID().toString()).putString("secret",Base64.encodeToString(cipher.getIV(),Base64.NO_WRAP)+":"+Base64.encodeToString(encrypted,Base64.NO_WRAP)).commit())throw new IOException("Could not save settings");
    new AtomicFile(new File(context.getFilesDir(),"tasks.json")).delete();
-   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();
+   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();context.getSharedPreferences("email_workspace",Context.MODE_PRIVATE).edit().clear().commit();
    ((android.app.NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
   }
  }
@@ -57,7 +57,7 @@ final class Store {
    String origin=prefs.getString("server","");if(!origin.isEmpty())context.getSharedPreferences("connection",Context.MODE_PRIVATE).edit().putString("last_server",origin).commit();
    if(!prefs.edit().clear().commit())throw new IOException("Could not clear local account");
    new AtomicFile(new File(context.getFilesDir(),"tasks.json")).delete();
-   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();
+   context.getSharedPreferences("conversations",Context.MODE_PRIVATE).edit().clear().commit();context.getSharedPreferences("email_workspace",Context.MODE_PRIVATE).edit().clear().commit();
    ((android.app.NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
   }
  }
@@ -75,6 +75,8 @@ final class Store {
    try{out=f.startWrite();out.write(new JSONObject().put("epoch",a.epoch).put("data",data).toString().getBytes(StandardCharsets.UTF_8));f.finishWrite(out);}catch(Exception e){if(out!=null)f.failWrite(out);throw e;}
   }
  }
+ JSONObject emailState(Account a){synchronized(Store.class){try{if(!current(a))return new JSONObject();String raw=context.getSharedPreferences("email_workspace",Context.MODE_PRIVATE).getString("encrypted","");String[] p=raw.split(":");if(p.length!=2)return new JSONObject();Cipher cipher=Cipher.getInstance("AES/GCM/NoPadding");cipher.init(Cipher.DECRYPT_MODE,key(),new GCMParameterSpec(128,Base64.decode(p[0],Base64.NO_WRAP)));cipher.updateAAD((a.server+"\n"+a.epoch+"\nemail-v1").getBytes(StandardCharsets.UTF_8));return new JSONObject(new String(cipher.doFinal(Base64.decode(p[1],Base64.NO_WRAP)),StandardCharsets.UTF_8));}catch(Exception e){return new JSONObject();}}}
+ boolean emailState(Account a,JSONObject data){synchronized(Store.class){try{if(!current(a))return false;Cipher cipher=Cipher.getInstance("AES/GCM/NoPadding");cipher.init(Cipher.ENCRYPT_MODE,key());cipher.updateAAD((a.server+"\n"+a.epoch+"\nemail-v1").getBytes(StandardCharsets.UTF_8));byte[] encrypted=cipher.doFinal(data.toString().getBytes(StandardCharsets.UTF_8));return context.getSharedPreferences("email_workspace",Context.MODE_PRIVATE).edit().putString("encrypted",Base64.encodeToString(cipher.getIV(),Base64.NO_WRAP)+":"+Base64.encodeToString(encrypted,Base64.NO_WRAP)).commit();}catch(Exception e){return false;}}}
  long cursor(){return prefs.getLong("cursor",0);}
  boolean bootstrapped(){return prefs.getBoolean("bootstrapped",false);}
  void cursor(Account a,long value,boolean baseline)throws IOException{

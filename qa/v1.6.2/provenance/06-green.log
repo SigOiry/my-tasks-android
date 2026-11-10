@@ -1,0 +1,22 @@
+test_atomic_replace_failure_rolls_back_task_and_origins_then_recovers (test_notification_origins.ProvenanceTests.test_atomic_replace_failure_rolls_back_task_and_origins_then_recovers) ... ok
+test_cross_source_update_existing_thread_preserves_explicit_roles (test_notification_origins.ProvenanceTests.test_cross_source_update_existing_thread_preserves_explicit_roles) ... ok
+test_deleted_candidate_is_suppressed_without_provenance (test_notification_origins.ProvenanceTests.test_deleted_candidate_is_suppressed_without_provenance) ... ok
+test_disposition_hash_link_and_semantic_decision_are_required (test_notification_origins.ProvenanceTests.test_disposition_hash_link_and_semantic_decision_are_required) ... ok
+test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay) ... ok
+test_future_template_requires_explicit_exact_message_review (test_notification_origins.ProvenanceTests.test_future_template_requires_explicit_exact_message_review) ... ok
+test_installer_dry_run_idempotence_and_fail_closed (test_notification_origins.ProvenanceTests.test_installer_dry_run_idempotence_and_fail_closed) ... ok
+test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) ... ok
+test_manual_override_blocks_attachment_even_when_evidence_changes (test_notification_origins.ProvenanceTests.test_manual_override_blocks_attachment_even_when_evidence_changes) ... ok
+test_nantes_trigger_and_gmail_context_do_not_follow_primary_source (test_notification_origins.ProvenanceTests.test_nantes_trigger_and_gmail_context_do_not_follow_primary_source) ... ok
+test_omitted_origins_never_infers_or_replaces_historical_record (test_notification_origins.ProvenanceTests.test_omitted_origins_never_infers_or_replaces_historical_record) ... ok
+test_original_workflow_regression_suite_runs_on_private_patched_copy (test_notification_origins.ProvenanceTests.test_original_workflow_regression_suite_runs_on_private_patched_copy) ... ok
+test_receipt_crash_recovers_provenance_exactly_once (test_notification_origins.ProvenanceTests.test_receipt_crash_recovers_provenance_exactly_once) ... ok
+test_references_in_prose_or_other_items_are_not_structured_proof (test_notification_origins.ProvenanceTests.test_references_in_prose_or_other_items_are_not_structured_proof) ... ok
+test_structured_known_references_still_reject_encoded_injection (test_notification_origins.ProvenanceTests.test_structured_known_references_still_reject_encoded_injection) ... ok
+test_terminal_status_blocks_attachment (test_notification_origins.ProvenanceTests.test_terminal_status_blocks_attachment) ... ok
+test_unchanged_snapshot_cannot_replace_provenance (test_notification_origins.ProvenanceTests.test_unchanged_snapshot_cannot_replace_provenance) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 5.273s
+
+OK

@@ -1,0 +1,15 @@
+package com.simon.mytasks;
+import org.json.*;
+public class EmailReplyApiIntegrationTest {
+ static void check(boolean b,String m){if(!b)throw new AssertionError(m);}static JSONObject revision(JSONObject d)throws Exception{return new JSONObject().put("expected_revision",d.getInt("revision"));}
+ public static void main(String[] args)throws Exception{
+  EmailReplyClient c=new EmailReplyClient((m,p,b)->ConversationApiIntegrationTest.http(args[0],args[1],m,p,b));
+  JSONObject sources=c.sources("task1","token1");check(sources.getJSONArray("sources").length()==1,"validated source");String source=sources.getJSONArray("sources").getJSONObject(0).getString("id");check(c.detail("task1",source).getJSONArray("thread").length()==1,"authenticated original context");
+  JSONObject d=c.create("native-create","task1",source,"token1");String id=d.getString("id");check(c.create("native-reopen","task1",source,"token1").getString("id").equals(id),"reopen authoritative draft");
+  d=c.save(id,revision(d).put("body","Human writing"));boolean conflict=false;try{c.save(id,new JSONObject().put("expected_revision",1).put("body","stale"));}catch(ConversationApiIntegrationTest.HttpFailure e){conflict=e.code==409;}check(conflict,"CAS rejects stale writes");
+  d=c.operation(id,"refresh-context",revision(d).put("reply_all",true));check(d.getBoolean("reply_all")&&d.getJSONArray("to").toString().equals("[\"reply@example.test\",\"colleague@example.test\"]")&&d.getJSONArray("cc").toString().equals("[\"copy@example.test\"]"),"server Reply all excludes self");
+  JSONObject b=revision(d).put("request_id","native-ai").put("intent","improve").put("instruction","Make concise");c.operation(id,"assist",b);JSONObject job=null;for(int i=0;i<200;i++){job=c.job(id,"native-ai");if(!ConversationState.pendingStatus(job.optString("status")))break;Thread.sleep(20);}check(job!=null&&job.getString("status").equals("succeeded"),"persisted AI job");check(c.get(id).getString("body").equals("Human writing"),"AI never auto-overwrites");JSONObject proposal=job.getJSONObject("proposal");d=c.operation(id,"proposals/"+proposal.getString("id")+"/apply",revision(d));check(d.getString("body").equals("Synthetic proposed reply"),"explicit apply");check(c.get(id).getJSONArray("ai_messages").length()==2,"persistent draft discussion");
+  JSONObject preview=c.operation(id,"preview",revision(d));check(preview.getString("body").equals(d.getString("body")),"review exact body");JSONObject send=revision(d).put("request_id","native-send").put("confirmation_id",preview.getString("confirmation_id")).put("confirmed",true);c.operation(id,"send",send);c.operation(id,"send",send);for(int i=0;i<200;i++){d=c.get(id);if(!d.getString("status").equals("sending"))break;Thread.sleep(20);}check(d.getString("status").equals("sent"),"synthetic receipt readback");check(c.operation(id,"reconcile",new JSONObject()).getString("status").equals("sent"),"reconcile never resends");
+  System.out.println("EmailReplyApiIntegrationTest passed: actual routes/store/client, CAS, AI preview/apply, exact review, duplicate send (synthetic provider only)");
+ }
+}

@@ -1,0 +1,13 @@
+EmailReplyStateTest passed
+EmailReplyClientTest passed
+EmailReplyControllerTest passed
+EmailReplyRaceTest passed
+CitationTitleTest passed
+CitationWarningsTest passed
+EmailReplyDiffTest passed
+ComposerHingeTest passed
+ComposerWindowObserverTest passed: reflective OEM Java Consumer + lifecycle fence
+EmailReplyUiMethodsHarness passed: actual capture + review recipients
+CitationSourceUiHarness passed: actual chips + sourceChooser
+ComposerWindowObserverTest passed: reflective OEM Java Consumer + lifecycle fence
+OEM vendor Consumer proxy variant passed; no physical OEM runtime claimed.

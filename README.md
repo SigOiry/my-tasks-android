@@ -2,6 +2,18 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Contextual email replies and conversations — 1.6.2
+
+Version **1.6.2 / code 12** adds a shared, persistent email reply workspace to Android and web, without redesigning unrelated task screens.
+
+- Reply from an email-driven update or task details; opening the composer does not acknowledge the update. Exact reviewed origins are snapshot-bound. Historical or multiple sources require an explicit message choice, with account, sender, subject, date and excerpt.
+- Server-authoritative drafts autosave with revisions and restore after closing. Reply and Reply all preserve the selected account, original subject and thread headers. A separate exact-message review and explicit confirmation are required to send; ambiguous delivery is reconciled without automatic resend.
+- **Draft with AI**, **Improve writing** and **Ask AI** use only bounded relevant context and no tools. Suggestions are editable previews; explicit Apply is revision-checked so newer human writing wins. The draft-bound AI discussion persists independently of its panel.
+- Narrow displays use a full-height editor/assistant switch; larger windows support an optional split workspace. Native layouts preserve editing state across configuration changes and honor available insets and reported occlusion.
+- Chat sources retain immutable original text plus durable provenance, compact source chips, authenticated email context and visible unavailable/failure notices. Asynchronous subject titles have a bounded update cadence; manual renaming is permanent.
+
+Architecture and acceptance boundaries: `docs/v1.6.2-reply-workspace-design.md`, `docs/v1.6.2-api-contract.md`, and `qa/v1.6.2/`. Native evidence uses the Pixel Fold emulator, not a physical Samsung Fold8. Test email transports are synthetic; no real email is sent during development.
+
 ## Android and shared chat 1.6.1
 
 Version **1.6.1 / code 11** removes the task rail crossing completion checkboxes and makes project surfaces and task-hue external unread halos substantially more visible. Text/cue contrast and reduced motion are retained.
@@ -46,7 +58,7 @@ Server operators must provision the private owner account **before** starting th
 - Optional reviewable speech transcription where the platform supports it; no automatic submission of dictation.
 - Light/dark themes, reduced-motion/transparency controls and width-adaptive compact/expanded layouts. Glass-inspired controls are distinct from solid readable content. This is not native iOS optical-refraction rendering.
 
-Previously discarded stateless chats cannot be reconstructed. Unsent browser drafts are page-memory only; durable history starts with accepted messages, not unsubmitted text. Discussion search filters the loaded metadata; use pagination to load more.
+Previously discarded stateless chats cannot be reconstructed. Unsent ordinary chat inputs are page-memory only; durable history starts with accepted messages, not unsubmitted text. Email reply drafts are separately server-persisted, with recoverable local writing during save failures. Discussion search filters the loaded metadata; use pagination to load more.
 
 ### Platform differences
 

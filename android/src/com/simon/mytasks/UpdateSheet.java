@@ -16,7 +16,8 @@ final class UpdateSheet {
   acknowledge=a.primary("Mark reviewed",()->{if(current()&&!waiting)a.markRead(shown.taskId(),shown.token());});
   LinearLayout actions=a.vertical();a.add(actions,state);a.add(actions,latest);a.space(actions,4);a.add(actions,acknowledge);a.space(actions,8);
   Button details=a.button("Open task",()->{if(!current())return;dialog.dismiss();a.openReviewedTask(shown.taskId(),false);});Button discuss=a.button("Ask Hermes",()->{if(!current())return;dialog.dismiss();a.openReviewedTask(shown.taskId(),true);});a.pair(actions,details,discuss);
-  TextView explanation=a.label("Open task and Ask Hermes keep this update unread.",12,a.muted);a.add(actions,explanation);
+  Button reply=a.button("Reply to email…",()->{if(!current()||waiting)return;dialog.dismiss();a.openEmailReply(shown.taskId(),shown.token());});a.ui.quiet(reply);a.add(actions,reply);
+  TextView explanation=a.label("Open task, Ask Hermes and Reply keep this update unread.",12,a.muted);a.add(actions,explanation);
   ScrollView body=new ScrollView(a);body.setFillViewport(false);boolean compact=a.getResources().getConfiguration().screenHeightDp<500||a.getResources().getConfiguration().fontScale>=1.5f;
   if(compact){a.add(prose,actions);body.addView(prose);panel.addView(body,new LinearLayout.LayoutParams(-1,-2,1));}else{body.addView(prose);panel.addView(body,new LinearLayout.LayoutParams(-1,-2,1));a.add(panel,actions);}
   dialog.setContentView(material);a.trackDialog(dialog);dialog.setOnDismissListener(d->{material.animate().cancel();a.forgetDialog(dialog);if(a.summaryDialog==dialog){a.summaryDialog=null;a.summaryUi=null;}});dialog.setOnShowListener(d->{updateState();NativeSheets.fit(a,dialog,material,false);});

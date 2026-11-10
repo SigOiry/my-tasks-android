@@ -1,0 +1,439 @@
+test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay) ... ok
+test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) ...
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='null') ... ERROR
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='list') ... ERROR
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-key') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-list') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='empty-list') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-object') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-item') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='wrong-item') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='bad-role') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='extra-field') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='missing-role') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='thread') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-carried') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-message') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='duplicate') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='conflicting-role') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='too-many') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='object-ref') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'gmail:reviewer@example.com:message:1a23456789abcdef\\r\\nBcc: victim@ex") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'javascript:alert(1)'") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://INBOX;UID=42'") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://../x;UIDVALIDITY=1;UID=2;Message-ID=<x@y>'") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://INBOX.Sent;UIDVALIDITY=1234;UID=42;Message-ID=<reply.42") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'gmail:reviewer@example.com:message:1a23456789abcdef;touch /x'") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=None) ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=True) ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version='1') ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=0) ... FAIL
+  test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=2) ... FAIL
+test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) ... FAIL
+
+======================================================================
+ERROR: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='null')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 105, in test_invalid_origins_fail_before_any_database_write
+    self.workflow.commit(run['run_id'], changed)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/data/cache/scratch/tmp4avo2wih/sync_workflow.py", line 315, in commit
+    origins = validate_origins(review, manifest, candidates, by_id)
+  File "/opt/data/cache/scratch/tmp4avo2wih/notification_origins.py", line 11, in validate_origins
+    for key, origins in review.get('notification_origins', {}).items()}
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'items'
+
+======================================================================
+ERROR: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='list')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 105, in test_invalid_origins_fail_before_any_database_write
+    self.workflow.commit(run['run_id'], changed)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/data/cache/scratch/tmp4avo2wih/sync_workflow.py", line 315, in commit
+    origins = validate_origins(review, manifest, candidates, by_id)
+  File "/opt/data/cache/scratch/tmp4avo2wih/notification_origins.py", line 11, in validate_origins
+    for key, origins in review.get('notification_origins', {}).items()}
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'items'
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-key')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-list')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='empty-list')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-object')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-item')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='wrong-item')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='bad-role')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='extra-field')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='missing-role')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='thread')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='not-carried')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='unknown-message')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='duplicate')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='conflicting-role')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='too-many')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label='object-ref')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'gmail:reviewer@example.com:message:1a23456789abcdef\\r\\nBcc: victim@ex")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'javascript:alert(1)'")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://INBOX;UID=42'")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://../x;UIDVALIDITY=1;UID=2;Message-ID=<x@y>'")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'nantes-imap://INBOX.Sent;UIDVALIDITY=1234;UID=42;Message-ID=<reply.42")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'gmail:reviewer@example.com:message:1a23456789abcdef;touch /x'")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (label="malformed-'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 104, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=None)
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 113, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=True)
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 113, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version='1')
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 113, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=0)
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 113, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write) (version=2)
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 113, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+======================================================================
+FAIL: test_invalid_origins_fail_before_any_database_write (test_notification_origins.ProvenanceTests.test_invalid_origins_fail_before_any_database_write)
+----------------------------------------------------------------------
+ValueError: run already committed with different review
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 118, in test_invalid_origins_fail_before_any_database_write
+    with self.assertRaisesRegex(ValueError, 'notification_origins'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "notification_origins" does not match "run already committed with different review"
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.307s
+
+FAILED (failures=29, errors=2)

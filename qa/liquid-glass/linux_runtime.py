@@ -16,7 +16,8 @@ REMOTE = '/home/simon/hermes-apks/qa-runtime'
 SSH = ['ssh','-i','/opt/data/ssh/android-testing','-o','UserKnownHostsFile=/opt/data/ssh/android-known_hosts',
        '-o','StrictHostKeyChecking=yes','-o','BatchMode=yes',HOST]
 SERVER = ('mobile_api.py','qa_server.py','account_auth.py','account_admin.py','account_routes.py',
-          'web_auth.py','conversations.py','hermes_chat.py','public_web.py','event_feed.py','releases.py')
+          'web_auth.py','conversations.py','hermes_chat.py','public_web.py','event_feed.py','releases.py',
+          'email_workspace.py','email_providers.py','email_routes.py','citations.py','conversation_titles.py')
 DATA = ('liquid-glass-synthetic.json','tasks.json','qa-cert.pem','qa-key.pem','qa-token','qa-password',
         'account.sqlite','conversations.sqlite')
 # Only filesystem location literals change in generated copies. Fail closed on upstream drift.
@@ -51,7 +52,13 @@ def package(root, bundle):
                     'qa/liquid-glass/runtime.py':HERE/'runtime.py',
                     'qa/liquid-glass/fixtures/public-source-replay.json':HERE/'fixtures/public-source-replay.json',
                     'qa/liquid-glass/live_mutate.py':HERE/'live_mutate.py',
-                    'qa/liquid-glass/live_summary.py':HERE/'live_summary.py'})
+                    'qa/liquid-glass/live_summary.py':HERE/'live_summary.py',
+                    'qa/v1.6.2/fixture.py':REPO/'qa/v1.6.2/fixture.py'})
+    web_manifest = json.loads((REPO/'server/web_dist/manifest.json').read_text())
+    for name in web_manifest['assets'] + ['manifest.json']:
+        if Path(name).name != name or (REPO/'server/web_dist'/name).is_symlink():
+            raise ValueError('Unsafe built asset')
+        sources['server/web_dist/'+name] = REPO/'server/web_dist'/name
     manifest = {}
     for relative, source in sources.items():
         content = source.read_bytes()

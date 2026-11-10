@@ -1,0 +1,1 @@
+package android.app;public class Activity{public void runOnUiThread(Runnable r){r.run();}}

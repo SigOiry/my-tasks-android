@@ -41,7 +41,7 @@ final class ConversationState {
   JSONObject existing=page(id);TreeMap<Long,JSONObject> turns=new TreeMap<>();
   if(existing!=null)merge(turns,existing.optJSONArray("messages"));merge(turns,incoming.optJSONArray("messages"));
   JSONArray all=new JSONArray();for(JSONObject turn:turns.values())all.put(turn);
-  JSONObject page=new JSONObject();put(page,"conversation",incoming.optJSONObject("conversation"));put(page,"messages",all);put(page,"context_compacted",incoming.has("context_compacted")?incoming.optBoolean("context_compacted"):existing!=null&&existing.optBoolean("context_compacted"));
+  JSONObject page=new JSONObject();put(page,"conversation",metadata(existing==null?null:existing.optJSONObject("conversation"),incoming.optJSONObject("conversation")));put(page,"messages",all);put(page,"context_compacted",incoming.has("context_compacted")?incoming.optBoolean("context_compacted"):existing!=null&&existing.optBoolean("context_compacted"));
   // Remote clients may have added more than a page since our last visit. An
   // old fully-loaded prefix is not proof that the newly observed middle exists.
   JSONArray fresh=incoming.optJSONArray("messages");JSONArray known=existing==null?new JSONArray():existing.optJSONArray("latest_page_ids");if(known==null)known=ids(existing.optJSONArray("messages"));
@@ -50,8 +50,15 @@ final class ConversationState {
   put(page,"latest_page_ids",!older&&incoming.has("has_more")?ids(fresh):known);
   JSONObject boundary=older||existing==null||gap?incoming:existing;put(page,"has_more",boundary.optBoolean("has_more"));put(page,"before_cursor",boundary.opt("before_cursor"));put(data.optJSONObject("pages"),id,page);
  }
+ static JSONObject metadata(JSONObject old,JSONObject fresh){
+  if(old==null)return fresh;if(fresh==null)return old;
+  JSONObject result;try{result=new JSONObject((fresh.optInt("revision")>=old.optInt("revision")?fresh:old).toString());}catch(JSONException e){throw new IllegalArgumentException(e);}
+  JSONObject title=fresh.optLong("title_revision",0)>old.optLong("title_revision",0)?fresh:old.optLong("title_revision",0)>fresh.optLong("title_revision",0)?old:result;
+  if("manual".equals(old.optString("title_origin"))&&!"manual".equals(fresh.optString("title_origin")))title=old;
+  for(String k:new String[]{"title","title_revision","title_origin","title_updated_at"})if(title.has(k))put(result,k,title.opt(k));return result;
+ }
  private static JSONArray ids(JSONArray messages){JSONArray ids=new JSONArray();if(messages!=null)for(int i=0;i<messages.length();i++){JSONObject message=messages.optJSONObject(i);if(message!=null)ids.put(message.optLong("id"));}return ids;}
  private static boolean overlaps(JSONArray known,JSONArray fresh){HashSet<Long> ids=new HashSet<>();for(int i=0;i<known.length();i++)ids.add(known.optLong(i));for(int i=0;i<fresh.length();i++){JSONObject message=fresh.optJSONObject(i);if(message!=null&&ids.contains(message.optLong("id")))return true;}return false;}
- private static void merge(TreeMap<Long,JSONObject> turns,JSONArray messages){if(messages==null)return;for(int i=0;i<messages.length();i++){JSONObject m=messages.optJSONObject(i);if(m!=null)turns.put(m.optLong("id"),m);}}
+ private static void merge(TreeMap<Long,JSONObject> turns,JSONArray messages){if(messages==null)return;for(int i=0;i<messages.length();i++){JSONObject m=messages.optJSONObject(i);if(m!=null){JSONObject old=turns.get(m.optLong("id"));if(old!=null&&old.optJSONObject("citation_metadata")!=null&&m.optJSONObject("citation_metadata")==null){try{m=new JSONObject(m.toString());}catch(JSONException e){throw new IllegalArgumentException(e);}put(m,"citation_metadata",old.optJSONObject("citation_metadata"));}turns.put(m.optLong("id"),m);}}}
  static boolean canApplyVoice(String epoch,String thread,String currentEpoch,String currentThread){return !thread.isEmpty()&&epoch.equals(currentEpoch)&&thread.equals(currentThread);}
 }

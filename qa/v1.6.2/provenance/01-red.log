@@ -1,0 +1,22 @@
+test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay) ... FAIL
+
+======================================================================
+FAIL: test_exact_commit_atomic_backup_and_replay (test_notification_origins.ProvenanceTests.test_exact_commit_atomic_backup_and_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 30, in setUp
+    import install_notification_origins as installer
+ModuleNotFoundError: No module named 'install_notification_origins'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/integration/test_notification_origins.py", line 32, in setUp
+    self.fail('provenance installer is not implemented')
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: provenance installer is not implemented
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

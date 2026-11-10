@@ -17,6 +17,7 @@ final class ConversationController {
  Listener listener;String visible="",notice="";boolean foreground=false,closed=false,connected=false;
  String scope="all",taskScope="",search="",next="";boolean archived=false;JSONArray threads=new JSONArray();
  private int listGeneration;int navigationVersion;private Runnable poll;private final Runnable saveDraft=()->save();
+ private final Runnable metadataRefresh=new Runnable(){public void run(){if(!valid()||!foreground||listener==null)return;if(visible.isEmpty())list(false);else load(visible,false);watchMetadata();}};
  ConversationController(Store s,Store.Account a){
   store=s;account=a;prefs=s.context.getSharedPreferences("conversations",Context.MODE_PRIVATE);
   JSONObject saved=new JSONObject();if(a!=null&&a.epoch.equals(prefs.getString("epoch","")))try{saved=new JSONObject(prefs.getString("state","{}"));}catch(Exception ignored){}
@@ -30,8 +31,9 @@ final class ConversationController {
  String noticeFor(String id){return state.json().optString("notice:"+id,"");}
  void noticeFor(String id,String message){if(id.isEmpty())notice=message;else ConversationState.put(state.json(),"notice:"+id,message);}
  void changed(){if(listener!=null&&foreground)listener.changed();}
- void resume(){foreground=true;if(!visible.isEmpty())load(visible,false);else if(listener!=null)list(false);}
- void pause(){foreground=false;cancelPoll();main.removeCallbacks(saveDraft);save();}
+ void watchMetadata(){main.removeCallbacks(metadataRefresh);if(foreground&&listener!=null)main.postDelayed(metadataRefresh,15000);}
+ void resume(){foreground=true;watchMetadata();if(!visible.isEmpty())load(visible,false);else if(listener!=null)list(false);}
+ void pause(){foreground=false;cancelPoll();main.removeCallbacks(metadataRefresh);main.removeCallbacks(saveDraft);save();}
  void editDraft(String id,String text){state.draft(id,text);main.removeCallbacks(saveDraft);main.postDelayed(saveDraft,500);}
  void close(){pause();closed=true;listener=null;visible="";operations.clear();threads=new JSONArray();state.clear();notice="";}
  void show(String id){visible=id;cancelPoll();if(!id.isEmpty()){state.select(id);save();load(id,false);}changed();}
@@ -40,7 +42,7 @@ final class ConversationController {
  void list(boolean more){
   final int gen=listGeneration;final String cursor=more?next:"";if(more&&cursor.isEmpty())return;
   final String requestedScope=scope,task=taskScope;final boolean arc=archived;
-  execute("list:"+gen+":"+cursor,c->c.list(requestedScope,task,arc,cursor),r->{if(gen!=listGeneration)return;LinkedHashMap<String,JSONObject> items=new LinkedHashMap<>();if(more)for(int i=0;i<threads.length();i++){JSONObject t=threads.optJSONObject(i);if(t!=null)items.put(t.optString("id"),t);}JSONArray rows=r.getJSONArray("conversations");for(int i=0;i<rows.length();i++){JSONObject t=rows.getJSONObject(i);items.put(t.getString("id"),t);}threads=new JSONArray();for(JSONObject t:items.values())threads.put(t);next=r.isNull("next_cursor")?"":r.optString("next_cursor","");},null);
+  execute("list:"+gen+":"+cursor,c->c.list(requestedScope,task,arc,cursor),r->{if(gen!=listGeneration)return;LinkedHashMap<String,JSONObject> known=new LinkedHashMap<>(),items=new LinkedHashMap<>();for(int i=0;i<threads.length();i++){JSONObject t=threads.optJSONObject(i);if(t!=null)known.put(t.optString("id"),t);}if(more)items.putAll(known);JSONArray rows=r.getJSONArray("conversations");for(int i=0;i<rows.length();i++){JSONObject t=rows.getJSONObject(i);items.put(t.getString("id"),ConversationState.metadata(known.get(t.getString("id")),t));if(state.conversation(t.getString("id"))!=null)seed(t);}threads=new JSONArray();for(JSONObject t:items.values())threads.put(t);next=r.isNull("next_cursor")?"":r.optString("next_cursor","");},null);
  }
  void create(String task,Runnable opened){final int navigation=navigationVersion;thread(visible,"create",c->c.create(task,null),r->{String id=r.getString("id");seed(r);notice="";if(navigation!=navigationVersion)return;state.select(id);if(task!=null)state.taskSelection(task,id);visible=id;if(opened!=null)opened.run();load(id,false);},"A creation may already have reached the server. Refresh Discussions before deciding to create another.");}
  void seed(JSONObject conversation){String id=conversation.optString("id");JSONObject p=new JSONObject();ConversationState.put(p,"conversation",conversation);ConversationState.put(p,"messages",new JSONArray());state.page(id,p,false);}

@@ -1,0 +1,33 @@
+{
+  "instruction_rotation_retained": true,
+  "draft_body_retained_after_rotation_and_unfold": true,
+  "dimensions": {
+    "portrait_before": [
+      411,
+      797
+    ],
+    "landscape": [
+      797,
+      411
+    ],
+    "portrait_after": [
+      411,
+      797
+    ]
+  },
+  "assistant_scroll_before": [
+    0,
+    0
+  ],
+  "assistant_scroll_after": [
+    0,
+    836
+  ],
+  "assistant_scroll_independent": true,
+  "selection_cursor": "untested: installed snapshot exposes no selection range",
+  "restored_settings": true,
+  "posture_closed": true,
+  "production_foreground": true,
+  "send_or_ack_called": false,
+  "synthetic_discuss_requests": 5
+}

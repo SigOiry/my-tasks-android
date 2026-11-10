@@ -1,0 +1,35 @@
+test_unseen_context_requires_explicit_refresh_before_confirmation (test_email_workspace.WorkspaceCase.test_unseen_context_requires_explicit_refresh_before_confirmation) ... FAIL
+test_changed_task_context_requires_refresh_and_fences_old_confirmation (test_email_workspace.WorkspaceCase.test_changed_task_context_requires_refresh_and_fences_old_confirmation) ... FAIL
+test_confirmed_send_threading_replay_and_reconcile (test_email_workspace.WorkspaceCase.test_confirmed_send_threading_replay_and_reconcile) ... FAIL
+
+======================================================================
+FAIL: test_unseen_context_requires_explicit_refresh_before_confirmation (test_email_workspace.WorkspaceCase.test_unseen_context_requires_explicit_refresh_before_confirmation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_email_workspace.py", line 169, in test_unseen_context_requires_explicit_refresh_before_confirmation
+    self.assertEqual(blocked.status_code,409,blocked.text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 409 : {"confirmation_id":"confirm_6d1a67a8ff0a41fab2fdd4023b524290","draft_revision":2,"body":"Written by human","context_changed":true,"from":"owner@example.test","to":["reply@example.test"],"cc":[],"subject":"Original subject","source":{"id":"src_e325f70c71d58757a19f42fdde6e882d","kind":"email","provider":"gmail","account_label":"owner@example.test","sender":"Author <author@example.test>","subject":"Original subject","date":"2026-11-10","excerpt":"Original private source","available":true,"replyable":true,"reason":null,"origin":"historical"}}
+
+======================================================================
+FAIL: test_changed_task_context_requires_refresh_and_fences_old_confirmation (test_email_workspace.WorkspaceCase.test_changed_task_context_requires_refresh_and_fences_old_confirmation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_email_workspace.py", line 201, in test_changed_task_context_requires_refresh_and_fences_old_confirmation
+    self.assertEqual(blocked.status_code,409,blocked.text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 409 : {"confirmation_id":"confirm_5452d939898f4448a8966df58cb1f530","draft_revision":2,"body":"Written by human","context_changed":true,"from":"owner@example.test","to":["reply@example.test"],"cc":[],"subject":"Original subject","source":{"id":"src_e325f70c71d58757a19f42fdde6e882d","kind":"email","provider":"gmail","account_label":"owner@example.test","sender":"Author <author@example.test>","subject":"Original subject","date":"2026-11-10","excerpt":"Original private source","available":true,"replyable":true,"reason":null,"origin":"historical"}}
+
+======================================================================
+FAIL: test_confirmed_send_threading_replay_and_reconcile (test_email_workspace.WorkspaceCase.test_confirmed_send_threading_replay_and_reconcile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_email_workspace.py", line 138, in test_confirmed_send_threading_replay_and_reconcile
+    self.assertEqual(blocked.status_code,409,blocked.text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 409 : {"confirmation_id":"confirm_b38c510af2d1441692906fcc409ed51f","draft_revision":2,"body":"Written by human","context_changed":true,"from":"owner@example.test","to":["reply@example.test","colleague@example.test"],"cc":["copy@example.test"],"subject":"Original subject","source":{"id":"src_e325f70c71d58757a19f42fdde6e882d","kind":"email","provider":"gmail","account_label":"owner@example.test","sender":"Author <author@example.test>","subject":"Original subject","date":"2026-11-10","excerpt":"Original private source","available":true,"replyable":true,"reason":null,"origin":"historical"}}
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.521s
+
+FAILED (failures=3)
