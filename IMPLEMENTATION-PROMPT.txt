@@ -1,5 +1,8 @@
 /native-android-liquid-glass
 
+CURRENT OWNER FOLLOW-UP — 2026-11-10 — SUPERSEDES SUBTLE COLOR/GLOW GUIDANCE BELOW
+The owner reports chat still cannot access the internet, the vertical task rail overlaps the completion checkbox on their Fold8, task colors are too hard to see, and unread glow is too narrow/dim. Diagnose the actual deployed durable-chat/provider path and fix automatic research rather than claiming success from source presence or explicit-keyword-only smoke tests. Verify ordinary current/public questions and supported direct public-page requests, honest failure, no-search greeting, privacy isolation and replay. On Android remove the rail/checkbox visual collision while preserving 48dp targets; make stable project-hue/importance-intensity task colors substantially more visible in light/dark; make a clearly larger, brighter, soft OUTSIDE halo using the SAME task hue, not a separate fixed blue. Preserve neutral mode, readable text, reduced motion, lifecycle budgets and exact unread acknowledgement. Web presentation, canonical data, saved sessions and release signer remain unchanged. Exercise actual folded/unfolded native renders; emulator evidence is not physical Fold8 acceptance.
+
 CURRENT OWNER BRIEF — 2026-11-10 — HIGHEST PRECEDENCE
 This brief supersedes conflicting older prompts, design documents and v3 skill instructions. Current Android visual acceptance FAILED: static UI, missing project/importance colors and a border substituted for animated glow are unfinished. Preserve good existing work; do not reset.
 

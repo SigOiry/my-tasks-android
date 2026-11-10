@@ -35,17 +35,16 @@ final class TaskRowView extends LinearLayout {
  private String taskId="",token="";
  private boolean unread,paused,ownsEmphasis;
  private float breath;
- private int category,tint;
+ private int category,cue,tint;
  private boolean arrival;
  private final Runnable continueEmphasis=this::startEmphasis;
- private final Paint categoryPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
  private ValueAnimator animator;
 
  TaskRowView(MainActivity activity,UpdateEmphasis ledger){
   super(activity);a=activity;ui=a.ui;emphasis=ledger;
   setOrientation(HORIZONTAL);setGravity(Gravity.CENTER_VERTICAL);
   setMinimumHeight(ui.dp(72));
-  setPadding(0,ui.dp(10),0,ui.dp(10));
+  setPadding(ui.dp(16),ui.dp(10),ui.dp(16),ui.dp(10));
   setWillNotDraw(false);setClickable(true);setFocusable(true);
   setOnClickListener(v->{if(task!=null)a.navigate(taskId);});
   setOnLongClickListener(v->{if(task==null)return false;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);a.showTaskActions(task);return true;});
@@ -73,6 +72,7 @@ final class TaskRowView extends LinearLayout {
   boolean nextUnread=n!=null&&n.optBoolean("unread");
   if(!id.equals(taskId)||!nextToken.equals(token)||nextUnread!=unread)stopEmphasis();
   category=PresentationPolicy.taskColor(value,a.colorMode,android.graphics.Color.red(ui.canvas)<100,ui.secondary);
+  cue=PresentationPolicy.taskCueColor(category,android.graphics.Color.red(ui.canvas)<100);
   tint=PresentationPolicy.rowTint(value,a.colorMode,android.graphics.Color.red(ui.canvas)<100,ui.surface);
   task=value;taskId=id;token=nextToken;unread=nextUnread;paused=false;setTag(taskId);
   String name=value.optString("title","");boolean largeText=getResources().getConfiguration().fontScale>=1.5f;title.setMaxLines(largeText?Integer.MAX_VALUE:2);title.setEllipsize(largeText?null:TextUtils.TruncateAt.END);title.setText(name);
@@ -84,12 +84,13 @@ final class TaskRowView extends LinearLayout {
   if(detail.isEmpty())detail=a.human(value.optString("status","todo"));
   if("Importance".equals(a.colorMode))detail=a.human(priority)+" priority · "+detail;
   SpannableString secondary=new SpannableString(TaskPresentation.context(detail,unread));
-  if(unread)secondary.setSpan(new ForegroundColorSpan(ui.unread),0,TaskPresentation.UPDATE.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+  if(unread)secondary.setSpan(new ForegroundColorSpan(PresentationPolicy.rowUnreadColor(android.graphics.Color.red(ui.canvas)<100)),0,TaskPresentation.UPDATE.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
   // Essential unread text is first and unbounded; long metadata may wrap below it.
   // Reset both policies on recycle so ordinary rows remain compact.
   boolean wrap=TaskPresentation.wrapContext(unread);
   context.setSingleLine(!wrap);context.setMaxLines(wrap?Integer.MAX_VALUE:1);
   context.setEllipsize(wrap?null:TextUtils.TruncateAt.END);
+  context.setTextColor(PresentationPolicy.rowSecondary(android.graphics.Color.red(ui.canvas)<100));
   context.setText(secondary);context.setVisibility(VISIBLE);
   boolean completed="completed".equals(value.optString("status"));completion.setChecked(completed);
   completion.setEnabled(a.online&&!a.busy&&!value.optBoolean("deleted"));
@@ -97,7 +98,7 @@ final class TaskRowView extends LinearLayout {
   int flag=TaskPresentation.flag(priority);
   if(flag==TaskPresentation.FLAG_FILLED)overflow.setImageDrawable(filledFlag());
   else overflow.setImageResource(flag==TaskPresentation.FLAG_OUTLINE?R.drawable.ic_flag:R.drawable.ic_more);
-  overflow.setImageTintList(ColorStateList.valueOf("Neutral".equals(a.colorMode)?ui.secondary:category));
+  overflow.setImageTintList(ColorStateList.valueOf("Neutral".equals(a.colorMode)?ui.secondary:cue));
   overflow.setContentDescription(a.human(priority)+" priority. Actions for "+name);overflow.setTooltipText("Task actions");
   boolean selected=taskId.equals(a.selected);setSelected(selected);
   setBackground(null);
@@ -115,12 +116,12 @@ final class TaskRowView extends LinearLayout {
   flag.getPaint().setAntiAlias(true);flag.setIntrinsicWidth(ui.dp(24));flag.setIntrinsicHeight(ui.dp(24));return flag;
  }
  void groupCorners(boolean first,boolean last){
-  // Reserve 8dp on all sides INSIDE the View for the halo OUTSIDE its edge.
+  // Reserve 16dp INSIDE the View for the 15dp halo OUTSIDE the surface edge.
   // No negative bounds, clipping flags, blur-on-text or software View layers.
   android.graphics.drawable.GradientDrawable fill=ui.shape(tint,0,14);
   if(!unread){float corner=ui.dp(18);fill.setCornerRadii(new float[]{first?corner:0,first?corner:0,first?corner:0,first?corner:0,last?corner:0,last?corner:0,last?corner:0,last?corner:0});}
-  android.graphics.drawable.InsetDrawable inset=new android.graphics.drawable.InsetDrawable(fill,ui.dp(8),unread?ui.dp(8):0,ui.dp(8),unread?ui.dp(8):0);
-  setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf((ui.primary&0x00ffffff)|0x18000000),inset,null));setPadding(0,ui.dp(10),0,ui.dp(10));
+  android.graphics.drawable.InsetDrawable inset=new android.graphics.drawable.InsetDrawable(fill,ui.dp(16),unread?ui.dp(16):0,ui.dp(16),unread?ui.dp(16):0);
+  setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf((ui.primary&0x00ffffff)|0x18000000),inset,null));setPadding(ui.dp(16),ui.dp(unread?18:10),ui.dp(16),ui.dp(unread?18:10));
  }
  private void startEmphasis(){
   if(animator!=null)return;
@@ -152,21 +153,25 @@ final class TaskRowView extends LinearLayout {
  @Override protected void onWindowVisibilityChanged(int visibility){super.onWindowVisibilityChanged(visibility);if(emphasis==null)return;if(visibility!=VISIBLE)stopEmphasis();else post(this::startEmphasis);}
  @Override protected void onDraw(Canvas canvas){
   super.onDraw(canvas);
-  if(!unread&&!isSelected()){halo.setColor(ui.separator);halo.setAlpha(95);halo.setStrokeWidth(1);canvas.drawLine(ui.dp(48),getHeight()-1,getWidth()-ui.dp(12),getHeight()-1,halo);}halo.setColor(ui.unread);halo.setStrokeWidth(ui.dp(1.5f));
-  if(!"Neutral".equals(a.colorMode)){categoryPaint.setColor(category);canvas.drawCircle(ui.dp(44),ui.dp(14),ui.dp(2.5f),categoryPaint);
-   canvas.drawRoundRect(ui.dp(12),ui.dp(18),ui.dp(15),getHeight()-ui.dp(18),ui.dp(1.5f),ui.dp(1.5f),categoryPaint);}
-  if(isSelected()){halo.setColor(ui.focus);halo.setAlpha(190);halo.setStrokeWidth(ui.dp(2));canvas.drawLine(getWidth()-ui.dp(12),ui.dp(22),getWidth()-ui.dp(12),getHeight()-ui.dp(22),halo);halo.setColor(ui.unread);}
+  if(!unread&&!isSelected()){halo.setColor(ui.separator);halo.setAlpha(95);halo.setStrokeWidth(1);canvas.drawLine(ui.dp(48),getHeight()-1,getWidth()-ui.dp(12),getHeight()-1,halo);}halo.setColor(category);halo.setStrokeWidth(ui.dp(1.5f));
+  // Category lives in the whole surface and priority cue, never across the completion target.
+  if(isSelected()){halo.setColor(ui.focus);halo.setAlpha(190);halo.setStrokeWidth(ui.dp(2));canvas.drawLine(getWidth()-ui.dp(16),ui.dp(22),getWidth()-ui.dp(16),getHeight()-ui.dp(22),halo);halo.setColor(category);}
   if(unread){
    // Concentric subpixel-overlapping strokes give a hardware-safe soft falloff
    // strictly OUTSIDE the inset row edge. It remains visible when motion is off.
-   halo.setStrokeWidth(ui.dp(1.6f));
-   for(int ring=7;ring>=1;ring--){float falloff=(8-ring)/7f;
-    halo.setAlpha(Math.round((22+breath*55)*falloff*falloff));
-    float inset=ui.dp(8-ring),radius=ui.dp(14+ring);
+   float haloStroke=ui.dp(2),halfStroke=haloStroke/2f;
+   halo.setStrokeWidth(haloStroke);
+   for(int ring=15;ring>=1;ring--){
+    // Gaussian-shaped alpha falloff: visible static trough, soft outer radius.
+    float falloff=(float)Math.exp(-(ring*ring)/98f);
+    halo.setAlpha(Math.round((90+breath*90)*falloff));
+    // Rounded dp(1) may be less than half of rounded dp(2). Guard both
+    // edges so the whole stroke fits between the View and inset background.
+    float inset=Math.max(halfStroke,Math.min(ui.dp(16-ring),ui.dp(16)-halfStroke)),radius=ui.dp(14+ring);
     canvas.drawRoundRect(inset,inset,getWidth()-inset,getHeight()-inset,radius,radius,halo);
    }
   }
-  halo.setStrokeWidth(ui.dp(1.5f));
-  if(unread){halo.setAlpha(Math.round(220+breath*35));float inset=ui.dp(8);canvas.drawRoundRect(inset,inset,getWidth()-inset,getHeight()-inset,ui.dp(14),ui.dp(14),halo);}
+  halo.setStrokeWidth(ui.dp(1));
+  if(unread){halo.setColor(cue);halo.setAlpha(170);float inset=ui.dp(16);canvas.drawRoundRect(inset,inset,getWidth()-inset,getHeight()-inset,ui.dp(14),ui.dp(14),halo);}
  }
 }

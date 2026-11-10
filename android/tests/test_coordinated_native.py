@@ -34,13 +34,13 @@ class CoordinatedNativeTest(unittest.TestCase):
   dots=self.text('PendingDots')
   for gate in ['NativeMotionPolicy.pendingWave','a.foreground','getGlobalVisibleRect','ui.motionEnabled()','onDetachedFromWindow','onWindowVisibilityChanged','removeCallbacks']:
    self.assertIn(gate,dots)
- def test_category_is_small_accent_not_text_or_unread(self):
+ def test_category_surface_and_external_halo_do_not_recolor_reading_text(self):
+  # Latest owner request supersedes the tiny accent/fixed blue halo contract.
   s=self.text('TaskRowView')
   self.assertIn('PresentationPolicy.taskColor(value,a.colorMode',s)
-  self.assertIn('canvas.drawCircle',s)
-  self.assertIn('setStrokeWidth(ui.dp(1.5f))',s)
-  self.assertIn('ui.dp(8)',s) # bounded halo
-  self.assertIn('halo.setAlpha(Math.round(220+breath*35))',s)
-  self.assertIn('new ForegroundColorSpan(ui.unread)',s)
+  self.assertIn('PresentationPolicy.rowTint(value,a.colorMode',s)
+  self.assertNotIn('canvas.drawCircle',s)
+  self.assertIn('halo.setColor(category)',s)
+  self.assertIn('new ForegroundColorSpan(PresentationPolicy.rowUnreadColor',s)
   self.assertNotRegex(s,r'title.setTextColor\(.*category')
 if __name__=='__main__':unittest.main()

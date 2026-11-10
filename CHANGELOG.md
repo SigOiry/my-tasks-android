@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.1
+
+Android visibility fixes and independently reviewed shared-chat public research routing. The final backend privacy gate passed after adding indirect-writing/gerund, opt-out modifier/apostrophe and social/capability regressions. Release assets retain the original signer and standard updater metadata.
+
+- Correct shared-chat research routing: ordinary public factual questions in English/French no longer depend on a small set of freshness keywords. Eligible direct public URLs use a single pinned page read and tool-free synthesis. Capability replies describe the server's actual bounded research feature, not the synthesis model's lack of tools.
+- Keep private/supplied text, credentials, ordinary writing, greetings, explicit no-browse requests and rolling summaries out of public retrieval. Persisted-current-request isolation, SSRF checks, provenance/context budgets and replay semantics remain enforced.
+- Remove the Android category rail/dot that overlapped completion checkboxes. Preserve separate 48dp completion and task-action targets.
+- Make project task surfaces substantially more visible: low/medium/high tint is 16/26/36% in light mode and 16/24/32% in dark mode, with tested readable text/cues. Importance remains intensity within the stable project hue.
+- Replace the small fixed-blue unread outline with a broad 15dp soft external halo in the task's own hue, including visible static reduced motion. Sustained breathing, bounded concurrency/lifecycle and exact-token acknowledgement are retained.
+- Android version `1.6.1`, code `11`, original signer. The web presentation and account/canonical task data are unchanged by this fix.
+
+Verification and remaining physical-device/installer limitations: `qa/chat-visual-fix-20261110/REPORT.md`.
+
 ## 1.6
 
 - Android-only project-hue/importance-intensity row tints, persistent Project/Importance/Neutral choices and stable canonical project mapping. The existing web presentation is unchanged.

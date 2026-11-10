@@ -23,7 +23,7 @@ class OwnerVisualsTest(unittest.TestCase):
    int hue=PresentationPolicy.taskColor(task,mode,dark,0xff63636b);
    check(hue==PresentationPolicy.taskColor(task,"Project",dark,0xff63636b),"importance must not replace project hue with global red/amber/teal");
    int tint=(Integer)PresentationPolicy.class.getMethod("rowTint",JSONObject.class,String.class,boolean.class,int.class).invoke(null,task,mode,dark,surface);
-   int percent=priority.equals("high")?(dark?20:14):priority.equals("medium")?(dark?12:8):(dark?6:4);
+   int percent=priority.equals("high")?(dark?32:36):priority.equals("medium")?(dark?24:26):(dark?16:16);
    for(int shift:new int[]{16,8,0})check(((tint>>shift)&255)==Math.round(((surface>>shift)&255)*(1-percent/100f)+((hue>>shift)&255)*percent/100f),"actual opaque row tint must use pinned priority intensity");
    check(tint!=surface&&tint!=previous,"all three priority tiers are visibly distinct composites");previous=tint;
    int neutral=(Integer)PresentationPolicy.class.getMethod("rowTint",JSONObject.class,String.class,boolean.class,int.class).invoke(null,task,"Neutral",dark,surface);
@@ -96,7 +96,7 @@ class OwnerVisualsTest(unittest.TestCase):
     def test_actual_halo_draw_and_scheduling_methods(self):
         from test_tasks_anchor_methods import extract
         source=(SRC/'TaskRowView.java').read_text()
-        methods='\n'.join(extract(source,p) for p in [r'^ private void startEmphasis\(',r'^ void stopEmphasis\(',r'^ void pause\(',r'^ void resume\(',r'^ @Override protected void onDraw\('])
+        methods='\n'.join(extract(source,p) for p in [r'^ void groupCorners\(',r'^ private void startEmphasis\(',r'^ void stopEmphasis\(',r'^ void pause\(',r'^ void resume\(',r'^ @Override protected void onDraw\('])
         template=(ANDROID/'tests/UnreadHaloMethodsHarness.java').read_text().replace('// METHODS',methods)
         javac=str(Path(os.environ['JAVA_HOME'])/'bin/javac') if os.environ.get('JAVA_HOME') else shutil.which('javac')
         if not javac: self.fail('JAVA_HOME/javac required')
@@ -122,10 +122,10 @@ class OwnerVisualsTest(unittest.TestCase):
  for(String project:new String[]{"Website","website","é","p2"," ","p5"})for(boolean dark:new boolean[]{false,true})for(String mode:new String[]{"Project","Importance"})for(String priority:new String[]{"high","medium","low"}){
   JSONObject task=new JSONObject().put("project",project).put("priority",priority);
   int bg=PresentationPolicy.rowTint(task,mode,dark,dark?0xff1a1d24:0xffffffff);
-  int ink=dark?0xfff5f5f7:0xff1c1c1e,secondary=dark?0xffaaaab3:0xff63636b,unread=PresentationPolicy.unreadColor(dark);
+  int ink=dark?0xfff5f5f7:0xff1c1c1e,secondary=PresentationPolicy.rowSecondary(dark),unread=PresentationPolicy.rowUnreadColor(dark);
   check(contrast(ink,bg)>=4.5&&contrast(secondary,bg)>=4.5,"neutral reading text on every actual composite "+project+priority+dark);
   check(contrast(unread,bg)>=4.5,"New update text contrast on every actual composite "+project+priority+dark+" "+contrast(unread,bg));
-  check(contrast(PresentationPolicy.taskColor(task,mode,dark,secondary),bg)>=3,"project indicator contrast on actual tint");
+  check(contrast(PresentationPolicy.taskCueColor(PresentationPolicy.taskColor(task,mode,dark,secondary),dark),bg)>=3,"project indicator contrast on actual tint");
  }
 ''')
 

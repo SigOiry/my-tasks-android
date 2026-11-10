@@ -1,0 +1,66 @@
+{
+  "deployed_sha256": "eea4810349f0f6a19c1a312786f07eb64646a316a16dbcefb3711fd304f3ee65",
+  "maintained_sha256": "22225eb6e37398d92621a48e424ab987a9a0b96ccb8c3c5aff61120fa0cb907d",
+  "routing": [
+    {
+      "prompt": "Who won the 2026 Nobel Prize in Physics?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "What is the capital of France?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "Quelle est la capitale de la France ?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "Peux-tu me dire qui a invent\u00e9 le t\u00e9lescope ?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "https://www.python.org",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "Summarize https://www.python.org/",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "What is a public IP address?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "My question is: what is the capital of France?",
+      "deployed": "off",
+      "maintained": "public"
+    },
+    {
+      "prompt": "Can you access the internet?",
+      "deployed": "off",
+      "maintained": "off"
+    },
+    {
+      "prompt": "Latest Python release; do not browse",
+      "deployed": "off",
+      "maintained": "off"
+    },
+    {
+      "prompt": "Search my email for the latest bill",
+      "deployed": "private",
+      "maintained": "private"
+    },
+    {
+      "prompt": "What was the first marker?",
+      "deployed": "off",
+      "maintained": "private"
+    }
+  ]
+}

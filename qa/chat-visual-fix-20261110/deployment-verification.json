@@ -1,0 +1,21 @@
+{
+  "backend_gate_passed": true,
+  "backend_deployed": true,
+  "deployed_source_sha256": {
+    "public_web.py": "20f46089060eea8b55d75cda97046b4e02305daeae3b1264718f2aa068c82c11",
+    "conversations.py": "66e249aba2a110a6178587806ba63388dbb415b2d15ef6e1a37755438ee7cd23"
+  },
+  "public_health_status": 200,
+  "anonymous_tasks_status": 401,
+  "anonymous_conversations_status": 401,
+  "account_sessions_logically_unchanged": true,
+  "production_conversation_message_request_rows_unchanged": true,
+  "canonical_task_bytes_unchanged": true,
+  "real_provider_receipts": [
+    "deployed-final-current.json",
+    "deployed-final-url.json",
+    "deployed-final-smalltalk.json"
+  ],
+  "apk_sha256": "953da5d22d257e0ea9ec6f4843d3dddfd5e9b2c655badd7cf1cf0f76cef42eab",
+  "web_presentation_diff": ""
+}

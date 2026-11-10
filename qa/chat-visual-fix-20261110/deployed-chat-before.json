@@ -1,0 +1,17 @@
+{
+  "case": "current",
+  "prompt": "Who won the 2026 Nobel Prize in Physics?",
+  "decision": "off",
+  "status": "succeeded",
+  "reply": "I don’t have verified information on the winner of the **2026 Nobel Prize in Physics**. The prize is typically announced in October, so it may not have been announced yet.\n\nThe official source is [NobelPrize.org](https://www.nobelprize.org/prizes/physics/).",
+  "phases": [],
+  "events": [
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": []
+    }
+  ],
+  "replay_no_new_work": true,
+  "reopened_exact_reply": true
+}

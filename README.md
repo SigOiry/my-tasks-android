@@ -2,6 +2,12 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Android and shared chat 1.6.1
+
+Version **1.6.1 / code 11** removes the task rail crossing completion checkboxes and makes project surfaces and task-hue external unread halos substantially more visible. Text/cue contrast and reduced motion are retained.
+
+The independently reviewed shared backend routes ordinary English/French public factual questions to bounded research and reads eligible public URLs directly. Recognized writing and transformations (including indirect/gerund forms), explicit no-browse, greetings, credentials and summaries stay tool-free. Current-request privacy, pinned-network safeguards, saved sources and durable replay are preserved. Web presentation and the original account/signing identity are unchanged. Verification, release assets and explicit emulator-versus-physical-device limits: `qa/chat-visual-fix-20261110/REPORT.md`.
+
 ## Android 1.6
 
 Version **1.6 / code 10** packages the owner continuation under tag `v1.6`, with the original signing identity and standard updater assets. It adds Android-only project-hue/importance tints, sustained unread halo breathing, native navigation/dialog/chat/IME motion, and waiting/inactive lanes in all ordering modes. The web UI presentation is unchanged. The shared durable-chat backend now offers bounded read-only public search/page retrieval with saved sources and actual search/read progress; it is not an unrestricted agent.

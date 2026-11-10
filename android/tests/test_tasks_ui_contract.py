@@ -73,7 +73,7 @@ class TasksUiContractTest(unittest.TestCase):
   for required in ['int flag=TaskPresentation.flag(priority)',
                    'if(flag==TaskPresentation.FLAG_FILLED)overflow.setImageDrawable(filledFlag())',
                    'flag==TaskPresentation.FLAG_OUTLINE?R.drawable.ic_flag:R.drawable.ic_more',
-                   '"Neutral".equals(a.colorMode)?ui.secondary:category']:
+                   '"Neutral".equals(a.colorMode)?ui.secondary:cue']:
    self.assertIn(required,s)
  def test_compact_rows_and_accessible_scope_targets(self):
   row=self.source('TaskRowView');tasks=self.source('TasksUi')

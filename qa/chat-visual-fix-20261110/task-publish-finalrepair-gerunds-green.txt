@@ -1,0 +1,6 @@
+test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.120s
+
+OK

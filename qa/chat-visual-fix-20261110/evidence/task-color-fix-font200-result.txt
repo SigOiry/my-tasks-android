@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: evidence=/storage/emulated/0/Android/data/com.simon.mytasks.qafix/files/evidence/task-color-fix-font200
+INSTRUMENTATION_RESULT: result=PASS snapshot
+INSTRUMENTATION_CODE: -1

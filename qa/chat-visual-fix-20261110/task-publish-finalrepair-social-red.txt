@@ -1,0 +1,198 @@
+test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) ...
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='How are you doing?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='How are you doing !') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Comment ça va ?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Comment ca va?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to access the internet?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to access the web?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to browse the web?') ... FAIL
+  test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to search the internet?') ... FAIL
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='How are you doing?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='How are you doing !')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Comment ça va ?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Comment ca va?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to access the internet?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to access the web?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to browse the web?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) (prompt='Are you able to search the internet?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 268, in test_neighboring_social_and_web_capability_questions_stay_tool_free
+    text, seen = self.assert_protected_answer(prompt)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+----------------------------------------------------------------------
+Ran 1 test in 0.113s
+
+FAILED (failures=8)

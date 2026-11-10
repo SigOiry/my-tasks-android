@@ -81,7 +81,7 @@ class ConversationTests(unittest.TestCase):
         from types import SimpleNamespace as NS
         from conversations import SendMessage
         private = 'The merger codename is Bluebird.'
-        public = 'Search latest Python release'
+        public = 'Who won the 2026 Nobel Prize in Physics?'
         thread = self.create()
         with patch('hermes_chat.call_llm', side_effect=RuntimeError('Injected provider failure')):
             response, failed_payload = self.send(thread, content=private)

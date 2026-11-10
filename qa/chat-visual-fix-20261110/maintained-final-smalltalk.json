@@ -1,0 +1,21 @@
+{
+  "case": "smalltalk",
+  "prompt": "How are you?",
+  "decision": "off",
+  "status": "succeeded",
+  "reply": "I’m doing well, thanks! How are you?",
+  "source_sha256": {
+    "public_web": "20f46089060eea8b55d75cda97046b4e02305daeae3b1264718f2aa068c82c11",
+    "conversations": "66e249aba2a110a6178587806ba63388dbb415b2d15ef6e1a37755438ee7cd23"
+  },
+  "phases": [],
+  "events": [
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": []
+    }
+  ],
+  "replay_no_new_work": true,
+  "reopened_exact_reply": true
+}

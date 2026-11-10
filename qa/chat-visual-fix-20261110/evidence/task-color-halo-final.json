@@ -1,0 +1,7 @@
+{
+  "file": "task-color-halo-final.mp4",
+  "sha256": "40592947c1d3ac9129bc95595489e55b5543e8fe39eadc30d0707364aa279830",
+  "retained_video_seconds": "0\u201330 only",
+  "scope": "actual synthetic native qafix dark-mode halo recording; encoded canvas not measured UI FPS",
+  "excluded_tail": "Instrumentation completion returned to prior production activity. Full capture and tail frame quarantined outside repository; only reviewed synthetic prefix retained."
+}

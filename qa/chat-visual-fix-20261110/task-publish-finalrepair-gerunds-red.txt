@@ -1,0 +1,758 @@
+test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) ...
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with rewriting this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with rewriting The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before rewriting The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with rewriting this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with rephrasing this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with rephrasing The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before rephrasing The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with rephrasing this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with summarizing this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with summarizing The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before summarizing The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with summarizing this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with summarising this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with summarising The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before summarising The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with summarising this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with proofreading this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with proofreading The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before proofreading The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with proofreading this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with editing this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with editing The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before editing The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with editing this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with translating this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with translating The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before translating The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with translating this text: Bluebird. Compare https://www.python.org/') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with paraphrasing this text: The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with paraphrasing The merger codename is Bluebird?') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before paraphrasing The merger codename is Bluebird.') ... FAIL
+  test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with paraphrasing this text: Bluebird. Compare https://www.python.org/') ... FAIL
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with rewriting this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with rewriting The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before rewriting The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with rewriting this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with rephrasing this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with rephrasing The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before rephrasing The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with rephrasing this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with summarizing this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with summarizing The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before summarizing The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with summarizing this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with summarising this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with summarising The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before summarising The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with summarising this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with proofreading this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with proofreading The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before proofreading The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with proofreading this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with editing this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with editing The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before editing The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with editing this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with translating this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with translating The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before translating The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with translating this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you help me with paraphrasing this text: The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Could you assist with paraphrasing The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Please verify sources before paraphrasing The merger codename is Bluebird.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_transformation_gerunds_never_send_operands_to_public_network (tests.test_public_web.PublicWebAnswerTests.test_transformation_gerunds_never_send_operands_to_public_network) (prompt='Help with paraphrasing this text: Bluebird. Compare https://www.python.org/')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 220, in test_transformation_gerunds_never_send_operands_to_public_network
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 338, in normal_answer
+    page = read_public(direct_urls[0], timeout=remaining(15))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+----------------------------------------------------------------------
+Ran 1 test in 0.153s
+
+FAILED (failures=32)

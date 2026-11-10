@@ -1,0 +1,80 @@
+PASS 72 checks (all)
+PrivateSurfacesTest: 6 checks passed
+AuthPolicyTest: 30 checks passed
+NotificationProseTest: 23 checks passed
+ChatPresentationPolicyTest: 31 assertions passed
+UpdateEmphasisTest: 32 checks passed
+UpdateReviewPolicyTest: 16 assertions passed
+TaskActionPolicyTest: 19 assertions passed
+UiReadGateTest: 5 assertions passed
+PASS 182 presentation checks
+CoordinatedPolicyTest: 79 checks passed
+NativeMotionPolicyTest: 164 checks passed
+CompactPolicyTest: 17 assertions passed
+ConversationStateTest: 20 assertions passed
+ConversationClientTest: 8 assertions passed
+UpdatePolicy: 51 assertions passed
+UpdateRelease: 18 assertions passed
+UpdateNetwork: 15 assertions passed
+UpdateState: 30 assertions passed
+ConversationControllerTest: 28 assertions passed
+ApiAuthGateTest: 11 checks passed
+Review native actions/state: 10 checks passed
+Native menu identity/visibility: 4 checks passed
+Native sheet bounds: 4 checks passed
+Details v3 review, sizing and integration contracts passed
+..........................GlassPixels: blur diffusion, local edges, constant preservation, bounded allocation PASS
+..........................visible header stays fixed across repeated mode captures/restores; scrolled task identity, offsets and rebuild guards preserved
+.Actual TasksUi.refresh lane/group checks passed: 1357
+................
+----------------------------------------------------------------------
+Ran 69 tests in 30.355s
+
+OK
+PASS route (Main + thread action cross-task reset, same-task editor/draft preserved)
+PASS own (mutation + quick exact U suppressed, later remote H eligible, unread preserved)
+PASS ack (delayed ACK versus newer OS post; bounded same-task supersession; task/account isolation)
+PASS reload (success rebase, failure input retention, ordinary refresh)
+PASS quick (clean same-task, dirty blocked, other-task preserved)
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=My Tasks Local Release
+Signer #1 certificate SHA-256 digest: a30330e687f078beaa6870254c2f5ce47d22c6e4e9e970ef4b2abc087d3137da
+Signer #1 certificate SHA-1 digest: e4b6c61ec8ecaaa1eff734cb8f17a6c193b34fa1
+Signer #1 certificate MD5 digest: ae459b9cacd6dae1bf956593dbd2dc41
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: d2dd4a06768913ed49797bfb6dfebf3547e78597e5ec706d25b0a5dc16f8d3fb
+Signer #1 public key SHA-1 digest: 186caaf46cedbff46a8cebf4588c11b7dc30fe19
+Signer #1 public key MD5 digest: ecc90d9e4cd3800a1852eb8a66772367
+package: name='com.simon.mytasks' versionCode='11' versionName='1.6.1' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+minSdkVersion:'26'
+targetSdkVersion:'35'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.REQUEST_INSTALL_PACKAGES'
+application-label:'My Tasks'
+application-icon-160:'res/drawable/ic_tasks.xml'
+application: label='My Tasks' icon='res/drawable/ic_tasks.xml'
+launchable-activity: name='com.simon.mytasks.MainActivity'  label='' icon=''
+feature-group: label=''
+  uses-feature: name='android.hardware.faketouch'
+  uses-implied-feature: name='android.hardware.faketouch' reason='default feature for all apps'
+main
+other-services
+supports-screens: 'small' 'normal' 'large' 'xlarge'
+supports-any-density: 'true'
+locales: '--_--'
+densities: '160'
+
+APK: /opt/data/workspace/my-tasks-android/android/build/my-tasks.apk

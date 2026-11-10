@@ -1,0 +1,6 @@
+test_no_browse_apostrophes_and_source_qualifiers_override_url_and_force (tests.test_public_web.PublicWebAnswerTests.test_no_browse_apostrophes_and_source_qualifiers_override_url_and_force) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.300s
+
+OK

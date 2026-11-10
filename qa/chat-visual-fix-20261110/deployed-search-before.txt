@@ -1,0 +1,13 @@
+CHAT_COMPACT_BEGIN
+{"module": "/opt/data/workspace/my-tasks-mobile/serv
+er/public_web.py", "sha256": "eea4810349f0f6a19c1a31
+2786f07eb64646a316a16dbcefb3711fd304f3ee65", "routin
+g": {"Who won the 2026 Nobel Prize in Physics?": "of
+f", "Search latest Python release": "public", "Peux-
+tu chercher sur internet ?": "public", "https://www.
+python.org": "off"}, "search_count": 4, "urls": ["ht
+tps://python.org/downloads/source", "https://python.
+org/downloads/macos", "https://python.org/downloads/
+latest/prerelease", "https://python.org/doc/versions
+"]}
+CHAT_COMPACT_END

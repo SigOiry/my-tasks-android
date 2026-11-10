@@ -2,7 +2,7 @@
 import json
 import socket
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 class PublicWebSecurityTests(unittest.TestCase):
@@ -138,6 +138,336 @@ class PublicWebAnswerTests(unittest.TestCase):
                 self.assertEqual(calls[0]['tools'], [])
                 if prompt.startswith('Search'):
                     self.assertIn('privacy', text.lower())
+
+    def test_indirect_original_writing_stays_tool_free(self):
+        from public_web import research_decision
+        for verb in ('write', 'draft', 'compose', 'writing', 'drafting', 'composing', 'écrire', 'rédiger'):
+            for template in ('Can you help me {verb} a reply saying The merger codename is Bluebird?',
+                             'Could you please assist with {verb} a brief reply saying The merger codename is Bluebird?',
+                             'Please verify sources and help {verb} a poem about the moon'):
+                prompt = template.format(verb=verb)
+                with self.subTest(prompt=prompt):
+                    self.assert_protected_answer(prompt)
+                    self.assertEqual(research_decision(prompt, force_search=True), 'off')
+
+    def assert_protected_answer(self, prompt):
+        from public_web import normal_answer
+        seen = []
+        def provider(**kwargs):
+            seen.append(kwargs)
+            return self.response('Local answer')
+        blocked = AssertionError('Protected request attempted public network access')
+        with patch('public_web.search_public', side_effect=blocked) as search, patch(
+                'public_web.read_public', side_effect=blocked) as read, patch(
+                'public_web.socket.create_connection', side_effect=blocked), patch(
+                'public_web.socket.getaddrinfo', side_effect=blocked), patch(
+                'public_web.socket.socket', side_effect=blocked), patch(
+                'public_web.subprocess.run', side_effect=blocked):
+            text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+        search.assert_not_called()
+        read.assert_not_called()
+        self.assertTrue(text)
+        self.assertTrue(all(call['tools'] == [] for call in seen))
+        return text, seen
+
+    def test_supplied_text_transformations_precede_public_question_and_research_routing(self):
+        for prompt in (
+                'Could you give a summary of this text: The merger codename is Bluebird?',
+                'Can you summarise: The merger codename is Bluebird?',
+                'Would you rewrite this sentence: The merger codename is Bluebird?',
+                'Can you provide a translation of this text: The merger codename is Bluebird?',
+                'Please search for sources and summarise this text: The merger codename is Bluebird?',
+                'Could you give a summary of this text and verify it: The merger codename is Bluebird?',
+                'Search and rewrite: The merger codename is Bluebird?',
+                'Verify and summarise "The merger codename is Bluebird".',
+                'Summarize this text: Bluebird. Compare with https://www.python.org/',
+                'Can you summarise The merger codename is Bluebird?',
+                'Could you give a summary of The merger codename is Bluebird?',
+                'Can you rephrase The merger codename is Bluebird?',
+                'Could you give a summary of The merger codename is Bluebird and verify sources?'):
+            with self.subTest(prompt=prompt):
+                self.assert_protected_answer(prompt)
+
+    def test_undelimited_transformations_fail_closed_independent_of_framing(self):
+        from public_web import research_decision
+        for prompt in (
+                'Could you provide a brief summary of The merger codename is Bluebird?',
+                'Could you give me a concise summary of The merger codename is Bluebird?',
+                'Can you help me rewrite The merger codename is Bluebird?',
+                'Would you kindly offer an exceptionally short summary of The merger codename is Bluebird?',
+                'I need help with a polished translation of The merger codename is Bluebird.',
+                'Is a careful paraphrase of The merger codename is Bluebird possible?',
+                'For the next meeting please proofread The merger codename is Bluebird.',
+                'Please verify sources then help me rewrite The merger codename is Bluebird?',
+                'Could you provide a brief summary of The merger codename is Bluebird and search for evidence?',
+                'What is a summary?',
+                'Search for the latest translation news'):
+            with self.subTest(prompt=prompt):
+                self.assert_protected_answer(prompt)
+                self.assertEqual(research_decision(prompt), 'off')
+                self.assertEqual(research_decision(prompt, force_search=True), 'off')
+
+    def test_transformation_gerunds_never_send_operands_to_public_network(self):
+        from public_web import research_decision
+        for gerund in ('rewriting', 'rephrasing', 'summarizing', 'summarising',
+                       'proofreading', 'editing', 'translating', 'paraphrasing'):
+            for template in (
+                    'Could you help me with {verb} this text: The merger codename is Bluebird?',
+                    'Could you assist with {verb} The merger codename is Bluebird?',
+                    'Please verify sources before {verb} The merger codename is Bluebird.',
+                    'Help with {verb} this text: Bluebird. Compare https://www.python.org/'):
+                prompt = template.format(verb=gerund)
+                with self.subTest(prompt=prompt):
+                    self.assert_protected_answer(prompt)
+                    self.assertEqual(research_decision(prompt, force_search=True), 'off')
+
+    def test_password_assignment_aliases_never_reach_public_network(self):
+        for alias in ('passwd', 'pwd', 'pass', 'password', 'passphrase', 'user_password', 'db_passwd'):
+            for assignment in ('=hunter2', ' : hunter2'):
+                with self.subTest(alias=alias, assignment=assignment):
+                    self.assert_protected_answer('What does ' + alias + assignment + ' mean?')
+
+    def test_no_browse_using_gerund_never_reaches_public_network(self):
+        for opt_out in ('Answer without using the internet.', 'Without accessing the web.',
+                        'Do not use the internet.', 'Answer without using online sources.'):
+            with self.subTest(opt_out=opt_out):
+                self.assert_protected_answer('What is the capital of France? ' + opt_out)
+
+    def test_no_browse_apostrophes_and_source_qualifiers_override_url_and_force(self):
+        from public_web import research_decision
+        opt_outs = [
+            "N'utilise pas internet.", 'N’utilise pas internet.',
+            "N'utilise pas le web.", 'N’utilise pas le web.',
+        ]
+        for instruction in ('Please do not use', "Don't access", 'Don’t use',
+                            'Answer without using', 'Never access'):
+            for qualifier in ('any', 'the', 'public', 'external', 'any public',
+                              'the public', 'any external', 'the external'):
+                for subject in ('online sources', 'web sources', 'internet sources'):
+                    opt_outs.append(f'{instruction} {qualifier} {subject}.')
+        for opt_out in opt_outs:
+            for question in ('What is the capital of France?',
+                             'Quelle est la capitale de la France ?',
+                             'Read https://www.python.org/'):
+                prompt = question + ' ' + opt_out
+                with self.subTest(prompt=prompt):
+                    self.assert_protected_answer(prompt)
+                    self.assertEqual(research_decision(prompt, force_search=True), 'off')
+
+    def test_social_questions_stay_tool_free(self):
+        for prompt in ('How are you?', 'Comment vas-tu ?', 'Hello!', 'Bonjour !'):
+            with self.subTest(prompt=prompt):
+                self.assert_protected_answer(prompt)
+
+    def test_neighboring_social_and_web_capability_questions_stay_tool_free(self):
+        from public_web import research_decision
+        for prompt in ('How are you doing?', 'How are you doing !', 'Comment ça va ?',
+                       'Comment ca va?', 'Are you able to access the internet?',
+                       'Are you able to access the web?', 'Are you able to browse the web?',
+                       'Are you able to search the internet?'):
+            with self.subTest(prompt=prompt):
+                text, seen = self.assert_protected_answer(prompt)
+                self.assertEqual(research_decision(prompt, force_search=True), 'off')
+                if prompt.startswith('Are you able'):
+                    self.assertEqual(seen, [], 'Server, not provider, owns capability replies')
+                    self.assertTrue(text.startswith('Yes.'))
+                    self.assertIn('I can search the public web', text)
+                    self.assertIn('No search was performed', text)
+                    self.assertIn('cannot access private accounts', text)
+                else:
+                    self.assertEqual(len(seen), 1)
+
+    def test_general_capability_questions_give_truthful_tool_free_guidance(self):
+        for prompt in ('What can you do?', 'Can you help me?', 'Que peux-tu faire ?', 'Peux-tu m’aider ?'):
+            with self.subTest(prompt=prompt):
+                text, seen = self.assert_protected_answer(prompt)
+                self.assertEqual(seen, [])
+                self.assertIn('public', text)
+                self.assertTrue('No search was performed' in text or 'Aucune recherche' in text)
+                self.assertTrue('private accounts' in text or 'comptes privés' in text)
+
+    def test_general_public_questions_in_english_and_french_require_retrieval(self):
+        from public_web import normal_answer, research_decision
+        for prompt in ('What is the capital of France?', 'Who invented the telescope?',
+                       'How does photosynthesis work?', 'Why is the sky blue?',
+                       'Quelle est la capitale de la France ?', 'Qui a inventé le télescope ?',
+                       'Comment fonctionne la photosynthèse ?', 'Pourquoi le ciel est-il bleu ?',
+                       'Quels sont les horaires du Louvre ?', 'Combien coûte un billet pour le Louvre ?',
+                       'Peux-tu me dire qui a inventé le télescope ?', 'C’est quoi la photosynthèse ?',
+                       'Explain the latest Python release', 'Explique les dernières nouvelles de Python',
+                       'What are public online sources about the capital of France?',
+                       'How are you doing research on photosynthesis?',
+                       'Are you able to explain photosynthesis?',
+                       'Comment ça va influencer la photosynthèse ?'):
+            with self.subTest(prompt=prompt), patch('public_web.search_public', return_value=[]) as search:
+                self.assertEqual(research_decision(prompt), 'public')
+                normal_answer([{'role': 'user', 'content': prompt}],
+                              lambda **kw: self.response('Not verified'), current_request=prompt)
+                self.assertEqual(search.call_count, 1)
+                self.assertEqual(search.call_args.args[0], prompt)
+
+    def test_public_subject_words_and_benign_question_wrappers_are_not_secrets(self):
+        from public_web import research_decision
+        for prompt in ('What is a public IP address?', 'What is the email protocol SMTP?',
+                       'My question is: what is the capital of France?',
+                       'Ma question : quelle est la capitale de la France ?',
+                       'Tell me about the Louvre', 'Parle-moi du Louvre'):
+            with self.subTest(prompt=prompt):
+                self.assertEqual(research_decision(prompt), 'public')
+                self.assertEqual(research_decision(prompt, force_search=True), 'public')
+        for prompt in ('What is my IP address?', 'What is my email protocol password?',
+                       'My question is: search my invoice', 'Ma question : cherche mon calendrier',
+                       'Search abcdef0123456789abcdef0123456789',
+                       'What is the status of abCDefGHiJKLmNOpQRsTUVwXYZ?',
+                       'Who is patient Alice?', 'Search latest news for +1 212 555 0199',
+                       'What is in the provided document?', 'Quels sont mes rendez-vous ?',
+                       'Where do I live?', 'What did we discuss yesterday?',
+                       'Quels sont les horaires où je travaille ?', 'What does the attached document say?',
+                       'What was the first marker?', 'What did you say in the last message?'):
+            with self.subTest(prompt=prompt):
+                self.assertEqual(research_decision(prompt), 'private')
+                self.assertEqual(research_decision(prompt, force_search=True), 'private')
+
+    def test_french_opt_out_and_supplied_text_writing_never_search(self):
+        from public_web import normal_answer, research_decision
+        for prompt in ('Quelle est la capitale de la France ? Ne fais pas de recherche.',
+                       'Quels sont les horaires du Louvre ? Sans naviguer.',
+                       'Résume ce texte : quels sont les horaires du Louvre ?',
+                       'Traduis : quels sont les horaires du Louvre ?',
+                       'Peux-tu écrire un poème sur les dernières nouvelles ?',
+                       'Rédige une histoire sur les dernières nouvelles.'):
+            with self.subTest(prompt=prompt), patch('public_web.search_public') as search:
+                self.assertEqual(research_decision(prompt), 'off')
+                normal_answer([{'role': 'user', 'content': prompt}],
+                              lambda **kw: self.response('No retrieval'), current_request=prompt)
+                search.assert_not_called()
+
+    def test_direct_public_url_is_read_without_disclosing_it_to_search(self):
+        from public_web import normal_answer, research_decision
+        url = 'https://www.python.org/'
+        for prompt in (url, 'Summarize ' + url, 'Résume ' + url,
+                       'Can you summarise ' + url, 'Could you give a summary of ' + url,
+                       'Could you provide a brief summary of ' + url,
+                       'Could you give me a concise summary of ' + url,
+                       'Can you help me rewrite ' + url,
+                       'Please verify sources then help me rewrite ' + url,
+                       'Help with rewriting ' + url, 'Help with rephrasing ' + url,
+                       'Help with summarizing ' + url, 'Help with summarising ' + url,
+                       'Help with proofreading ' + url, 'Help with editing ' + url,
+                       'Help with translating ' + url, 'Help with paraphrasing ' + url):
+            seen, phases = [], []
+            def provider(**kwargs):
+                seen.append(kwargs)
+                return self.response('Summary of actual page')
+            messages = [{'role': 'system', 'content': 'PRIVATE-HISTORY'},
+                        {'role': 'user', 'content': prompt}]
+            with self.subTest(prompt=prompt), patch('public_web.search_public') as search, patch(
+                    'public_web.read_public', return_value={'url': url, 'text': 'ACTUAL-PAGE'}) as read:
+                self.assertEqual(research_decision(prompt), 'public')
+                text = normal_answer(messages, provider, current_request=prompt, progress=phases.append)
+                search.assert_not_called()
+                self.assertEqual(read.call_args.args[0], url)
+                self.assertEqual(read.call_count, 1)
+                self.assertIn('Page read: ' + url, text)
+                self.assertIn('ACTUAL-PAGE', json.dumps(seen[0]))
+                self.assertNotIn('PRIVATE-HISTORY', json.dumps(seen[:-1]))
+                self.assertIn('PRIVATE-HISTORY', json.dumps(seen[-1]))
+                self.assertEqual(seen[-1]['tools'], [])
+                self.assertEqual(len(seen), 1)
+                self.assertEqual(seen[0]['tools'], [])
+                self.assertEqual(phases[:2], ['reading', 'answering'])
+
+    def test_direct_urls_fail_closed_before_any_outbound_call_for_private_inputs(self):
+        from public_web import normal_answer, research_decision
+        urls = ('http://127.0.0.1/', 'http://192.168.0.199/', 'http://metadata.google.internal/',
+                'https://user:pass@example.com/', 'https://example.com:8443/',
+                'https://example.com/?q=alice', 'https://example.com/#token=hidden',
+                'https://example.com/account/alice', 'https://private.example.com/',
+                'https://abcdef0123456789abcdef012345.example.com/',
+                'https://example.com/sk-abcdef0123456789abcdef012345',
+                'https://one.example/ https://two.example/')
+        for url in urls:
+            prompt = 'Summarize ' + url
+            with self.subTest(url=url), patch('public_web.search_public') as search, patch('public_web.read_public') as read:
+                self.assertEqual(research_decision(prompt), 'private')
+                normal_answer([{'role': 'user', 'content': prompt}],
+                              lambda **kw: self.response('Private'), current_request=prompt)
+                search.assert_not_called()
+                read.assert_not_called()
+        for prompt in ('Summarize my notes at https://www.python.org/',
+                       'Read https://www.python.org/ without internet'):
+            with self.subTest(prompt=prompt), patch('public_web.search_public') as search, patch('public_web.read_public') as read:
+                normal_answer([{'role': 'user', 'content': prompt}],
+                              lambda **kw: self.response('No retrieval'), current_request=prompt)
+                search.assert_not_called()
+                read.assert_not_called()
+
+    def test_direct_url_network_failure_is_disclosed_without_search_fallback(self):
+        from public_web import normal_answer, WebUnavailable
+        with patch('public_web.read_public', side_effect=WebUnavailable()), patch('public_web.search_public') as search:
+            text = normal_answer([{'role': 'user', 'content': 'https://www.python.org/'}],
+                                 lambda **kw: self.response('Not verified'), current_request='https://www.python.org/')
+        search.assert_not_called()
+        self.assertIn('Public page request failed', text)
+        self.assertNotIn('Page read:', text)
+
+    def test_capability_question_truthfully_describes_server_web_access_without_search(self):
+        from public_web import normal_answer, research_decision
+        for prompt in ('Can you access the internet?', 'Do you have internet access?',
+                       'Can you browse the web?', 'Peux-tu accéder à internet ?',
+                       'As-tu accès à internet ?'):
+            with self.subTest(prompt=prompt), patch('public_web.search_public') as search, patch('public_web.read_public') as read:
+                provider = Mock(side_effect=AssertionError('Capability reply must not hallucinate'))
+                self.assertEqual(research_decision(prompt), 'off')
+                text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+                self.assertTrue(text.startswith(('Yes.', 'Oui.')), text)
+                self.assertIn('public', text)
+                provider.assert_not_called()
+                search.assert_not_called()
+                read.assert_not_called()
+
+    def test_direct_read_cannot_become_a_search_or_arbitrary_link_crawl(self):
+        from public_web import normal_answer
+        from types import SimpleNamespace as NS
+        url = 'https://www.python.org/'
+        for name, args in (('public_search', {'query': 'https www python org'}),
+                           ('public_page', {'url': 'https://attacker.example/'})):
+            tool = NS(id='inject', function=NS(name=name, arguments=json.dumps(args)))
+            responses = iter([self.response(calls=[tool]), self.response('Done'), self.response('Answer')])
+            with self.subTest(name=name), patch('public_web.search_public') as search, patch(
+                    'public_web.read_public', return_value={'url': url, 'text': 'Evidence'}) as read:
+                with self.assertRaisesRegex(ValueError, 'No supported model text'):
+                    normal_answer([{'role': 'user', 'content': url}],
+                                  lambda **kw: next(responses), current_request=url)
+                search.assert_not_called()
+                self.assertEqual(read.call_count, 1)
+
+    def test_tool_free_provider_context_explains_web_evidence_not_global_internet_denial(self):
+        from conversations import SYSTEM
+        from public_web import normal_answer
+        prompt = 'Who won the 2026 Nobel Prize in Physics?'
+        seen = []
+        def provider(**kw):
+            seen.append(kw)
+            return self.response('Unverified')
+        with patch('public_web.search_public', return_value=[]):
+            normal_answer([{'role': 'system', 'content': SYSTEM}, {'role': 'user', 'content': prompt}],
+                          provider, current_request=prompt)
+        instructions = seen[-1]['messages'][0]['content']
+        self.assertIn('Bounded public web research is available', instructions)
+        self.assertIn('Do not claim you lack internet access', instructions)
+        self.assertEqual(seen[-1]['tools'], [])
+
+    def test_search_worker_rejects_urls_instead_of_disclosing_them_to_provider(self):
+        import io
+        from public_web import _main
+        with patch('public_web.sys.argv', ['public_web.py', 'search']), patch(
+                'public_web.sys.stdin', io.StringIO('https://www.python.org/')), patch(
+                'public_web.sys.stdout', new_callable=io.StringIO) as output, patch(
+                'tools.web_tools.web_search_tool', return_value='{}') as provider:
+            _main()
+        provider.assert_not_called()
+        self.assertEqual(json.loads(output.getvalue()), {'ok': False})
 
     def test_implicit_current_information_searches_without_search_keyword(self):
         from public_web import normal_answer, research_decision

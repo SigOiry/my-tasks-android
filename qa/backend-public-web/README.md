@@ -1,5 +1,7 @@
 # Restricted public web backend — owner brief 2026-11-10
 
+**Post-v1.6 follow-up:** `GENERAL-ACCESS-FIX.md` supersedes this historical brief's narrow routing, blanket direct-URL rejection and verification counts. It documents the maintained-only general-question/direct-public-URL/capability fixes, 107 passing tests and a new actual configured-provider scratch-store smoke; deployment remains with the parent.
+
 This directory retains intermediate research/routing evidence. The v1.6 pre-release review additionally fixed failed-turn history isolation and the total synthesis-context budget; current verification is in `qa/releases/v1.6/README.md` (97 backend tests). Historical RED logs retain their failure results, with trailing whitespace normalized for Git publication.
 
 ## Delivered scope

@@ -1,0 +1,78 @@
+{
+  "case": "current",
+  "prompt": "Who won the 2026 Nobel Prize in Physics?",
+  "decision": "public",
+  "status": "succeeded",
+  "reply": "**Francis Halzen**, of the University of Wisconsin–Madison, won the **2026 Nobel Prize in Physics** “for decisive contributions to the IceCube Neutrino Observatory and the discovery of high-energy neutrinos of astrophysical origin.”\n\nThe award was announced on 6 October 2026. [Official Nobel Prize press release](https://www.nobelprize.org/prizes/physics/2026/press-release/).\n\nSources:\nPage read: https://www.nobelprize.org/prizes/physics/2026/press-release/\nSearch result (page not read): https://www.nobelprize.org/prizes/physics/2026/summary/\nSearch result (page not read): https://www.youtube.com/watch?v=HTi0PU_yPvU\nSearch result (page not read): https://www.nobelprize.org/all-nobel-prizes-2026/\nSearch result (page not read): https://www.nobelprize.org/prizes/physics/2026/popular-information/\nSearch result (page not read): https://www.youtube.com/shorts/MqX1BCkmhLA",
+  "source_sha256": {
+    "public_web": "e7e5cbe0a9d756f6e00f7d3e5aa1ae2d73d87269b3176f4ac988ef2f80248db5",
+    "conversations": "66e249aba2a110a6178587806ba63388dbb415b2d15ef6e1a37755438ee7cd23"
+  },
+  "phases": [
+    "searching",
+    "answering",
+    "searching",
+    "answering",
+    "reading",
+    "answering"
+  ],
+  "events": [
+    {
+      "kind": "search",
+      "query": "Who won the 2026 Nobel Prize in Physics?",
+      "urls": [
+        "https://www.nobelprize.org/prizes/physics/2026/press-release/",
+        "https://www.nobelprize.org/prizes/physics/2026/summary/",
+        "https://www.youtube.com/watch?v=HTi0PU_yPvU",
+        "https://www.nobelprize.org/all-nobel-prizes-2026/"
+      ]
+    },
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": [
+        "public_search",
+        "public_page"
+      ]
+    },
+    {
+      "kind": "search",
+      "query": "2026 Nobel Prize in Physics",
+      "urls": [
+        "https://www.nobelprize.org/prizes/physics/2026/press-release/",
+        "https://www.nobelprize.org/prizes/physics/2026/summary/",
+        "https://www.nobelprize.org/prizes/physics/2026/popular-information/",
+        "https://www.youtube.com/shorts/MqX1BCkmhLA"
+      ]
+    },
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": [
+        "public_search",
+        "public_page"
+      ]
+    },
+    {
+      "kind": "read",
+      "url": "https://www.nobelprize.org/prizes/physics/2026/press-release/",
+      "final_url": "https://www.nobelprize.org/prizes/physics/2026/press-release/",
+      "characters": 6899
+    },
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": [
+        "public_search",
+        "public_page"
+      ]
+    },
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": []
+    }
+  ],
+  "replay_no_new_work": true,
+  "reopened_exact_reply": true
+}

@@ -1,0 +1,6 @@
+test_neighboring_social_and_web_capability_questions_stay_tool_free (tests.test_public_web.PublicWebAnswerTests.test_neighboring_social_and_web_capability_questions_stay_tool_free) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.100s
+
+OK

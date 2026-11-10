@@ -27,10 +27,19 @@ public final class PresentationPolicy {
  public static int rowTint(JSONObject task,String mode,boolean dark,int surface){
   if("Neutral".equals(mode))return surface;
   String priority=value(task,"priority");
-  float amount=("high".equals(priority)?(dark?20:14):"medium".equals(priority)?(dark?12:8):(dark?6:4))/100f;
+  float amount=("high".equals(priority)?(dark?32:36):"medium".equals(priority)?(dark?24:26):16)/100f;
   int hue=taskColor(task,mode,dark,dark?PROJECT_DARK[5]:PROJECT_LIGHT[5]);
   int result=0xff000000;
   for(int shift:new int[]{16,8,0})result|=Math.round(((surface>>shift)&255)*(1-amount)+((hue>>shift)&255)*amount)<<shift;
+  return result;
+ }
+ /** Neutral text strengthened for the more visible task surfaces. */
+ public static int rowUnreadColor(boolean dark){return dark?0xffabd0ff:0xff00499f;}
+ public static int rowSecondary(boolean dark){return dark?0xffc4c4ce:0xff494951;}
+ /** Same category hue, darker light-theme cue for 3:1 on tinted surfaces. */
+ public static int taskCueColor(int category,boolean dark){
+  if(dark)return category;int result=0xff000000;
+  for(int shift:new int[]{16,8,0})result|=Math.round(((category>>shift)&255)*.78f)<<shift;
   return result;
  }
  public static String value(JSONObject task,String key){return task.isNull(key)?"":task.optString(key,"");}

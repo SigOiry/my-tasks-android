@@ -1,0 +1,556 @@
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me write a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with write a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help write a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me draft a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with draft a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help draft a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me compose a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with compose a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help compose a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me writing a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with writing a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help writing a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me drafting a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with drafting a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help drafting a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me composing a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with composing a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help composing a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me écrire a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with écrire a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help écrire a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Can you help me rédiger a reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Could you please assist with rédiger a brief reply saying The merger codename is Bluebird?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+======================================================================
+FAIL: test_indirect_original_writing_stays_tool_free (tests.test_public_web.PublicWebAnswerTests.test_indirect_original_writing_stays_tool_free) (prompt='Please verify sources and help rédiger a poem about the moon')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 150, in test_indirect_original_writing_stays_tool_free
+    self.assert_protected_answer(prompt)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/opt/data/workspace/my-tasks-android/server/tests/test_public_web.py", line 165, in assert_protected_answer
+    text = normal_answer([{'role': 'user', 'content': prompt}], provider, current_request=prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 344, in normal_answer
+    rows = search(prompt)
+  File "/opt/data/workspace/my-tasks-android/server/public_web.py", line 325, in search
+    rows = search_public(query, timeout=remaining(45))
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/hermes/tools/python-3.14.9+20261021-linux-x64/lib/python3.14/unittest/mock.py", line 1241, in _execute_mock_call
+    raise effect
+AssertionError: Protected request attempted public network access
+
+----------------------------------------------------------------------
+Ran 1 test in 0.170s
+
+FAILED (failures=24)

@@ -1,0 +1,30 @@
+{
+  "case": "url",
+  "prompt": "Read https://www.python.org/robots.txt and tell me what it says.",
+  "decision": "public",
+  "status": "succeeded",
+  "reply": "The [Python.org `robots.txt`](https://www.python.org/robots.txt) gives these instructions to web crawlers:\n\n- **HTTrack, puf, and MSIECrawler:** Disallowed from crawling the entire site (`Disallow: /`).\n- **Krugle:** Allowed to crawl the site, except `/~guido/orlijn/` and `/webstats/`.\n- **Nutch:** Disallowed from crawling the entire site.\n- **All other crawlers (`User-agent: *`):** Disallowed from crawling `/~guido/orlijn/` and `/webstats/`.\n\nIts comments link to an explanation of the robots.txt format, explicitly permit Krugle despite its being based on Nutch, and describe the restricted paths as hiding old documentation and large sets of files.\n\nThese are crawler directives, not access-control restrictions.\n\nSources:\nPage read: https://www.python.org/robots.txt",
+  "source_sha256": {
+    "public_web": "20f46089060eea8b55d75cda97046b4e02305daeae3b1264718f2aa068c82c11",
+    "conversations": "66e249aba2a110a6178587806ba63388dbb415b2d15ef6e1a37755438ee7cd23"
+  },
+  "phases": [
+    "reading",
+    "answering"
+  ],
+  "events": [
+    {
+      "kind": "read",
+      "url": "https://www.python.org/robots.txt",
+      "final_url": "https://www.python.org/robots.txt",
+      "characters": 531
+    },
+    {
+      "kind": "provider",
+      "provider": "openai-codex",
+      "tools": []
+    }
+  ],
+  "replay_no_new_work": true,
+  "reopened_exact_reply": true
+}

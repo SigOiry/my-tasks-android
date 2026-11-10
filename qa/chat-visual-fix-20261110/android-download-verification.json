@@ -1,0 +1,12 @@
+{
+  "android_only_manual_download": true,
+  "version_name": "1.6.1",
+  "version_code": 11,
+  "http_status": 200,
+  "sha256": "953da5d22d257e0ea9ec6f4843d3dddfd5e9b2c655badd7cf1cf0f76cef42eab",
+  "size": 796399,
+  "backend_changed": false,
+  "github_release_published": false,
+  "updater_feed_changed": false,
+  "url": "https://task.oirysimon.com/download/my-tasks.apk"
+}

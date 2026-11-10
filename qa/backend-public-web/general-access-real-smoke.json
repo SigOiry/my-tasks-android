@@ -1,0 +1,106 @@
+{
+  "scratch_only": true,
+  "network_mocked": false,
+  "service_started": false,
+  "maintained_modules_sha256": {
+    "public_web.py": "22225eb6e37398d92621a48e424ab987a9a0b96ccb8c3c5aff61120fa0cb907d",
+    "conversations.py": "66e249aba2a110a6178587806ba63388dbb415b2d15ef6e1a37755438ee7cd23",
+    "hermes_chat.py": "457a0b30cc083fd5bde06526340f4d68c24416457ac40a37aa9c452df538046a"
+  },
+  "cases": [
+    {
+      "prompt": "What is the capital of France?",
+      "decision": "public",
+      "provider_calls": [
+        {
+          "tools": [
+            "public_search",
+            "public_page"
+          ],
+          "provider": "openai-codex"
+        },
+        {
+          "tools": [],
+          "provider": "openai-codex"
+        }
+      ],
+      "searches": [
+        {
+          "query": "What is the capital of France?",
+          "urls": [
+            "https://en.wikipedia.org/wiki/Paris",
+            "https://www.youtube.com/shorts/doFTuSWo7rE",
+            "https://www.reddit.com/r/riddles/comments/p8kx8x/whats_the_capital_of_france/",
+            "https://www.facebook.com/groups/376100836095453/posts/2780652808973565/"
+          ]
+        }
+      ],
+      "reads": [],
+      "status": "succeeded",
+      "error": null,
+      "reply": "The capital of France is **Paris**.\n\nSources:\nSearch result (page not read): https://en.wikipedia.org/wiki/Paris\nSearch result (page not read): https://www.youtube.com/shorts/doFTuSWo7rE\nSearch result (page not read): https://www.reddit.com/r/riddles/comments/p8kx8x/whats_the_capital_of_france/\nSearch result (page not read): https://www.facebook.com/groups/376100836095453/posts/2780652808973565/",
+      "seconds": 23.27,
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    },
+    {
+      "prompt": "Quelle est la capitale de l’Italie ?",
+      "decision": "public",
+      "provider_calls": [
+        {
+          "tools": [
+            "public_search",
+            "public_page"
+          ],
+          "provider": "openai-codex"
+        },
+        {
+          "tools": [],
+          "provider": "openai-codex"
+        }
+      ],
+      "searches": [
+        {
+          "query": "Quelle est la capitale de l’Italie ?",
+          "urls": [
+            "https://www.facebook.com/Voyages.Rive.Gauche/videos/bienvenue-%C3%A0-rome-la-ville-%C3%A9ternelle-rome-capitale-de-litalie-est-une-ville-o%C3%B9-lh/941295858191656/",
+            "https://fr.wikipedia.org/wiki/Capitale_de_l%27Italie",
+            "https://www.lhistoire.fr/comment-rome-est-devenue-la-capitale-de-litalie",
+            "https://cnes.fr/geoimage/italie-rome-ville-eternelle"
+          ]
+        }
+      ],
+      "reads": [],
+      "status": "succeeded",
+      "error": null,
+      "reply": "La capitale de l’Italie est **Rome**.\n\nSources:\nSearch result (page not read): https://www.facebook.com/Voyages.Rive.Gauche/videos/bienvenue-%C3%A0-rome-la-ville-%C3%A9ternelle-rome-capitale-de-litalie-est-une-ville-o%C3%B9-lh/941295858191656/\nSearch result (page not read): https://fr.wikipedia.org/wiki/Capitale_de_l%27Italie\nSearch result (page not read): https://www.lhistoire.fr/comment-rome-est-devenue-la-capitale-de-litalie\nSearch result (page not read): https://cnes.fr/geoimage/italie-rome-ville-eternelle",
+      "seconds": 21.501,
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    },
+    {
+      "prompt": "Summarize https://www.python.org/",
+      "decision": "public",
+      "provider_calls": [
+        {
+          "tools": [],
+          "provider": "openai-codex"
+        }
+      ],
+      "searches": [],
+      "reads": [
+        {
+          "url": "https://www.python.org/",
+          "final_url": "https://www.python.org/",
+          "characters": 7069
+        }
+      ],
+      "status": "succeeded",
+      "error": null,
+      "reply": "[Python.org](https://www.python.org/) is the official hub for the Python programming language, offering resources for beginners, experienced developers, and the wider community.\n\nThe homepage highlights:\n- **Python’s accessibility:** Short code examples demonstrate its readable syntax, functions, loops, lists, arithmetic, and input/output.\n- **Getting started:** Links to the Beginner’s Guide, Python downloads, tutorials, and standard-library documentation.\n- **Practical applications:** Web development, AI and machine learning, scientific computing, desktop interfaces, software development, and system administration.\n- **Community resources:** Jobs, conferences, user groups, news, success stories, and ways to contribute.\n- **The Python Software Foundation:** Its mission to advance Python and support a diverse, international community, with options to join or donate.\n\nThe supplied page also includes a prominent security notice recommending upgrades to several Python ecosystem tools.\n\n*Note: The retrieved page was a fallback rendering because interactive scripts did not run; its text content was available for this summary.*\n\nSources:\nPage read: https://www.python.org/",
+      "seconds": 13.433,
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    }
+  ]
+}
