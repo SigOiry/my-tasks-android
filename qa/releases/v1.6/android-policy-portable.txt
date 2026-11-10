@@ -1,0 +1,38 @@
+PASS 72 checks (all)
+PrivateSurfacesTest: 6 checks passed
+AuthPolicyTest: 30 checks passed
+NotificationProseTest: 23 checks passed
+ChatPresentationPolicyTest: 31 assertions passed
+UpdateEmphasisTest: 32 checks passed
+UpdateReviewPolicyTest: 16 assertions passed
+TaskActionPolicyTest: 19 assertions passed
+UiReadGateTest: 5 assertions passed
+PASS 182 presentation checks
+CoordinatedPolicyTest: 79 checks passed
+NativeMotionPolicyTest: 164 checks passed
+CompactPolicyTest: 17 assertions passed
+ConversationStateTest: 20 assertions passed
+ConversationClientTest: 8 assertions passed
+UpdatePolicy: 51 assertions passed
+UpdateRelease: 18 assertions passed
+UpdateNetwork: 15 assertions passed
+UpdateState: 30 assertions passed
+ConversationControllerTest: 28 assertions passed
+ApiAuthGateTest: 11 checks passed
+Review native actions/state: 10 checks passed
+Native menu identity/visibility: 4 checks passed
+Native sheet bounds: 4 checks passed
+Details v3 review, sizing and integration contracts passed
+..........................GlassPixels: blur diffusion, local edges, constant preservation, bounded allocation PASS
+..........................visible header stays fixed across repeated mode captures/restores; scrolled task identity, offsets and rebuild guards preserved
+.Actual TasksUi.refresh lane/group checks passed: 1357
+................
+----------------------------------------------------------------------
+Ran 69 tests in 21.524s
+
+OK
+PASS route (Main + thread action cross-task reset, same-task editor/draft preserved)
+PASS own (mutation + quick exact U suppressed, later remote H eligible, unread preserved)
+PASS ack (delayed ACK versus newer OS post; bounded same-task supersession; task/account isolation)
+PASS reload (success rebase, failure input retention, ordinary refresh)
+PASS quick (clean same-task, dirty blocked, other-task preserved)

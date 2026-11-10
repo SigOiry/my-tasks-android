@@ -15,6 +15,7 @@ The Android presentation implementation matches the immediately preceding owner 
 ## Executed local gates
 
 - Full signed `android/build.sh`: existing JVM/auth/controller/API gates, **68 Python tests**, actual Java/resource/DEX build, signing/alignment — PASS.
+- Final source policy rerun: **69 Python tests** — PASS, including an added unset-TMPDIR regression executing the real lane JVM harness. Initial GitHub CI found a NAS-specific scratch fallback in that test; standard tempfile discovery fixes portability without changing APK/runtime code or release asset bytes.
 - Backend: **97 tests** — PASS, including failed-private-turn/current-public-request structural isolation and near-limit final-context budget regressions.
 - Browser: **101 JS tests**, syntax check and reproducible existing web bundle — PASS. Web source/built presentation assets remain unchanged.
 - Staged credential/forbidden-path scan: no actual credential material, signing keys, private databases, canonical tasks or APK files. Notification tokens in test harnesses are explicitly synthetic, not credentials.

@@ -5,6 +5,7 @@ from pathlib import Path
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from test_tasks_anchor_methods import extract
@@ -23,8 +24,7 @@ class TasksLaneMethodsTest(unittest.TestCase):
             self.fail('Set JAVA_HOME or put javac on PATH')
         jar = ANDROID / 'build/test-lib/json.jar'
         self.assertTrue(jar.exists(), 'Run android/test.sh for the verified host JSON jar')
-        scratch = Path(os.environ.get('TMPDIR', '/opt/data/cache/scratch'))
-        with tempfile.TemporaryDirectory(prefix='tasks-lanes-', dir=scratch) as directory:
+        with tempfile.TemporaryDirectory(prefix='tasks-lanes-') as directory:
             work = Path(directory)
             harness = work / 'TasksLaneMethodsHarness.java'
             harness.write_text(template.replace('// PRODUCTION_METHODS', methods + '\n' + entry))
@@ -35,6 +35,32 @@ class TasksLaneMethodsTest(unittest.TestCase):
                                      'com.simon.mytasks.TasksLaneMethodsHarness'], text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             print(result.stdout.strip())
+
+    def test_refresh_harness_uses_standard_temp_discovery_without_tmpdir(self):
+        # Exercise the real JVM harness, not a substituted presentation policy.
+        with tempfile.TemporaryDirectory(prefix='portable-lanes-') as portable:
+            env = dict(os.environ)
+            env.pop('TMPDIR', None)
+            script = '''import pathlib, sys, tempfile, unittest
+root = pathlib.Path(sys.argv[1])
+tempfile.tempdir = str(root)
+original = tempfile.TemporaryDirectory
+created = []
+class AuditedTemporaryDirectory(original):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        created.append(pathlib.Path(self.name).parent)
+tempfile.TemporaryDirectory = AuditedTemporaryDirectory
+sys.path.insert(0, sys.argv[2])
+from test_tasks_lane_methods import TasksLaneMethodsTest
+result = unittest.TextTestRunner().run(unittest.TestSuite([
+    TasksLaneMethodsTest('test_actual_refresh_labels_lanes_and_preserves_project_groups')]))
+assert result.wasSuccessful(), 'Actual JVM lane harness failed'
+assert created and all(p == root for p in created), 'Harness bypassed standard temporary-directory discovery'
+'''
+            result = subprocess.run([sys.executable, '-c', script, portable, str(ANDROID/'tests')],
+                                    env=env, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == '__main__':
