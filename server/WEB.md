@@ -1,6 +1,6 @@
-# Browser workspace v1.3
+# Browser workspace
 
-Maintained source: `/opt/data/workspace/my-tasks-android/server/web/`. `python build_web.py` creates reproducible `web_dist/`. See `WEB-v1.3.md` for the current verification record. No deployment/publication is performed by these commands.
+Maintained source: `/opt/data/workspace/my-tasks-android/server/web/`. `python build_web.py` creates reproducible `web_dist/`. See `WEB-v1.3.md` for the underlying account/API verification record and `WEB-LIQUID-GLASS.md` for the responsive presentation update. No deployment/publication is performed by these commands.
 
 ## Account and privacy
 
@@ -16,9 +16,9 @@ Confirmed logout clears private memory/DOM/forms/drafts/pending bindings/prefere
 
 ## Tasks and notifications
 
-Compact title-first project groups; Active/Today/Week/All/Trash; expandable search/filter/sort; project navigation; notes and separate source context. Date boundaries come from the server. Background refresh preserves row keyboard focus. Native dialogs contain focus. Revision409 preserves edits and offers copy + fresh review, never force overwrite. Deletion is confirmed, soft and recoverable.
+Compact title-first project groups; primary Active/Today/All, with Week/Trash and secondary filters in More; expandable search/filter/sort; project navigation; notes and separate source context. Date boundaries come from the server. Background refresh preserves row keyboard focus. At >=1100px the task editor is a modeless right inspector; compact task sheets, update review, Settings and conversation dialogs are modal. Resizing retains the form and does not promote an underlying inspector above another modal. Revision409 preserves edits and offers copy + fresh review, never force overwrite. Deletion is confirmed, soft and recoverable.
 
-Unread updates gate the editor. Canonical `notification.sections` renders Context, New, then optional Suggested next steps. Empty optional sections are omitted and prose never mixes with legacy technical summaries; legacy summary is used only when sections are absent. Acknowledgement sends the exact displayed token.409 preserves the summary and requires newer review before OK.
+Unread updates open a review sheet first. Canonical `notification.sections` renders Context, New, then optional Suggested next steps. Empty optional sections are omitted and prose never mixes with legacy technical summaries; legacy summary is used only when sections are absent. Open task / Ask Hermès are read-only navigation and never acknowledge or create a discussion automatically. Only Mark reviewed sends the exact displayed token.409 preserves the summary and requires newer review. Delayed success/error responses must still own the same session, task and displayed token; an old success cannot replace a newer cached unread update. Dismissing the review invalidates that binding.
 
 Notification Markdown is a restricted AST rendered with createElement/text nodes: paragraphs, bold/emphasis, lists, inline/fenced code. No innerHTML, raw HTML interpretation, anchors, images, URL attributes or source actions. Markdown link/image labels become inert text; unmatched delimiters remain visible. Reliable backend Gmail/Calendar links remain only in the ordinary task editor.
 

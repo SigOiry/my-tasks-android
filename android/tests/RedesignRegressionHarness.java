@@ -12,6 +12,7 @@ public class RedesignRegressionHarness extends Context {
  void render(){
   // HYDRATE_DRAFT
  }
+ void renderPage(boolean returning){render();} // Host UI seam; motion exercised separately in NativeMotionMethodsHarness.
  void invalidateQuietRead(){quietGate.invalidate();quietInFlight=false;}
  // MAIN_METHODS
  static JSONObject task(String revision,String status,String token,boolean unread){return new JSONObject().put("id","synthetic").put("title","Synthetic").put("revision",revision).put("status",status).put("notification",new JSONObject().put("token",token).put("unread",unread));}

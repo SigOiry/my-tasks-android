@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5
+
+- Native Liquid Glass-inspired redesign: compact Tasks, grouped details/editing, anchored actions, readable update review, durable task/free conversations, keyboard-safe composition and deliberate folded/unfolded layouts.
+- Shared muted project colors, deterministic canonical-identity mapping, Importance/Neutral alternatives and persisted presentation preferences.
+- Smart cross-project ordering using canonical deadlines, importance, status, unread updates and capped creation age; traditional Project/Importance/Due/Updated/Created ordering remains available. Waiting and inactive work are separated, exact-token review semantics are unchanged, and sorting never rewrites tasks.
+- Four finite update-edge/halo breaths with persistent unread markers; running-only response indicators and honest queued/admission states. Native moving scope capsule, directional page motion, bounded idle reorder feedback and reduced-motion/transparency behavior.
+- Corrected repeated native toolbar-anchor drift and web reverse sorting with missing date/timestamp values. Authentication, canonical storage, original Android signer and durable message identities are preserved.
+- Published as tag `v1.5`, Android version name `1.5`, version code `8`. Install over existing versions without uninstalling. Updates are offered on the next eligible foreground check or Settings → Check for updates; installation still requires Android confirmation.
+
+Known limitations: web currently uses the workspace Europe/Rome calendar rather than the browser's local zone; web shared moving-capsule/semantic direction-label polish remains unfinished. Native offscreen/background emphasis stops rather than guaranteeing visible-time resumption. Physical Samsung/One UI, exhaustive accessibility and real-provider animation recordings remain separate checks. Native QA screenshots/recordings use an isolated explicitly synthetic backend, not fabricated production behavior.
+
 ## 1.3.0
 
 - Durable server-side conversations: multiple selectable threads per task, free discussions, cross-client history, rename/archive/reopen, older pagination and preserved follow-up drafts.

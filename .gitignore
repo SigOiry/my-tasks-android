@@ -29,6 +29,10 @@
 **/__pycache__/
 **/*.pyc
 
+# Local native QA captures/archives (source scenarios stay tracked)
+/qa/coordinated-evidence-*/
+/qa/coordinated-evidence-*.zip
+
 # Editor/OS
 .idea/
 .vscode/

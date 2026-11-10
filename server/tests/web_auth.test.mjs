@@ -7,10 +7,10 @@ import {ConversationStore,pendingRequest} from '../web/conversations.mjs';
 const tick=()=>new Promise(r=>setImmediate(r));
 function harness(session={authenticated:false},hash='') {
  const elements=new Map(),calls=[],replaced=[];
- const element=()=>({value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,v){this.listeners[k]=v;},setAttribute(){},replaceChildren(...v){this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;},querySelector(){return element();}});
+ const element=()=>({options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,v){this.listeners[k]=v;},setAttribute(){},replaceChildren(...v){this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;},querySelector(){return element();}});
  const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
  const context=vm.createContext({...policy,ConversationStore,pendingRequest,TextEncoder,URLSearchParams,AbortController,setTimeout,clearTimeout,clearInterval,
- location:{hash,pathname:'/',search:''},history:{replaceState(...v){replaced.push(v);}},localStorage:{getItem(){return null;}},navigator:{},document:{getElementById:get,documentElement:{dataset:{}},querySelectorAll(){return [];},addEventListener(){},createElement:element},window:{addEventListener(){},SpeechRecognition:function(){}},
+ location:{hash,pathname:'/',search:''},history:{replaceState(...v){replaced.push(v);}},localStorage:{getItem(){return null;}},navigator:{},document:{querySelector(selector){return selector==='.filters'?get('filters'):null;},getElementById:get,documentElement:{dataset:{}},querySelectorAll(){return [];},addEventListener(){},createElement:element},window:{addEventListener(){},SpeechRecognition:function(){}},
  fetch:async(path,options)=>{calls.push({path,options});if(path==='/auth/password')return {ok:false,status:401,json:async()=>({detail:'Invalid current password'})};return {ok:true,json:async()=>path==='/auth/activate'?{authenticated:true,csrf:'fixture-csrf',password_change_required:true}:session};}});
  vm.runInContext(readFileSync(new URL('../web/app.js',import.meta.url),'utf8').replace(/^import .*?;\n/gm,'')+'\nglobalThis.app={beginSession,state,request,clearPrivate};',context);
  return {context,get,calls,replaced};

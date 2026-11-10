@@ -1,23 +1,78 @@
 // Shared, side-effect-free presentation and privacy policy. No DOM or storage.
 export const statuses = {inbox:'Inbox',todo:'To do',in_progress:'In progress',waiting:'Waiting',completed:'Completed',cancelled:'Cancelled'};
 export const priorities = {high:0,medium:1,low:2};
+export const projectColors=[['#527FC2','#8FB2E8'],['#3C8B83','#82C8BA'],['#8972BB','#BBA7E5'],['#B26D87','#DFA2B9'],['#A57A35','#D4B26F'],['#6C7E91','#A6B7C9']];
+export function projectPalette(task) {
+ const key=task.project_id || task.project;
+ if(!key)return {index:null,light:'#6C7E91',dark:'#A6B7C9'};
+ let hash=2166136261;
+ for(const byte of new TextEncoder().encode(key))hash=Math.imul(hash^byte,16777619)>>>0;
+ const index=hash%6;return {index,light:projectColors[index][0],dark:projectColors[index][1]};
+}
+// Animation identity lives beyond row binding; only active visible time counts.
+export class UpdateBreaths {
+ constructor(limit=2){this.limit=limit;this.records=new Map();this.observed=new Set();this.active=[];this.last=null;}
+ observe(id,token,unread){
+  const key=JSON.stringify([id,token]);
+  if(!token||!unread){this.records.delete(id);return;}
+  if(this.records.get(id)?.token===token)return;
+  this.active=this.active.filter(activeId=>activeId!==id);
+  const seen=this.observed.has(key);this.observed.add(key);this.records.set(id,{token,elapsed:seen?6400:0});
+ }
+ tick(visible,now){
+  if(this.last!==null)for(const id of this.active){const record=this.records.get(id);if(record)record.elapsed=Math.min(6400,record.elapsed+Math.max(0,now-this.last));}
+  this.last=now;this.active=visible.filter(id=>this.records.has(id)&&this.age(id)<6400).slice(0,this.limit);return [...this.active];
+ }
+ age(id){return this.records.get(id)?.elapsed??6400;}
+ clear(){this.records.clear();this.observed.clear();this.active=[];this.last=null;}
+}
 export const active = task => !task.deleted && !['completed','cancelled'].includes(task.status);
+export function calendarDay(value) {
+ if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return null;
+ const ms=Date.parse(value+'T00:00:00Z');return Number.isFinite(ms)&&new Date(ms).toISOString().slice(0,10)===value?ms/86400000:null;
+}
+export function validInstant(value) {
+ if(typeof value!=='string')return null;
+ const match=value.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|([+-])(\d{2}):(\d{2}))$/);
+ if(!match||calendarDay(match[1])===null||Number(match[2])>23||Number(match[3])>59||Number(match[4])>59||Number(match[6]||0)>23||Number(match[7]||0)>59)return null;
+ const ms=Date.parse(value);return Number.isFinite(ms)?ms:null;
+}
+export function localCalendarDate(value=new Date(),timezone='Europe/Rome') {
+ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(value).map(part=>[part.type,part.value]));
+ return `${parts.year}-${parts.month}-${parts.day}`;
+}
+export function smartScore(task,today,timezone='Europe/Rome') {
+ const day=calendarDay(today),due=calendarDay(task.due_date),delta=day!==null&&due!==null?due-day:null;
+ const deadline=delta===null?0:delta<0?50:delta===0?40:delta===1?25:delta<=7?10:0;
+ const instant=validInstant(task.created_at),created=instant===null?null:calendarDay(localCalendarDate(new Date(instant),timezone));
+ const age=created!==null&&day!==null?Math.min(4,Math.max(0,Math.floor((day-created)/7))):0;
+ return deadline+({high:30,medium:15,low:0}[task.priority]||0)+(task.status==='in_progress'?6:0)+(task.notification?.unread===true?6:0)+age;
+}
+const compare=(a,b)=>String(a)<String(b)?-1:String(a)>String(b)?1:0;
 export function selectTasks(tasks, options) {
- const {view,today,week_end,project,query='',status,sort='priority'} = options;
+ const {view,today,week_end,project,query='',status,sort='smart',direction='asc',timezone='Europe/Rome'} = options;
  const q = query.toLocaleLowerCase().trim();
  return tasks.filter(t => {
   if (view === 'trash' ? !t.deleted : t.deleted) return false;
   if (['active','today','week'].includes(view) && !active(t)) return false;
-  if (view === 'today' && (!t.due_date || t.due_date > today)) return false;
-  if (view === 'week' && (!t.due_date || t.due_date > week_end)) return false;
+  if (view === 'today' && (calendarDay(t.due_date)===null || t.due_date > today)) return false;
+  if (view === 'week' && (calendarDay(t.due_date)===null || t.due_date > week_end)) return false;
   if (project && (t.project || 'Unassigned') !== project) return false;
   if (status && t.status !== status) return false;
   return !q || [t.title,t.description,t.notes,t.project,...(t.source_accounts||[])].some(v => String(v||'').toLocaleLowerCase().includes(q));
  }).sort((a,b) => {
-  const unread = Number(!!b.notification?.unread)-Number(!!a.notification?.unread);
-  const priority = (priorities[a.priority]??9)-(priorities[b.priority]??9);
-  const date = (a.due_date || '9999').localeCompare(b.due_date || '9999');
-  return unread || (sort === 'title' ? a.title.localeCompare(b.title) : sort === 'date' ? date || priority : priority || date) || a.title.localeCompare(b.title) || a.id.localeCompare(b.id);
+  const bucket=t=>['completed','cancelled'].includes(t.status)?2:t.status==='waiting'?1:0;
+  const priority=(priorities[a.priority]??9)-(priorities[b.priority]??9);
+  const date=compare(calendarDay(a.due_date)===null?'9999':a.due_date,calendarDay(b.due_date)===null?'9999':b.due_date);
+  const timestamp=validInstant;
+  const created=(timestamp(a.created_at)??Infinity)-(timestamp(b.created_at)??Infinity);
+  let primary=sort==='smart'?smartScore(b,today,timezone)-smartScore(a,today,timezone):sort==='project'?compare(a.project||'\uffff',b.project||'\uffff'):['date','due'].includes(sort)?date:sort==='title'?compare(a.title,b.title):sort==='updated'?(timestamp(b.updated_at)??-Infinity)-(timestamp(a.updated_at)??-Infinity):sort==='created'?created:priority;
+  // Legacy saved priority/date choices retain their unread-first behavior.
+  if(['priority','date'].includes(sort))primary=Number(!!b.notification?.unread)-Number(!!a.notification?.unread)||primary;
+  // Missing nullable primary keys stay last independently of direction.
+  // Keep legacy saved date/priority behavior untouched.
+  const missing=sort==='due'?Number(calendarDay(a.due_date)===null)-Number(calendarDay(b.due_date)===null):['created','updated'].includes(sort)?Number(timestamp(a[sort==='created'?'created_at':'updated_at'])===null)-Number(timestamp(b[sort==='created'?'created_at':'updated_at'])===null):0;
+  return bucket(a)-bucket(b)||missing||(Number.isNaN(primary)?0:primary)*(direction==='desc'?-1:1)||date||priority||(Number.isNaN(created)?0:created)||compare(a.id,b.id);
  });
 }
 export function chatBody(task_id,message,mode,history=[]) {

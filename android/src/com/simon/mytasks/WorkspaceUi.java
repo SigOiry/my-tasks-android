@@ -15,7 +15,7 @@ final class WorkspaceUi {
  static final int TYPE_TITLE=16, TYPE_CONTEXT=13, TYPE_HEADING=30;
  static final int RADIUS_ROW=12, RADIUS_CONTROL=24, RADIUS_SHEET=28;
  static final int ELEVATION_FLOATING=6, ELEVATION_SHEET=12;
- static final long MOTION_FEEDBACK=140L, MOTION_NAVIGATION=220L, MOTION_SHEET=280L;
+ static final long MOTION_FEEDBACK=140L, MOTION_NAVIGATION=280L, MOTION_SHEET=280L;
  final Context context;final Typeface font;
  final int canvas,surface,ink,secondary,border,primary,soft,danger,onPrimary;
  final int unread,focus,separator;
@@ -56,6 +56,23 @@ final class WorkspaceUi {
  void leadingIcon(Button button,int resource){Drawable icon=context.getDrawable(resource).mutate();icon.setTint(button.getCurrentTextColor());icon.setBounds(0,0,dp(20),dp(20));button.setCompoundDrawablesRelative(icon,null,null,null);button.setCompoundDrawablePadding(dp(8));}
  ImageButton icon(int resource,String name,Runnable action){
   ImageButton b=new ImageButton(context);b.setImageResource(resource);b.setImageTintList(ColorStateList.valueOf(ink));b.setScaleType(ImageView.ScaleType.CENTER_INSIDE);b.setPadding(dp(12),dp(12),dp(12),dp(12));b.setBackground(touch(Color.TRANSPARENT,0,24));b.setContentDescription(name);b.setTooltipText(name);b.setOnClickListener(v->action.run());b.setMinimumHeight(dp(48));b.setMinimumWidth(dp(48));press(b);return b;
+ }
+ void enter(View v,long duration){v.animate().cancel();v.setAlpha(1);v.setTranslationY(0);if(!motionEnabled()||!v.isShown())return;v.setTranslationY(dp(6));v.animate().translationY(0).setDuration(duration).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();}
+ void finishPageMotion(View v){if(v==null)return;v.animate().cancel();v.setTranslationX(0);v.setTranslationY(0);v.setAlpha(1);}
+ /** Page entry is directional; message/row insertion continues to use enter(). */
+ void navigatePage(View v,boolean returning){
+  if(v==null)return;v.animate().cancel();v.setAlpha(1);v.setTranslationX(0);v.setTranslationY(0);
+  if(!motionEnabled()||!v.isShown())return;
+  v.setTranslationX(dp(returning?-24:24));v.animate().translationX(0).setDuration(MOTION_NAVIGATION).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+ }
+ /** Called after scope layout; origin is the old rendered X / track width. */
+ void placeScopeCapsule(View capsule,ViewGroup scopes,int selected,float origin){
+  View target=scopes.getChildAt(selected);int width=scopes.getWidth();
+  capsule.animate().cancel();
+  FrameLayout.LayoutParams p=new FrameLayout.LayoutParams(target.getWidth(),target.getHeight());p.topMargin=scopes.getTop()+target.getTop();capsule.setLayoutParams(p);
+  float end=target.getLeft();boolean move=motionEnabled()&&!Float.isNaN(origin)&&width>0;
+  capsule.setTranslationX(move?origin*width:end);
+  if(move)capsule.animate().translationX(end).setDuration(210L).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
  }
  void press(View v){v.setOnTouchListener((view,event)->{if(!motionEnabled()){view.animate().cancel();view.setScaleX(1f);view.setScaleY(1f);return false;}int action=event.getActionMasked();if(action==MotionEvent.ACTION_DOWN)view.animate().scaleX(.975f).scaleY(.975f).setDuration(160).start();else if(action==MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL)view.animate().scaleX(1).scaleY(1).setDuration(200).start();return false;});}
  void input(EditText e){e.setTypeface(font);e.setTextColor(ink);e.setHintTextColor(secondary);e.setTextSize(16);e.setPadding(dp(12),dp(12),dp(12),dp(12));e.setMinHeight(dp(48));e.setBackground(shape(surface,border,14));}

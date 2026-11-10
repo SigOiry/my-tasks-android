@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "contract": {
+    "age": "Convert valid offset-bearing created_at instant to user timezone, then floor(nonnegative calendar-day distance / 7), cap 4; no age from updated_at or invented fields.",
+    "deadline": "Strict YYYY-MM-DD, calendar day arithmetic in the user timezone; overdue 50, today 40, tomorrow 25, days 2..7 10, otherwise 0.",
+    "score": "priority high 30, medium 15, low/invalid 0; in_progress 6; notification.unread exactly true 6.",
+    "order": "Filter complete eligible dataset first; actionable then waiting then terminal; Smart descending; due ascending invalid last; importance descending; created instant ascending invalid last; exact canonical ID ascending UTF-16 code units. No project grouping or pagination before ranking.",
+    "palette": "FNV-1a UTF-8 unsigned32 modulo6. Nonempty string project_id wins, else exact nonempty string project; missing neutral (-1). Never trim, casefold, normalize Unicode, or hash display fallback."
+  },
+  "contexts": {
+    "rome": {"now": "2026-11-10T12:00:00Z", "timezone": "Europe/Rome", "today": "2026-11-10"},
+    "la_before_midnight": {"now": "2026-11-10T07:59:59Z", "timezone": "America/Los_Angeles", "today": "2026-11-09"},
+    "la_midnight": {"now": "2026-11-10T08:00:00Z", "timezone": "America/Los_Angeles", "today": "2026-11-10"},
+    "tokyo": {"now": "2026-11-09T15:00:00Z", "timezone": "Asia/Tokyo", "today": "2026-11-10"},
+    "spring_before": {"now": "2026-03-08T09:59:59Z", "timezone": "America/Los_Angeles", "today": "2026-03-08"},
+    "spring_after": {"now": "2026-03-08T10:00:00Z", "timezone": "America/Los_Angeles", "today": "2026-03-08"},
+    "fall_first": {"now": "2026-11-01T08:30:00Z", "timezone": "America/Los_Angeles", "today": "2026-11-01"},
+    "fall_second": {"now": "2026-11-01T09:30:00Z", "timezone": "America/Los_Angeles", "today": "2026-11-01"}
+  },
+  "palette": [
+    {"name":"missing", "task":{}, "slot":-1},
+    {"name":"null", "task":{"project":null,"project_id":null}, "slot":-1},
+    {"name":"empty", "task":{"project":"","project_id":""}, "slot":-1},
+    {"name":"ascii", "task":{"project":"Website"}, "hash_u32":806556010, "slot":4},
+    {"name":"case_exact", "task":{"project":"website"}, "hash_u32":4243573962, "slot":0},
+    {"name":"whitespace_exact", "task":{"project":" Website "}, "hash_u32":2387405756, "slot":2},
+    {"name":"space_not_missing", "task":{"project":" "}, "hash_u32":621580159, "slot":1},
+    {"name":"canonical_id", "task":{"project_id":"hello","project":"Website"}, "hash_u32":1335831723, "slot":3},
+    {"name":"rename_same_id", "task":{"project_id":"hello","project":"RENAMED"}, "hash_u32":1335831723, "slot":3},
+    {"name":"empty_id_fallback", "task":{"project_id":"","project":"Website"}, "hash_u32":806556010, "slot":4},
+    {"name":"null_id_fallback", "task":{"project_id":null,"project":"Website"}, "hash_u32":806556010, "slot":4},
+    {"name":"utf8_composed", "task":{"project":"é"}, "hash_u32":513665217, "slot":3},
+    {"name":"utf8_decomposed", "task":{"project":"é"}, "hash_u32":4204513055, "slot":5},
+    {"name":"cjk", "task":{"project":"東京"}, "hash_u32":1759422319, "slot":1},
+    {"name":"astral", "task":{"project":"🚀"}, "hash_u32":2141686490, "slot":2},
+    {"name":"mixed_unicode_unsigned", "task":{"project":"项目🚀"}, "hash_u32":3769459573, "slot":1},
+    {"name":"string_zero_id", "task":{"project_id":"0","project":"Website"}, "hash_u32":890022063, "slot":3}
+  ],
+  "colors": [
+    {"light":"#527FC2","dark":"#8FB2E8"},
+    {"light":"#3C8B83","dark":"#82C8BA"},
+    {"light":"#8972BB","dark":"#BBA7E5"},
+    {"light":"#B26D87","dark":"#DFA2B9"},
+    {"light":"#A57A35","dark":"#D4B26F"},
+    {"light":"#6C7E91","dark":"#A6B7C9"}
+  ],
+  "neutral":{"light":"#6C7E91","dark":"#A6B7C9"},
+  "scores": [
+    {"name":"missing", "context":"rome", "task":{}, "expected":0},
+    {"name":"overdue", "context":"rome", "task":{"due_date":"2026-11-09"}, "expected":50},
+    {"name":"today", "context":"rome", "task":{"due_date":"2026-11-10"}, "expected":40},
+    {"name":"tomorrow", "context":"rome", "task":{"due_date":"2026-11-11"}, "expected":25},
+    {"name":"two_days", "context":"rome", "task":{"due_date":"2026-11-12"}, "expected":10},
+    {"name":"seven_days", "context":"rome", "task":{"due_date":"2026-11-17"}, "expected":10},
+    {"name":"eight_days", "context":"rome", "task":{"due_date":"2026-11-18"}, "expected":0},
+    {"name":"invalid_day", "context":"rome", "task":{"due_date":"2026-02-30"}, "expected":0},
+    {"name":"not_date_only", "context":"rome", "task":{"due_date":"2026-11-10T00:00:00Z"}, "expected":0},
+    {"name":"untrimmed_date", "context":"rome", "task":{"due_date":" 2026-11-10"}, "expected":0},
+    {"name":"unpadded_date", "context":"rome", "task":{"due_date":"2026-11-1"}, "expected":0},
+    {"name":"null_fields", "context":"rome", "task":{"due_date":null,"created_at":null,"priority":null,"notification":null}, "expected":0},
+    {"name":"high", "context":"rome", "task":{"priority":"high"}, "expected":30},
+    {"name":"medium", "context":"rome", "task":{"priority":"medium"}, "expected":15},
+    {"name":"low", "context":"rome", "task":{"priority":"low"}, "expected":0},
+    {"name":"invalid_importance", "context":"rome", "task":{"priority":"HIGH","importance":"high"}, "expected":0},
+    {"name":"progress", "context":"rome", "task":{"status":"in_progress"}, "expected":6},
+    {"name":"canonical_unread", "context":"rome", "task":{"notification":{"unread":true}}, "expected":6},
+    {"name":"wrong_unread_keys", "context":"rome", "task":{"unread":true,"has_unread_updates":true,"notification":{"unread":false}}, "expected":0},
+    {"name":"string_unread_not_boolean", "context":"rome", "task":{"notification":{"unread":"true"}}, "expected":0},
+    {"name":"age_six_days", "context":"rome", "task":{"created_at":"2026-11-04T00:00:00+01:00"}, "expected":0},
+    {"name":"age_one_week", "context":"rome", "task":{"created_at":"2026-11-03T23:59:59+01:00"}, "expected":1},
+    {"name":"age_cap", "context":"rome", "task":{"created_at":"2020-01-01T00:00:00+01:00"}, "expected":4},
+    {"name":"future_creation", "context":"rome", "task":{"created_at":"2026-11-11T00:00:00+01:00"}, "expected":0},
+    {"name":"invalid_creation", "context":"rome", "task":{"created_at":"2026-02-30T00:00:00Z"}, "expected":0},
+    {"name":"naive_creation", "context":"rome", "task":{"created_at":"2026-10-01T00:00:00"}, "expected":0},
+    {"name":"wrong_creation_key", "context":"rome", "task":{"created":"2020-01-01","updated_at":"2020-01-01T00:00:00Z"}, "expected":0},
+    {"name":"all_parts", "context":"rome", "task":{"due_date":"2026-11-09","priority":"high","status":"in_progress","notification":{"unread":true},"created_at":"2026-10-01T23:00:00+02:00"}, "expected":96},
+    {"name":"la_previous_day", "context":"la_before_midnight", "task":{"due_date":"2026-11-10"}, "expected":25},
+    {"name":"la_new_day", "context":"la_midnight", "task":{"due_date":"2026-11-10"}, "expected":40},
+    {"name":"tokyo_new_day", "context":"tokyo", "task":{"due_date":"2026-11-10"}, "expected":40},
+    {"name":"la_local_creation_day", "context":"la_midnight", "task":{"created_at":"2026-11-04T01:00:00Z"}, "expected":1},
+    {"name":"spring_before", "context":"spring_before", "task":{"due_date":"2026-03-09","created_at":"2026-03-01T23:59:59-08:00"}, "expected":26},
+    {"name":"spring_after", "context":"spring_after", "task":{"due_date":"2026-03-09","created_at":"2026-03-01T23:59:59-08:00"}, "expected":26},
+    {"name":"fall_first", "context":"fall_first", "task":{"due_date":"2026-11-02","created_at":"2026-10-25T23:59:59-07:00"}, "expected":26},
+    {"name":"fall_second", "context":"fall_second", "task":{"due_date":"2026-11-02","created_at":"2026-10-25T23:59:59-07:00"}, "expected":26}
+  ],
+  "orders": [
+    {"name":"global_cross_project", "context":"rome", "view":"active", "tasks":[
+      {"id":"alpha","status":"todo","priority":"high","project":"A"},
+      {"id":"urgent","status":"inbox","priority":"low","due_date":"2026-11-09","project":"Z"},
+      {"id":"waiting","status":"waiting","priority":"high","due_date":"2020-01-01"},
+      {"id":"done","status":"completed","priority":"high","due_date":"2020-01-01"},
+      {"id":"deleted","status":"todo","priority":"high","due_date":"2020-01-01","deleted":true},
+      {"id":"cancelled","status":"cancelled","priority":"high"}
+    ], "expected":["urgent","alpha","waiting"]},
+    {"name":"all_terminal_lower", "context":"rome", "view":"all", "tasks":[
+      {"id":"done","status":"completed","priority":"high","due_date":"2020-01-01"},
+      {"id":"action","status":"todo","priority":"low"},
+      {"id":"wait","status":"waiting","priority":"high"},
+      {"id":"cancelled","status":"cancelled","priority":"low"},
+      {"id":"deleted","status":"todo","deleted":true}
+    ], "expected":["action","wait","done","cancelled"]},
+    {"name":"trash_only", "context":"rome", "view":"trash", "tasks":[
+      {"id":"live","status":"todo","priority":"high"},
+      {"id":"deleted_action","status":"todo","deleted":true},
+      {"id":"deleted_done","status":"completed","deleted":true,"priority":"high"}
+    ], "expected":["deleted_action","deleted_done"]},
+    {"name":"due_tie", "context":"rome", "view":"active", "tasks":[
+      {"id":"late","status":"todo","priority":"low","due_date":"2026-11-17"},
+      {"id":"early","status":"todo","priority":"low","due_date":"2026-11-12"}
+    ], "expected":["early","late"]},
+    {"name":"importance_tie", "context":"rome", "view":"active", "tasks":[
+      {"id":"low","status":"todo","priority":"low","due_date":"2026-11-09"},
+      {"id":"high","status":"todo","priority":"high","due_date":"2026-11-09"}
+    ], "score_overrides_note":"Priority itself affects score; isolates ordering only after primary tie in separate medium_vs_tomorrow case.", "expected":["high","low"]},
+    {"name":"equal_score_earliest_due", "context":"rome", "view":"active", "tasks":[
+      {"id":"tomorrow_medium","status":"todo","priority":"medium","due_date":"2026-11-11"},
+      {"id":"today_low","status":"todo","priority":"low","due_date":"2026-11-10"}
+    ], "expected":["today_low","tomorrow_medium"]},
+    {"name":"oldest_creation_instant", "context":"rome", "view":"active", "tasks":[
+      {"id":"missing","status":"todo","priority":"low"},
+      {"id":"newer","status":"todo","priority":"low","created_at":"2026-11-09T02:00:00Z"},
+      {"id":"older","status":"todo","priority":"low","created_at":"2026-11-08T23:00:00-01:00"},
+      {"id":"invalid","status":"todo","priority":"low","created_at":"bad"}
+    ], "expected":["older","newer","invalid","missing"]},
+    {"name":"canonical_id_not_title_or_project", "context":"rome", "view":"active", "tasks":[
+      {"id":"b","title":"A","project":"A","status":"todo"},
+      {"id":"a","title":"Z","project":"Z","status":"todo"}
+    ], "expected":["a","b"]},
+    {"name":"equal_score_higher_importance", "context":"rome", "view":"active", "tasks":[
+      {"id":"a_medium","status":"in_progress","priority":"medium","notification":{"unread":true},"created_at":"2026-10-20T12:00:00+02:00"},
+      {"id":"z_high","status":"todo","priority":"high"}
+    ], "expected":["z_high","a_medium"]},
+    {"name":"unicode_canonical_id_utf16", "context":"rome", "view":"active", "tasks":[
+      {"id":"\ue000","status":"todo","priority":"low"},
+      {"id":"🚀","status":"todo","priority":"low"}
+    ], "expected":["🚀","\ue000"]},
+    {"name":"today_excludes_invalid", "context":"rome", "view":"today", "tasks":[
+      {"id":"invalid","status":"todo","due_date":"2026-02-30"},
+      {"id":"tomorrow","status":"todo","due_date":"2026-11-11"},
+      {"id":"today","status":"todo","due_date":"2026-11-10"},
+      {"id":"overdue","status":"todo","due_date":"2026-11-09"},
+      {"id":"missing","status":"todo"},
+      {"id":"done","status":"completed","due_date":"2026-11-10"}
+    ], "expected":["overdue","today"]}
+  ]
+}

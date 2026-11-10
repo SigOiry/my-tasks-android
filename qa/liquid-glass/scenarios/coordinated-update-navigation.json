@@ -1,0 +1,22 @@
+[
+ {"op":"scroll","dy":-3000,"ms":600},
+ {"op":"capture","name":"coordinated-unread-breath-start"},
+ {"op":"wait","ms":7200},
+ {"op":"capture","name":"coordinated-unread-static-marker"},
+ {"op":"tap","label":"Review the observatory proposal","ms":600},
+ {"op":"capture","name":"coordinated-update-review"},
+ {"op":"back","ms":600},
+ {"op":"tap","label":"Back to tasks","ms":600},
+ {"op":"scroll","dy":-3000,"ms":600},
+ {"op":"tap","label":"Confirm room accessibility and equipment","ms":600},
+ {"op":"capture","name":"coordinated-detail-forward"},
+ {"op":"tap","label":"Back to tasks","ms":600},
+ {"op":"scroll","dy":-3000,"ms":600},
+ {"op":"longPress","label":"Confirm room accessibility and equipment","ms":600},
+ {"op":"capture","name":"coordinated-anchored-actions"},
+ {"op":"back","ms":600},
+ {"op":"scroll","dy":-3000,"ms":600},
+ {"op":"tap","label":"Today","ms":600},
+ {"op":"tap","label":"Active","ms":600},
+ {"op":"capture","name":"coordinated-tasks-after-navigation"}
+]

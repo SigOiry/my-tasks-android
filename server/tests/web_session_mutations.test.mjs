@@ -9,14 +9,14 @@ const task={id:'private',title:'Private title',description:'Private description'
 const response=(data,status=200)=>({ok:status===200,status,json:async()=>data});
 async function harness(){
  const elements=new Map(),calls=[];
- const element=()=>({value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(){},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
+ const element=()=>({options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(){},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
  const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
  const keys=['title','description','notes','project','due_date','status','priority'];
  get('task-form').elements={namedItem:get};get('task-form').reset=()=>keys.forEach(k=>{get(k).value='';});
  const context=vm.createContext({...policy,ConversationStore,pendingRequest,AbortController,TextEncoder,URLSearchParams,setTimeout:()=>0,clearTimeout,clearInterval,
  FormData:class{entries(){return keys.map(k=>[k,get(k).value]);}},
  localStorage:{getItem(){return null;}},navigator:{},window:{addEventListener(){},confirm:()=>true,SpeechRecognition:function(){}},
- document:{getElementById:get,documentElement:{dataset:{}},querySelectorAll(selector){return selector==='dialog[open]'?[...elements].filter(([id,e])=>id.endsWith('dialog')&&e.open).map(([,e])=>e):selector==='input,textarea'?keys.map(get):[];},createElement:element,createTextNode:text=>({textContent:text}),addEventListener(){}},
+ document:{querySelector(selector){return selector==='.filters'?get('filters'):null;},getElementById:get,documentElement:{dataset:{}},querySelectorAll(selector){return selector==='dialog[open]'?[...elements].filter(([id,e])=>id.endsWith('dialog')&&e.open).map(([,e])=>e):selector==='input,textarea'?keys.map(get):[];},createElement:element,createTextNode:text=>({textContent:text}),addEventListener(){}},
  fetch:async()=>response({authenticated:false})});
  vm.runInContext(readFileSync(new URL('../web/app.js',import.meta.url),'utf8').replace(/^import .*?;\n/gm,'')+'\nglobalThis.app={state,chats,clearPrivate,showTask,saveTask,quickComplete,deleteTask,restoreTask,showUpdates,acknowledge,backgroundRefresh,refreshTasks,mutate};',context);
  await tick();const app=context.app;
@@ -54,6 +54,39 @@ for(const status of [200,401,409])test(`production acknowledge: delayed ${status
  assert.equal(h.state.gate,gate);assert.equal(h.get('updates-dialog').open,true);assert.equal(h.get('updates-title').textContent,'Replacement title');
  assert.equal(h.get('updates-error').textContent,'Replacement error');assert.equal(h.get('updates-refresh').hidden,true);assert.equal(h.get('updates-ack').disabled,false);
  assert.equal(h.get('task-dialog').open,false);assert.equal(h.state.selected,null);assert.equal(h.state.data,null);assert.equal(h.get('title').value,'');
+});
+for(const status of [200,409])test(`production acknowledge: delayed ${status} cannot replace a newer review in the same session`,async()=>{
+ const h=await harness();h.showUpdates({...task,notification:{unread:true,token:'own'}});
+ let release;h.context.fetch=async()=>({ok:status===200,status,json:()=>new Promise(resolve=>{release=resolve;})});
+ const ack=h.acknowledge();await tick();
+ h.showUpdates({...task,title:'Newer displayed task',notification:{unread:true,token:'newer',summary:['Newer summary']}});
+ const gate=h.state.gate;release(status===200?task:{detail:'Old response'});await ack;
+ assert.equal(h.state.gate,gate);assert.equal(h.get('updates-dialog').open,true);
+ assert.equal(h.get('task-dialog').open,false);assert.equal(h.get('updates-title').textContent,'Newer displayed task');
+ assert.equal(h.get('updates-error').textContent,'');assert.equal(h.get('updates-refresh').hidden,true);
+});
+test('Escape invalidates an update review binding without sending an acknowledgement',async()=>{
+ const h=await harness();h.showUpdates({...task,notification:{unread:true,token:'own'}});
+ assert.equal(typeof h.get('updates-dialog').listeners.cancel,'function');
+ h.get('updates-dialog').listeners.cancel();assert.equal(h.state.gate,null);assert.equal(h.calls.length,0);
+});
+test('responsive task presentation never promotes an underlying inspector above an active chat',async()=>{
+ const h=await harness(),dialog=h.get('task-dialog');dialog.dataset.presentation='inspector';let promoted=0;
+ h.context.window.matchMedia=()=>({matches:false});h.get('chat-dialog').open=true;
+ h.context.document.querySelector=selector=>selector.includes(':modal:not')&&h.get('chat-dialog').open?h.get('chat-dialog'):null;
+ dialog.showModal=()=>{promoted++;dialog.open=true;};
+ vm.runInContext('presentTaskDialog()',h.context);assert.equal(promoted,0);assert.equal(h.get('notes').value,task.notes);
+ h.get('chat-dialog').open=false;vm.runInContext('presentTaskDialog()',h.context);assert.equal(promoted,1);assert.equal(dialog.dataset.presentation,'sheet');
+});
+test('production acknowledge never replaces a newer cached update with a delayed old success',async()=>{
+ const h=await harness();h.showUpdates({...task,notification:{unread:true,token:'own'}});
+ let release;h.context.fetch=async()=>({ok:true,status:200,json:()=>new Promise(resolve=>{release=resolve;})});
+ const ack=h.acknowledge();await tick();
+ const newer={...task,title:'New canonical update',notification:{unread:true,token:'newer'}};h.state.data.tasks=[newer];
+ release(task);await ack;
+ assert.equal(h.state.data.tasks[0],newer);assert.equal(h.state.data.tasks[0].notification.unread,true);
+ assert.equal(h.state.gate.token,'own');assert.equal(h.get('updates-refresh').hidden,false);assert.equal(h.get('updates-ack').disabled,true);
+ assert.equal(h.get('task-dialog').open,false);
 });
 test('production acknowledge: exact displayed token, 409 fresh review, and successful editor opening',async()=>{
  const h=await harness(),displayed={...task,notification:{unread:true,token:'displayed-token',summary:['Displayed summary']}};
@@ -96,6 +129,73 @@ for(const [name,run] of Object.entries(workflows))test(`production ${name} ignor
 test('production unread quick-complete does not toast after review fetch expires the session',async()=>{
  const h=await harness();h.context.fetch=async()=>response({detail:'Session expired'},401);
  await h.quickComplete({...task,notification:{unread:true}},h.get('check'));scrubbed(h);
+});
+async function delayedSave(h,status=200){
+ let release,arrived;const waiting=new Promise(resolve=>{arrived=resolve;});
+ const saved={...task,notes:'Canonical saved A notes',revision:2};
+ h.get('notes').value='Submitted A notes';h.get('task-form').listeners.input();
+ h.context.fetch=async(path,options)=>{
+  h.calls.push({path,options});
+  if(path.startsWith('/api/events'))return response({events:[],cursor:0,has_more:false});
+  if(options?.method==='PATCH'){arrived();return new Promise(resolve=>{release=()=>resolve(response(status===200?saved:{detail:'Delayed A failure'},status));});}
+  return response({conversations:[],next_cursor:null});
+ };
+ const saving=workflows.save(h);await waiting;
+ assert.equal(h.state.mutating,true);
+ assert.deepEqual(JSON.parse(h.calls.find(call=>call.options?.method==='PATCH').options.body),{title:'Private title',description:'Private description',notes:'Submitted A notes',project:'Secret',due_date:null,status:'todo',priority:'medium',revision:1});
+ return {saved,finish:async()=>{release();await saving;assert.equal(h.state.mutating,false);}};
+}
+test('production delayed save success updates cache without replacing B unsaved editor',async()=>{
+ const h=await harness(),pending=await delayedSave(h);
+ const replacement={...task,id:'B',title:'Task B',notes:'Original B notes'};
+ h.showTask(replacement);h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
+ const snapshot=h.state.snapshot;
+ await pending.finish();
+ assert.equal(h.state.data.tasks.find(item=>item.id===task.id).notes,'Canonical saved A notes');
+ assert.equal(h.state.selected,replacement);assert.equal(h.get('notes').value,'Unsaved B notes');assert.equal(h.state.dirty,true);assert.equal(h.state.snapshot,snapshot);
+ assert.equal(h.get('task-dialog').open,true);assert.equal(h.get('detail-error').textContent,'');assert.equal(h.get('conflict').hidden,true);assert.equal(h.get('save-task').disabled,false);assert.equal(h.get('toast').textContent,'');
+});
+for(const status of [200,409,500])test(`production delayed save ${status} preserves replacement editor errors and disabled state`,async()=>{
+ const h=await harness(),pending=await delayedSave(h,status);
+ // Reopening even the same task creates a new editor owner, not an ID match.
+ h.showTask({...task});h.get('notes').value='Replacement unsaved notes';h.get('task-form').listeners.input();
+ h.get('detail-error').textContent='Replacement editor message';h.get('save-task').disabled=true;
+ await pending.finish();
+ assert.equal(h.get('notes').value,'Replacement unsaved notes');assert.equal(h.state.dirty,true);
+ assert.equal(h.get('detail-error').textContent,'Replacement editor message');assert.equal(h.get('conflict').hidden,true);assert.equal(h.get('save-task').disabled,true);assert.equal(h.get('toast').textContent,'');
+ assert.equal(h.state.data.tasks[0].revision,status===200?2:1);
+});
+for(const action of ['close','discussions'])test(`production delayed save success cannot reopen editor after ${action}`,async()=>{
+ const h=await harness(),pending=await delayedSave(h);
+ if(action==='close')h.get('task-dialog').listeners.cancel({preventDefault(){}});
+ else h.get('nav-discussions').listeners.click();
+ assert.equal(h.state.selected,null);assert.equal(h.get('task-dialog').open,false);
+ const snapshot=h.state.snapshot,notes=h.get('notes').value;
+ await pending.finish();
+ assert.equal(h.state.data.tasks[0].revision,2);assert.equal(h.state.selected,null);assert.equal(h.get('task-dialog').open,false);
+ assert.equal(h.get('notes').value,notes);assert.equal(h.state.snapshot,snapshot);assert.equal(h.state.dirty,false);assert.equal(h.get('toast').textContent,'');
+ if(action==='discussions'){assert.equal(h.context.document.documentElement.dataset.destination,'discussions');assert.equal(h.get('tasks-workspace').hidden,true);assert.equal(h.get('discussions-workspace').hidden,false);}
+});
+test('production delayed save 409 cannot conflict or disable B unsaved editor',async()=>{
+ const h=await harness(),pending=await delayedSave(h,409),replacement={...task,id:'B',title:'Task B'};
+ h.showTask(replacement);h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
+ await pending.finish();
+ assert.equal(h.state.selected,replacement);assert.equal(h.get('notes').value,'Unsaved B notes');assert.equal(h.state.dirty,true);
+ assert.equal(h.get('detail-error').textContent,'');assert.equal(h.get('conflict').hidden,true);assert.equal(h.get('save-task').disabled,false);assert.equal(h.state.data.tasks[0].revision,1);
+});
+test('production delayed save success cannot reopen an editor replaced by update review',async()=>{
+ const h=await harness(),pending=await delayedSave(h);
+ h.showUpdates({...task,id:'B',title:'Task B update',notification:{unread:true,token:'B-update',summary:['Review B']}});
+ const gate=h.state.gate;assert.equal(h.get('task-dialog').open,false);
+ await pending.finish();
+ assert.equal(h.state.data.tasks.find(item=>item.id===task.id).revision,2);
+ assert.equal(h.get('task-dialog').open,false);assert.equal(h.get('updates-dialog').open,true);assert.equal(h.state.gate,gate);
+ assert.equal(h.get('updates-title').textContent,'Task B update');assert.equal(h.get('toast').textContent,'');
+});
+test('production delayed save success still refreshes its unchanged editor',async()=>{
+ const h=await harness(),pending=await delayedSave(h);await pending.finish();
+ assert.equal(h.state.selected.notes,'Canonical saved A notes');assert.equal(h.state.selected.revision,2);assert.equal(h.get('notes').value,'Canonical saved A notes');
+ assert.equal(h.state.dirty,false);assert.equal(h.get('save-task').disabled,false);assert.equal(h.get('conflict').hidden,true);assert.equal(h.get('detail-error').textContent,'');assert.equal(h.get('toast').textContent,'Changes saved');
 });
 test('production save retains revision conflict gating and unsaved notes',async()=>{
  const h=await harness();h.context.fetch=async path=>path.startsWith('/api/events')?response({events:[],cursor:0,has_more:false}):response({detail:'Revision changed'},409);

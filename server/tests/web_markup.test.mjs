@@ -10,11 +10,17 @@ test('every statically referenced UI selector exists exactly once in the shipped
  assert.deepEqual(missing,[],'Missing markup required by production app');
  assert.equal(new Set(ids).size,ids.length,'Duplicate HTML IDs');
 });
-const luminance=hex=>{const rgb=hex.replace('#','').match(/../g).map(c=>parseInt(c,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};
+const luminance=hex=>{let raw=hex.replace('#','');if(raw.length===3)raw=[...raw].map(c=>c+c).join('');const rgb=raw.match(/../g).map(c=>parseInt(c,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};
 const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
 test('light/dark text and primary roles meet normal-text 4.5:1 contrast',()=>{
- for(const [fg,bg] of [['#005ac8','#ffffff'],['#63636b','#ffffff'],['#63636b','#f2f2f7'],['#8bbdff','#0b0d12'],['#aaaab3','#1c1c1e'],['#f5f5f7','#1c1c1e']])assert.ok(contrast(fg,bg)>=4.5,fg+' / '+bg);
- assert.ok(css.includes('--primary:#005ac8'));assert.ok(css.includes('--primary:#8bbdff'));
+ const declarations=block=>Object.fromEntries([...block.matchAll(/--([a-z-]+)\s*:\s*(#[a-f0-9]{3,8})/gi)].map(m=>[m[1],m[2]]));
+ const light=declarations(css.match(/:root\s*\{([^}]+)\}/s)[1]);
+ const dark={...light,...declarations(css.match(/:root\[data-theme=dark\]\s*\{([^}]+)\}/s)[1])};
+ for(const palette of [light,dark]){
+  for(const fg of ['ink','muted','primary'])for(const bg of ['canvas','surface'])assert.ok(contrast(palette[fg],palette[bg])>=4.5,fg+' / '+bg);
+  assert.ok(contrast('#fff',palette.action)>=4.5,'white primary-action label');
+ }
+ assert.equal(light.primary.toLowerCase(),'#0068e5');
 });
 test('licensed self-hosted typography and accessible material/motion controls ship together',()=>{
  const build=readFileSync(new URL('../build_web.py',import.meta.url),'utf8');

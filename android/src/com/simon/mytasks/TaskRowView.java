@@ -35,6 +35,8 @@ final class TaskRowView extends LinearLayout {
  private String taskId="",token="";
  private boolean unread,paused,ownsEmphasis;
  private float breath;
+ private int category;
+ private final Paint categoryPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
  private ValueAnimator animator;
 
  TaskRowView(MainActivity activity,UpdateEmphasis ledger){
@@ -68,6 +70,7 @@ final class TaskRowView extends LinearLayout {
   String nextToken=n==null?"":n.optString("token","");
   boolean nextUnread=n!=null&&n.optBoolean("unread");
   if(!id.equals(taskId)||!nextToken.equals(token)||nextUnread!=unread)stopEmphasis();
+  category=PresentationPolicy.taskColor(value,a.colorMode,android.graphics.Color.red(ui.canvas)<100,ui.secondary);
   task=value;taskId=id;token=nextToken;unread=nextUnread;paused=false;setTag(taskId);
   String name=value.optString("title","");boolean largeText=getResources().getConfiguration().fontScale>=1.5f;title.setMaxLines(largeText?Integer.MAX_VALUE:2);title.setEllipsize(largeText?null:TextUtils.TruncateAt.END);title.setText(name);
   String due=PresentationPolicy.value(value,"due_date").isEmpty()?"":a.dueLabel(value);
@@ -131,7 +134,10 @@ final class TaskRowView extends LinearLayout {
  @Override protected void onWindowVisibilityChanged(int visibility){super.onWindowVisibilityChanged(visibility);if(emphasis==null)return;if(visibility!=VISIBLE)stopEmphasis();else post(this::startEmphasis);}
  @Override protected void onDraw(Canvas canvas){
   super.onDraw(canvas);
-  if(!unread&&!isSelected()){halo.setColor(ui.separator);halo.setAlpha(95);halo.setStrokeWidth(1);canvas.drawLine(ui.dp(48),getHeight()-1,getWidth()-ui.dp(12),getHeight()-1,halo);}halo.setColor(ui.unread);halo.setStrokeWidth(ui.dp(1.2f));
-  if(unread){halo.setAlpha(Math.round(35+breath*135));float inset=ui.dp(1.5f);canvas.drawRoundRect(inset,inset,getWidth()-inset,getHeight()-inset,ui.dp(WorkspaceUi.RADIUS_ROW),ui.dp(WorkspaceUi.RADIUS_ROW),halo);}
+  if(!unread&&!isSelected()){halo.setColor(ui.separator);halo.setAlpha(95);halo.setStrokeWidth(1);canvas.drawLine(ui.dp(48),getHeight()-1,getWidth()-ui.dp(12),getHeight()-1,halo);}halo.setColor(ui.unread);halo.setStrokeWidth(ui.dp(1.5f));
+  if(!"Neutral".equals(a.colorMode)){categoryPaint.setColor(category);canvas.drawCircle(ui.dp(44),ui.dp(14),ui.dp(2.5f),categoryPaint);}
+  if(unread&&breath>0){halo.setStrokeWidth(ui.dp(8));halo.setAlpha(Math.round(breath*25));float glow=ui.dp(5);canvas.drawRoundRect(glow,glow,getWidth()-glow,getHeight()-glow,ui.dp(WorkspaceUi.RADIUS_ROW),ui.dp(WorkspaceUi.RADIUS_ROW),halo);}
+  halo.setStrokeWidth(ui.dp(1.5f));
+  if(unread){halo.setAlpha(Math.round(220+breath*35));float inset=ui.dp(1.5f);canvas.drawRoundRect(inset,inset,getWidth()-inset,getHeight()-inset,ui.dp(WorkspaceUi.RADIUS_ROW),ui.dp(WorkspaceUi.RADIUS_ROW),halo);}
  }
 }

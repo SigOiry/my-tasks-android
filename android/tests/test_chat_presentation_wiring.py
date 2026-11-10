@@ -44,7 +44,7 @@ class ChatPresentationWiringTest(unittest.TestCase):
         self.assertNotIn('composer.setBackground(a.ui.glass())', composer)
         self.assertIn('binding.equals(rowBindings.get(id))', source)
         self.assertIn('ChatRowPolicy.animate(own,bottom,first,prepended,a.ui.motionEnabled())', source)
-        self.assertIn('setDuration(180)', source)
+        self.assertIn('setDuration(NativeMotionPolicy.duration("insertion"))', source)
         self.assertNotIn('outgoing?"You":"Hermès"', source)
 
     def test_global_entry_does_not_retain_task_overflow_binding(self):

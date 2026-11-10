@@ -22,7 +22,7 @@
   assert(!$('task-dialog').open,'unread summary appears before ordinary editor');
   assert((await api('/api/tasks/'+summaryTask.id)).notification.unread,'opening summary does not acknowledge');
   $('updates-ack').click();await wait(()=>$('task-dialog').open);
-  assert(!(await api('/api/tasks/'+summaryTask.id)).notification.unread,'explicit OK persists exact acknowledgement');
+  assert(!(await api('/api/tasks/'+summaryTask.id)).notification.unread,'explicit Mark reviewed persists exact acknowledgement');
   $('task-dialog').querySelector('.close-dialog').click();
  }
  const title='Browser acceptance '+Date.now();

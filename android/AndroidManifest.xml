@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.simon.mytasks" android:versionCode="7" android:versionName="1.5.0-glass-preview">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.simon.mytasks" android:versionCode="8" android:versionName="1.5">
  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35"/>
  <uses-permission android:name="android.permission.INTERNET"/>
  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

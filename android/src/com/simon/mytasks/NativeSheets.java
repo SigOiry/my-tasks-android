@@ -14,7 +14,7 @@ final class NativeSheets {
   panel.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));int height=boundedHeight(panel.getMeasuredHeight(),available);window.setLayout(width,height);
   if(!a.wide){WindowManager.LayoutParams attributes=window.getAttributes();attributes.y=a.dp(8);window.setAttributes(attributes);}
   window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);window.getDecorView().setSystemUiVisibility(a.getWindow().getDecorView().getSystemUiVisibility());
-  if(a.ui.motionEnabled()){panel.setTranslationY(a.dp(a.wide?12:24));panel.setAlpha(.85f);panel.animate().translationY(0).alpha(1).setDuration(280).setInterpolator(new DecelerateInterpolator()).start();}
+  if(a.ui.motionEnabled()){panel.setTranslationY(a.dp(a.wide?12:24));panel.setAlpha(.85f);panel.animate().translationY(0).alpha(1).setDuration(NativeMotionPolicy.duration("menu")).setInterpolator(new DecelerateInterpolator()).start();}
  }
  static void positionMenu(MainActivity a,Dialog dialog,View material,View anchor){
   fit(a,dialog,material,false);Window w=dialog.getWindow();if(w==null)return;Rect visible=new Rect();a.getWindow().getDecorView().getWindowVisibleDisplayFrame(visible);int width=Math.min(a.dp(anchor==null?360:320),visible.width()-a.dp(24));material.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));int height=boundedHeight(material.getMeasuredHeight(),visible.height());w.setLayout(width,height);

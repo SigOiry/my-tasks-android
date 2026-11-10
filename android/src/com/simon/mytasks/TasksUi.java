@@ -30,14 +30,17 @@ final class TasksUi {
  private TextView count;
  private Button create;
  private Runnable restore;
+ private View scopeCapsule;private LinearLayout scopeTrack;private float scopeOrigin=Float.NaN;
  private final Anchor anchor=new Anchor();
  private String viewFilter,projectFilter,query,sortOrder;
- private boolean paused,anchorReset;
+ private boolean paused,anchorReset,touching,scrolling,pendingRefresh,reverse;
+ private String colorMode;
+ private final Runnable deferredRefresh=()->{if(!paused&&pendingRefresh)refresh();};
 
- TasksUi(MainActivity activity){a=activity;}
+ TasksUi(MainActivity activity){a=activity;emphasis.onSlotAvailable(()->{if(list!=null)list.post(()->{if(!paused&&a.foreground&&list!=null)resume();});});}
  void build(LinearLayout parent){
   if(list!=null){capture();pause();list.setAdapter(null);}
-  paused=false;
+  paused=false;touching=scrolling=false;
   WorkspaceUi ui=a.ui;
   FrameLayout dock=new FrameLayout(a);parent.addView(dock,new LinearLayout.LayoutParams(-1,0,1));
   list=new ListView(a);list.setBackgroundColor(ui.canvas);list.setDivider(null);list.setDividerHeight(0);
@@ -49,8 +52,12 @@ final class TasksUi {
   LinearLayout titlebar=a.horizontal();TextView page=a.heading(a.projectFilter.isEmpty()?"Tasks":a.projectFilter,30);page.setMaxLines(2);titlebar.addView(page,new LinearLayout.LayoutParams(0,-2,1));
   titlebar.addView(ui.icon(R.drawable.ic_search,"Search tasks",()->{a.captureDraft();a.showSearch=!a.showSearch;a.render();}),new LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)));
   titlebar.addView(ui.icon(R.drawable.ic_more,"Task views, project, sort and settings",this::moreMenu),new LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)));a.add(controls,titlebar);
-  FrameLayout segment=ui.glassSurface();LinearLayout scopes=a.horizontal();scopes.setPadding(ui.dp(3),ui.dp(3),ui.dp(3),ui.dp(3));
-  for(String scope:TaskPresentation.visibleScopes(a.filter)){Button tab=ui.button(scope,()->{a.captureDraft();a.filter=scope;resetAnchor();a.saveWorkspacePreferences();a.render();});ui.selected(tab,a.filter.equals(scope));tab.setMinHeight(ui.dp(48));tab.setPadding(ui.dp(6),ui.dp(4),ui.dp(6),ui.dp(4));scopes.addView(tab,new LinearLayout.LayoutParams(0,-2,1));}
+  FrameLayout segment=ui.glassSurface();LinearLayout scopes=a.horizontal();scopeTrack=scopes;scopes.setPadding(ui.dp(3),ui.dp(3),ui.dp(3),ui.dp(3));
+  View capsule=new View(a);scopeCapsule=capsule;capsule.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);capsule.setBackground(ui.shape((ui.soft&0x00ffffff)|0x99000000,0,24));segment.addView(capsule,new FrameLayout.LayoutParams(0,0));
+  int selectedScope=0;String[] visibleScopes=TaskPresentation.visibleScopes(a.filter);
+  for(int i=0;i<visibleScopes.length;i++){String scope=visibleScopes[i];boolean selected=a.filter.equals(scope);if(selected)selectedScope=i;Button tab=ui.button(scope,()->selectScope(scope));ui.selected(tab,selected);ui.tone(tab,android.graphics.Color.TRANSPARENT,0,selected?ui.primary:ui.secondary);tab.setMinHeight(ui.dp(48));tab.setPadding(ui.dp(6),ui.dp(4),ui.dp(6),ui.dp(4));scopes.addView(tab,new LinearLayout.LayoutParams(0,-2,1));}
+  final int slot=selectedScope;final float origin=scopeOrigin;scopeOrigin=Float.NaN;final boolean[] placed={false};
+  scopes.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(!placed[0]||r-l!=or-ol||b-t!=ob-ot){ui.placeScopeCapsule(capsule,scopes,slot,placed[0]?Float.NaN:origin);placed[0]=true;}});
   segment.addView(scopes,new FrameLayout.LayoutParams(-1,-2));a.add(controls,segment);
   if(!"Project".equals(a.sortOrder)){TextView order=ui.text("Sorted by "+a.sortOrder.toLowerCase(java.util.Locale.getDefault()),12,ui.secondary,false);order.setPadding(ui.dp(8),ui.dp(4),ui.dp(8),ui.dp(4));a.add(controls,order);}
   page.setContentDescription((a.projectFilter.isEmpty()?"Tasks":a.projectFilter)+", "+a.filter+", sorted by "+a.sortOrder);
@@ -66,14 +73,20 @@ final class TasksUi {
   View footer=new View(a);footer.setMinimumHeight(ui.dp(88));list.addFooterView(footer,null,false);
   adapter=new Rows();list.setAdapter(adapter);
   list.setRecyclerListener(v->{if(v instanceof TaskRowView)((TaskRowView)v).stopEmphasis();});
-  list.setOnScrollListener(new AbsListView.OnScrollListener(){public void onScrollStateChanged(AbsListView v,int state){}public void onScroll(AbsListView v,int first,int visible,int total){if(!paused)for(int i=0;i<v.getChildCount();i++)if(v.getChildAt(i) instanceof TaskRowView)((TaskRowView)v.getChildAt(i)).resume();}});
-  create=ui.button("+",()->a.navigate("NEW"));ui.primary(create);create.setTextSize(28);create.setContentDescription("Create a new task");create.setTooltipText("New task");create.setPadding(0,0,0,0);create.setElevation(ui.dp(WorkspaceUi.ELEVATION_FLOATING));
+  list.setOnTouchListener((v,event)->{int action=event.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){touching=true;stopRowMotion();}else if(action==android.view.MotionEvent.ACTION_UP||action==android.view.MotionEvent.ACTION_CANCEL){touching=false;if(pendingRefresh)list.postDelayed(deferredRefresh,200);}return false;});
+  list.setOnScrollListener(new AbsListView.OnScrollListener(){public void onScrollStateChanged(AbsListView v,int state){scrolling=state!=AbsListView.OnScrollListener.SCROLL_STATE_IDLE;if(scrolling)stopRowMotion();if(!scrolling&&pendingRefresh)list.postDelayed(deferredRefresh,200);}public void onScroll(AbsListView v,int first,int visible,int total){if(!paused)for(int i=0;i<v.getChildCount();i++)if(v.getChildAt(i) instanceof TaskRowView)((TaskRowView)v.getChildAt(i)).resume();}});
+  create=ui.button("+",()->a.navigate("NEW"));create.setEnabled(a.online&&!a.busy);ui.primary(create);create.setTextSize(28);create.setContentDescription("Create a new task");create.setTooltipText("New task");create.setPadding(0,0,0,0);create.setElevation(ui.dp(WorkspaceUi.ELEVATION_FLOATING));
   FrameLayout.LayoutParams add=new FrameLayout.LayoutParams(ui.dp(56),ui.dp(56),Gravity.BOTTOM|Gravity.END);add.setMargins(ui.dp(12),ui.dp(12),ui.dp(12),ui.dp(12));dock.addView(create,add);
   refresh();
+ }
+ void selectScope(String scope){
+  scopeOrigin=scopeCapsule!=null&&scopeTrack!=null&&scopeTrack.getWidth()>0?scopeCapsule.getTranslationX()/scopeTrack.getWidth():Float.NaN;
+  a.captureDraft();a.filter=scope;resetAnchor();a.saveWorkspacePreferences();a.render();
  }
  void moreMenu(){
   String[] labels=TaskPresentation.menuScopes();android.app.AlertDialog[] holder=new android.app.AlertDialog[1];LinearLayout refinements=a.vertical();refinements.setPadding(a.ui.dp(16),a.ui.dp(8),a.ui.dp(16),0);
   a.add(refinements,a.ui.button("Project · "+(a.projectFilter.isEmpty()?"All projects":a.projectFilter),()->{holder[0].dismiss();a.projectMenu();}));a.add(refinements,a.ui.button("Sort · "+a.sortOrder,()->{holder[0].dismiss();a.sortMenu();}));
+  a.add(refinements,a.ui.button("Color by · "+a.colorMode,()->{holder[0].dismiss();a.colorMenu();}));
   holder[0]=a.dialogBuilder().setTitle("Task views & filters").setSingleChoiceItems(labels,TaskPresentation.selectedScope(a.filter),(d,index)->{
    a.captureDraft();a.filter=labels[index];resetAnchor();a.saveWorkspacePreferences();d.dismiss();a.render();
   }).setView(refinements).setNeutralButton("Refresh",(d,w)->a.refresh()).setNegativeButton("Settings",(d,w)->a.settings()).create();holder[0].show();
@@ -81,8 +94,11 @@ final class TasksUi {
  void refresh(){
   if(list==null)return;
   boolean changed=!sameFilters();
-  if(changed)resetAnchor();else capture();
-  viewFilter=a.filter;projectFilter=a.projectFilter;query=a.query;sortOrder=a.sortOrder;
+  if(!changed&&deferRefresh()){pendingRefresh=true;list.removeCallbacks(deferredRefresh);if(!paused)list.postDelayed(deferredRefresh,200);return;}
+  final java.util.Map<String,Float> oldPositions=changed?java.util.Collections.emptyMap():snapshotRowPositions();
+  pendingRefresh=false;list.removeCallbacks(deferredRefresh);
+  if(changed&&(!a.filter.equals(viewFilter)||!a.projectFilter.equals(projectFilter)||!a.query.equals(query)))resetAnchor();else capture();
+  viewFilter=a.filter;projectFilter=a.projectFilter;query=a.query;sortOrder=a.sortOrder;reverse=a.sortReverse;colorMode=a.colorMode;
   ArrayList<JSONObject> shown=new ArrayList<>();LocalDate today=LocalDate.now();int unread=0;
   for(int i=0;i<a.tasks.length();i++){
    JSONObject task=a.tasks.optJSONObject(i);
@@ -90,10 +106,10 @@ final class TasksUi {
     shown.add(task);JSONObject n=task.optJSONObject("notification");if(n!=null&&n.optBoolean("unread"))unread++;
    }
   }
-  Collections.sort(shown,(left,right)->PresentationPolicy.compare(left,right,a.sortOrder));
+  Collections.sort(shown,(left,right)->PresentationPolicy.compare(left,right,a.sortOrder,a.sortReverse,today,java.time.ZoneId.systemDefault()));
   entries.clear();String last=null;
   for(JSONObject task:shown){
-   String group="Priority".equals(a.sortOrder)?a.human(task.optString("priority"))+" priority":"Due date".equals(a.sortOrder)?a.dueLabel(task):PresentationPolicy.project(task);
+   String group="Smart".equals(a.sortOrder)?(PresentationPolicy.smartLane(task)==0?"Actionable":PresentationPolicy.smartLane(task)==1?"Waiting":"Inactive"):"Priority".equals(a.sortOrder)||"Importance".equals(a.sortOrder)?a.human(task.optString("priority"))+" importance":"Due date".equals(a.sortOrder)?a.dueLabel(task):"Project".equals(a.sortOrder)?PresentationPolicy.project(task):a.sortOrder;
    if(!group.equals(last)){entries.add(new Entry(group,null));last=group;}
    entries.add(new Entry(null,task));
   }
@@ -101,21 +117,50 @@ final class TasksUi {
   count.setText(shown.size()+" tasks"+(unread>0?" · "+unread+" unread":"")+(a.projectFilter.isEmpty()?"":" · "+a.projectFilter)+(a.online?"":" · Read only"));
   create.setEnabled(a.online&&!a.busy);
   adapter.notifyDataSetChanged();restoreAnchor();
+  if(!oldPositions.isEmpty()){
+   final ListView target=list;
+   target.getViewTreeObserver().addOnPreDrawListener(new android.view.ViewTreeObserver.OnPreDrawListener(){public boolean onPreDraw(){
+    if(target.getViewTreeObserver().isAlive())target.getViewTreeObserver().removeOnPreDrawListener(this);
+    if(list==target&&!anchorReset)applyRowPositions(oldPositions);return true;
+   }});
+  }
  }
+ /** Bounded visible-only FLIP: layout/selection stays canonical, only pixels move. */
+ private java.util.Map<String,Float> snapshotRowPositions(){
+  java.util.Map<String,Float> positions=new java.util.HashMap<>();
+  if(list==null||deferRefresh()||!a.ui.motionEnabled())return positions;
+  for(int i=0;i<list.getChildCount()&&positions.size()<12;i++){View row=list.getChildAt(i);if(row instanceof TaskRowView&&row.getTag() instanceof String)positions.put((String)row.getTag(),row.getTop()+row.getTranslationY());}
+  return positions;
+ }
+ private void applyRowPositions(java.util.Map<String,Float> positions){
+  if(list==null||deferRefresh()||!a.ui.motionEnabled())return;
+  for(int i=0;i<list.getChildCount();i++){
+   View row=list.getChildAt(i);if(!(row instanceof TaskRowView))continue;Float old=positions.get(row.getTag());if(old==null)continue;
+   float offset=old-row.getTop();row.animate().cancel();row.setTranslationY(0);
+   if(Math.abs(offset)<1||Math.abs(offset)>a.ui.dp(160))continue;
+   row.setTranslationY(offset);row.animate().translationY(0).setDuration(200).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+  }
+ }
+ private void resetRowMotion(View row){row.animate().cancel();row.setTranslationY(0);}
+ private void stopRowMotion(){if(list!=null)for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)resetRowMotion(list.getChildAt(i));}
  /** Measured floating navigation can grow when system text is enlarged. */
  void navigationClearance(int pixels){
   if(list==null)return;int clearance=Math.max(a.ui.dp(88),pixels);
   if(list.getPaddingBottom()!=clearance)list.setPadding(0,0,0,clearance);
   // The Add action shares the floating navigation baseline, not a second action tier.
  }
- void resume(){paused=false;if(list!=null&&list.isShown())for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).resume();}
- private boolean sameFilters(){return a.filter.equals(viewFilter)&&a.projectFilter.equals(projectFilter)&&a.query.equals(query)&&a.sortOrder.equals(sortOrder);}
+ private boolean deferRefresh(){return paused||touching||scrolling||a.editing||a.busy||!a.dialogClosers.isEmpty();}
+ void resume(){paused=false;if(pendingRefresh&&list!=null)list.post(deferredRefresh);if(list!=null&&list.isShown())for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).resume();}
+ private boolean sameFilters(){return a.filter.equals(viewFilter)&&a.projectFilter.equals(projectFilter)&&a.query.equals(query)&&a.sortOrder.equals(sortOrder)&&a.sortReverse==reverse&&a.colorMode.equals(colorMode);}
  /** Filter changes deliberately reset reading position; polling never does. */
  void resetAnchor(){anchor.reset();anchorReset=true;if(list!=null&&restore!=null){list.removeCallbacks(restore);restore=null;}}
  void capture(){
   if(list==null||list.getChildCount()==0||!sameFilters()||restore!=null||anchorReset)return;
   anchor.remember("",list.getChildAt(0).getTop()-list.getPaddingTop(),list.getFirstVisiblePosition());
   int headers=list.getHeaderViewsCount();
+  // A visible toolbar owns the viewport, even when tasks are visible below it.
+  // Task-relative restoration across changing header heights drifts the toolbar.
+  if(list.getFirstVisiblePosition()<headers)return;
   for(int i=0;i<list.getChildCount();i++){
    int index=list.getFirstVisiblePosition()+i-headers;
    if(index>=0&&index<entries.size()&&entries.get(index).task!=null){anchor.remember(entries.get(index).task.optString("id",""),list.getChildAt(i).getTop()-list.getPaddingTop(),index+headers);break;}
@@ -150,7 +195,7 @@ final class TasksUi {
   }
  }
  void pause(){
-  paused=true;
+  paused=true;stopRowMotion();touching=scrolling=false;if(list!=null)list.removeCallbacks(deferredRefresh);
   if(list!=null){if(restore!=null){list.removeCallbacks(restore);restore=null;}for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).pause();}
   emphasis.pause();
  }
@@ -170,7 +215,7 @@ final class TasksUi {
   @Override public boolean isEnabled(int p){return entries.get(p).task!=null;}
   @Override public View getView(int position,View recycled,ViewGroup parent){
    Entry e=entries.get(position);WorkspaceUi ui=a.ui;
-   if(e.task!=null){TaskRowView row=recycled instanceof TaskRowView?(TaskRowView)recycled:new TaskRowView(a,emphasis);row.bind(e.task,"Project".equals(a.sortOrder));row.groupCorners(position==0||entries.get(position-1).task==null,position==entries.size()-1||entries.get(position+1).task==null);if(paused)row.pause();return row;}
+   if(e.task!=null){TaskRowView row=recycled instanceof TaskRowView?(TaskRowView)recycled:new TaskRowView(a,emphasis);resetRowMotion(row);row.bind(e.task,"Project".equals(a.sortOrder));row.groupCorners(position==0||entries.get(position-1).task==null,position==entries.size()-1||entries.get(position+1).task==null);if(paused)row.pause();return row;}
    if(e.group!=null){TextView heading=recycled instanceof TextView?(TextView)recycled:ui.text("",13,ui.secondary,true);heading.setText(e.group.toUpperCase(java.util.Locale.getDefault()));heading.setPadding(ui.dp(4),ui.dp(16),ui.dp(4),ui.dp(8));if(android.os.Build.VERSION.SDK_INT>=28)heading.setAccessibilityHeading(true);return heading;}
    LinearLayout empty=new LinearLayout(a);empty.setOrientation(LinearLayout.VERTICAL);empty.setPadding(ui.dp(20),ui.dp(24),ui.dp(20),ui.dp(24));
    empty.addView(ui.text("No tasks in this view",20,ui.ink,true));empty.addView(ui.text("Try another view, clear filters, or add a task when connected.",15,ui.secondary,false));

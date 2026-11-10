@@ -33,6 +33,8 @@ public final class TaskPresentationTest {
     }
    }
   }
+  check(TaskPresentation.flagColor("high",false,0)==0xffb55746,"High flag uses coordinated muted coral");
+  check(TaskPresentation.flagColor("medium",true,0)==0xffd4b26f,"Medium flag uses coordinated muted amber");
   check(TaskPresentation.flag("high")==2,"High has a filled flag, not the medium outline in a different color");
   check(TaskPresentation.flag("medium")==1,"Medium has an outline flag");
   check(TaskPresentation.flag("low")==0,"Low has no flag, retaining its separate actions affordance");

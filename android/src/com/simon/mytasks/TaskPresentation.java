@@ -10,5 +10,5 @@ final class TaskPresentation {
  static String[] menuScopes(){return new String[]{"Active","Today","Week","All","Trash"};}
  static int selectedScope(String current){String[] all=menuScopes();for(int i=0;i<all.length;i++)if(all[i].equals(current))return i;return -1;}
  static int flag(String priority){return "high".equals(priority)?FLAG_FILLED:"medium".equals(priority)?FLAG_OUTLINE:FLAG_NONE;}
- static int flagColor(String priority,boolean dark,int secondary){return "high".equals(priority)?(dark?0xffff9aa2:0xffce363f):"medium".equals(priority)?(dark?0xffe5b754:0xffa56b00):secondary;}
+ static int flagColor(String priority,boolean dark,int secondary){return "high".equals(priority)?(dark?0xffe7a296:0xffb55746):"medium".equals(priority)?(dark?0xffd4b26f:0xff936b2b):secondary;}
 }

@@ -33,8 +33,8 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
  import android.app.Activity;import android.app.AlertDialog;import org.json.*;
  class MainActivity extends Activity {
   WorkspaceUi ui;String filter="Active",projectFilter="",query="",sortOrder="Project",selected="";
-  boolean showSearch,online,busy,foreground=true;JSONArray tasks=new JSONArray();
-  void navigate(String id){} void projectMenu(){} void sortMenu(){} void settings(){}
+  boolean showSearch,online,busy,editing,sortReverse,foreground=true;String colorMode="Project";android.widget.LinearLayout listPane;java.util.Map<Object,Object> dialogClosers=new java.util.HashMap<>();JSONArray tasks=new JSONArray();
+  void navigate(String id){} void projectMenu(){} void sortMenu(){} void colorMenu(){} void settings(){}
   void showTaskActions(JSONObject t){} void quickChange(JSONObject t,String field,Object value){}
   String dueLabel(JSONObject t){return "";} String human(String s){return s;}
   void captureDraft(){} void render(){} void saveWorkspacePreferences(){} void refresh(){}
@@ -47,7 +47,7 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
  final class R {static final class font {static final int inter_variable=1;}
  static final class drawable {static final int ic_more=2,ic_search=3,ic_flag=4;}}''')
  classes=work/'sdk';classes.mkdir()
- sources=[SRC/(n+'.java') for n in ['WorkspaceUi','GlassLayout','GlassDrawable','GlassPixels','CompletionMark','TasksUi','TaskRowView','TaskPresentation','UpdateEmphasis','PresentationPolicy','CompactPolicy','Core']]
+ sources=[SRC/(n+'.java') for n in ['WorkspaceUi','GlassLayout','GlassDrawable','GlassPixels','CompletionMark','TasksUi','TaskRowView','TaskPresentation','UpdateEmphasis','PresentationPolicy','CompactPolicy','Core','NativeMotionPolicy']]
  run([JAVA/'javac','--release','8','-cp',SDK/'platforms/android-35/android.jar','-d',classes,*sources,seams/'MainActivity.java',seams/'R.java',ANDROID/'tests/TasksAnchorTest.java'])
  print('Tasks UI: SDK 35 / Java 8 isolated module compilation passed')
  run([JAVA/'java','-cp',str(classes)+os.pathsep+str(SDK/'platforms/android-35/android.jar'),'com.simon.mytasks.TasksAnchorTest'])

@@ -59,7 +59,7 @@ An ordinary task tap opens beautifully composed details: title, description, pro
 
 Long press anchors a useful menu for supported status, priority, project, Edit and recoverable Trash actions. Include an accessible overflow equivalent. Completion-control taps are distinct from opening a row.
 
-When Hermes produces a genuinely new canonical update, show a persistent New update dot/label and two subtle blue accent/edge breaths, roughly 2.0-2.6 seconds per cycle, then settle. Do not animate task text opacity or whole-row size. Polling, row recycling, sorting and revisiting must not replay the same update animation. Batch multiple arrivals and stop offscreen/background effects.
+When Hermes produces a genuinely new canonical update, use a crisp 1-2dp accent edge, a soft bounded 6-10dp halo and a persistent New update dot/label. Animate four smooth breaths of approximately 1.6 seconds each, then retain a clearly visible static edge/marker until explicitly reviewed. Animate only the edge/halo, never task text, row height or the whole list. Observe canonical update tokens independently of row binding: polling, scrolling, sorting and revisiting never replay the same token. Limit simultaneous animations, batch arrivals and pause offscreen/background effects. Reduced motion retains the static edge and label. Completion of animation does not acknowledge anything.
 
 Tapping an unread task first opens the update sheet: concise Context, What's new and optional supplied next steps. Use actual snapshot-bound prose. Offer explicit Mark reviewed, Open task and Ask Hermes paths. Dismissing/opening/animation completion does not acknowledge. Submit only the exact displayed token and clear unread only after confirmation. A newer update during review/acknowledgement remains reviewable. Preserve safe summary rendering and keep source navigation in ordinary details.
 
@@ -119,5 +119,46 @@ Deliver:
 - Actual screenshots of Tasks compact/unfolded, project filtering, update review, details/edit, quick actions, Discussions, task/free chat, keyboard-open chat, dark mode and utilities.
 - A short recording of the key motion and adaptive behaviors.
 - Verification results, concrete visual differences corrected and any remaining unverified limitations.
+
+10. CURRENT SHARED ANDROID/WEB CONTRACT — SUPERSEDES CONFLICTING OLDER RULES
+
+Continue the completed compact iOS 27 Liquid Glass redesign; preserve work that already meets the design and unrelated screens. Apply the following to Android and affected web task/chat views without replacing their established base styles, compact layouts, Fold adaptation or backend contracts. These requirements override older conflicting color, ordering, update-highlight and animation rules in this brief, skill references and existing design documents.
+
+COORDINATED TASK COLORS
+Inspect both clients' existing palettes and introduce shared semantic task-color tokens with light/dark variants:
+- Ocean: #527FC2 / #8FB2E8
+- Teal: #3C8B83 / #82C8BA
+- Violet: #8972BB / #BBA7E5
+- Rose: #B26D87 / #DFA2B9
+- Amber: #A57A35 / #D4B26F
+- Slate: #6C7E91 / #A6B7C9
+Use muted coral for High importance, warm amber for Medium and soft teal for Low. Validate final composite contrast rather than applying starting values blindly. Offer Color by: Project, Importance, Neutral. Project mappings use canonical identity and must be persistent/deterministic across filtering, refresh, restarts and clients. Apply small dots, slim accents and very light surface tints; keep text neutral and readable. No saturated cards, rainbow backgrounds or glass behind reading text. Distinguish project, importance, unread, selection and error semantics; meaningful colors always have labels/icons. Project mode retains small importance flags/labels; Importance mode retains visible project context.
+
+SMART ORDERING WITH TRADITIONAL ALTERNATIVES
+A compact Sort menu offers Smart, Project, Importance, Due date, Recently updated and Created date where supported by canonical fields. Show selected mode and meaningful direction controls. Persist across launches/reloads and synchronize through an existing preference mechanism where available. Never silently overwrite an existing saved choice. Smart is the default only without a saved preference.
+Smart answers What should I work on next? using actual canonical fields, not refresh-time LLM calls or invented significance, effort/dependencies:
+- Deadline: overdue +50; today +40; tomorrow +25; within seven days +10; otherwise 0.
+- Importance: High +30; Medium +15; Low 0.
+- In progress +6.
+- Canonical unread update +6.
+- Anti-starvation: +1 per full week since valid creation, capped at +4.
+Date-only deadlines use the user-visible local calendar/timezone; missing fields contribute zero. Rank actionable inbox/todo/in_progress together across projects. Keep waiting in a clearly labelled lower section. Completed/cancelled/deleted follow scope and never compete with actionable work. Tie-break earliest deadline, higher importance, oldest creation, canonical ID. Rank the complete eligible dataset, not just visible rows. Provide unobtrusive Why this order? explanations (Due today · High importance); no scores/lengthy explanations in ordinary rows. Smart rows retain compact project context; Project grouping remains an explicit alternative (the older instruction to show project context only in group headers applies only when grouped). Preserve selection and viewport anchor. Defer automatic reordering while scrolling, touching, editing or menus are active; apply at safe idle or explicit refresh using a short position transition. Never rewrite stored priorities, deadlines, status or unread state to sort.
+
+NOTICEABLE NEW UPDATES
+Use the four-breath edge/halo treatment in section 4, not the earlier two-breath rule. Once per newly observed canonical token, not poll/bind/scroll; limit concurrent effects and batch arrivals; pause offscreen/background. Reduced motion is static and clear. Opening/dismissing summaries and animation completion never mark reviewed. Acknowledge only the explicitly displayed exact token; newer tokens and failed acknowledgements remain visible.
+
+COMPLETE COORDINATED MOTION
+- Page/detail navigation: coherent 240-320ms forward/back transitions reversed on return.
+- Tabs/scopes: moving selected capsule and restrained 180-240ms content transitions.
+- Sheets/menus: anchored 220-320ms opening with coordinated scrim and restored focus.
+- Sending: local bubble insertion 180-240ms from composer; honest Sending until admission succeeds; preserve recoverable draft/request identity.
+- Incoming: restrained 160-240ms insertion, retain older-message reading position and jump-to-latest cue.
+- Hermes responding: small three-dot wave only while actual request running; Queued when queued; stop completion/error/hidden. Reduced motion uses static responding text.
+- Keyboard/composer: coordinated insets/height without clipping, jumps or duplicate navigation.
+- Completion/quick actions/reordering: short useful feedback and correct failure rollback.
+Use real transport state; no fabricated typing, streaming, delivery receipts or progress stages. Preserve durable chat/idempotency and explicitly handle ambiguous failures. Honor Android animation settings, reduced motion/transparency and web prefers-reduced-motion. Keep effects local and profile suspected jank.
+
+IMPLEMENT AND VERIFY, NOT JUST PLAN
+Use configured SSH/Android MCP build-transfer-hash-install-inspect loop. Preserve signed-in production session; isolated synthetic data only for edits/acknowledgements/chat sends. Verify stable colors and Project/Importance/Neutral modes, every ordering mode/preference restoration, cross-client Smart parity, date/timezone boundaries/missing values, waiting/completed scope, and no disruptive movement during interaction. Deliver actual light/dark task-color and Sort-menu screenshots, plus recordings of update glow, page transitions, message sending/receiving, genuine transport-pending state (identify synthetic providers honestly), keyboard and folding. Continue correcting results; report actual verification and precise limitations. First build/install/screenshots are intermediate gates, not completion.
 
 Generated boards, browser mockups and passing tests are not proof of Android runtime visual quality. A fake primary glass material, a clipped composer, broken fold state or unfinished route remains unfinished work. Match the requested visual language and keep the product usable.

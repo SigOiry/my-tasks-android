@@ -2,9 +2,9 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
-## Local Android redesign preview
+## Android and web 1.5
 
-The local native `1.5.0-glass-preview` (code 7) rebuilds Tasks, details/editing, update review, messaging and utilities with compact grouped native Views and real bounded sampled/blurred glass controls. It includes deliberate folded/unfolded layouts, IME-safe composition and explicit assistant-text-to-task review. Build output: `android/build/my-tasks.apk`. See `android/REDESIGN.md` for actual Pixel_Fold verification, source architecture and physical-device limits. This local preview is not a stable-release promotion, public publication or production backend deployment.
+Version `1.5` (Android code 8, GitHub tag `v1.5`) extends the native Liquid Glass redesign with shared muted task colors, persisted Smart/traditional ordering and coordinated motion. Tasks, details/editing, update review, messaging and utilities use compact native Views and real bounded sampled/blurred glass controls, deliberate folded/unfolded layouts, IME-safe composition and explicit assistant-text-to-task review. Official build output: `android/build/my-tasks.apk`, signed with the original external release identity. See `CHANGELOG.md`, `android/REDESIGN.md` and `server/WEB-PRESENTATION.md` for verification and known limits, including the web's current Europe/Rome calendar. Native synthetic QA evidence is separate from the official release and is not a live-model invocation.
 
 ## Open or install
 

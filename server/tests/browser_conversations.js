@@ -22,7 +22,7 @@
  const rid=detail.conversation.latest_request.id,request=await api('/api/conversations/'+created.id+'/requests/'+rid);
  assert(['queued','running','succeeded','failed','interrupted'].includes(request.status),'request endpoint returns contract status');
  $('chat-close').click();await wait(()=>!$('chat-dialog').open);$('discussion-refresh').click();
- await wait(()=>document.querySelector(`[data-conversation-id="${created.id}"]`));document.querySelector(`[data-conversation-id="${created.id}"]`).click();await wait(()=>$('chat-log').textContent.includes(content));
+ await wait(()=>document.querySelector(`[data-conversation-id="${created.id}"]`));document.querySelector(`[data-conversation-id="${created.id}"]`).click();await wait(()=>$('chat-log').textContent.includes(content)&&!$('chat-send').disabled);
  assert($('chat-message').value==='My follow-up stays editable','close/reopen preserves per-conversation draft');
  $('chat-rename').click();await wait(()=>$('rename-dialog').open);change('conversation-title','Scratch durable discussion');$('rename-form').requestSubmit();await wait(()=>!$('rename-dialog').open);
  assert((await api('/api/conversations/'+created.id)).conversation.title==='Scratch durable discussion','rename persisted, verified by exact readback');

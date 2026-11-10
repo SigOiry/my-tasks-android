@@ -17,7 +17,9 @@ public final class UpdateEmphasisTest {
   ledger.pause();
   check(ledger.activeCount()==0,"background releases all active slots");
   check(!ledger.claim("task-a","token-2",true,true),"background/navigation never rearms seen update");
-  check(!ledger.claim("task-c","token-3",true,true),"overflow does not replay after scrolling");
+  check(ledger.claim("task-c","token-3",true,true),"unanimated overflow enters the next bounded batch rather than being lost");
+  ledger.release("task-c","token-3");
+  check(!ledger.claim("task-c","token-3",true,true),"completed overflow never replays on scroll");
   check(!ledger.claim("task-d","token-4",true,false),"reduced motion is static");
   check(!ledger.claim("task-d","token-4",true,true),"preference change does not replay");
   check(!ledger.claim("task-e","token-5",false,true),"read state never animates");
@@ -35,11 +37,18 @@ public final class UpdateEmphasisTest {
   check(ledger.claim("task","a:b",true,true),"identity pairs cannot collide via delimiters");
   ledger.pause();
   check(ledger.claim("task:a","B",true,true),"token case is exact, never normalized");
-  check(UpdateEmphasis.CYCLE_MS==2300L&&UpdateEmphasis.CYCLES==2,"exact bounded two-cycle timing");
+  check(UpdateEmphasis.CYCLE_MS==1600L&&UpdateEmphasis.CYCLES==4,"four bounded 1.6-second breaths");
   ledger.clear();
   ledger.observe("edited-task","canonical-token");
   check(!ledger.claim("edited-task","canonical-token",true,true),"own canonical snapshot token stays static without acknowledging");
   check(ledger.claim("edited-task","remote-next-token",true,true),"subsequent remote update still breathes");
+  UpdateEmphasis batches=new UpdateEmphasis();final int[] wake={0},started={0};
+  batches.onSlotAvailable(()->{wake[0]++;if(batches.claim("third","v1",true,true))started[0]++;});
+  check(batches.claim("first","v1",true,true)&&batches.claim("second","v1",true,true),"first bounded batch starts");
+  check(!batches.claim("third","v1",true,true),"overflow waits while both slots active");
+  batches.release("wrong","v1");check(wake[0]==0,"stale releases never schedule a batch");
+  batches.release("first","v1");check(wake[0]==1&&started[0]==1&&batches.activeCount()==2,"release wakes next bounded visible batch");
+  batches.release("third","v1");check(started[0]==1,"batch callback never replays an admitted token");
   System.out.println("UpdateEmphasisTest: "+checks+" checks passed");
  }
 }
