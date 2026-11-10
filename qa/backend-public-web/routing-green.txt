@@ -1,0 +1,23 @@
+test_configured_provider_has_killable_wall_clock_timeout (test_public_web.PublicWebAnswerTests.test_configured_provider_has_killable_wall_clock_timeout) ... ok
+test_current_request_searches_then_reads_but_private_context_never_reaches_researcher (test_public_web.PublicWebAnswerTests.test_current_request_searches_then_reads_but_private_context_never_reaches_researcher) ... ok
+test_failure_is_disclosed_even_if_model_claims_verification (test_public_web.PublicWebAnswerTests.test_failure_is_disclosed_even_if_model_claims_verification) ... ok
+test_final_evidence_uses_one_system_message_and_preserves_input (test_public_web.PublicWebAnswerTests.test_final_evidence_uses_one_system_message_and_preserves_input) ... ok
+test_greeting_writing_no_browse_and_private_requests_never_search (test_public_web.PublicWebAnswerTests.test_greeting_writing_no_browse_and_private_requests_never_search) ... ok
+test_implicit_current_information_keeps_opt_out_writing_and_privacy (test_public_web.PublicWebAnswerTests.test_implicit_current_information_keeps_opt_out_writing_and_privacy) ... ok
+test_implicit_current_information_searches_without_search_keyword (test_public_web.PublicWebAnswerTests.test_implicit_current_information_searches_without_search_keyword) ... ok
+test_model_cannot_exfiltrate_page_instructions_as_new_query (test_public_web.PublicWebAnswerTests.test_model_cannot_exfiltrate_page_instructions_as_new_query) ... ok
+test_only_three_extra_tool_calls_are_accepted (test_public_web.PublicWebAnswerTests.test_only_three_extra_tool_calls_are_accepted) ... ok
+test_summary_is_tool_free_even_when_input_demands_browsing (test_public_web.PublicWebAnswerTests.test_summary_is_tool_free_even_when_input_demands_browsing) ... ok
+test_unlisted_page_never_reaches_reader (test_public_web.PublicWebAnswerTests.test_unlisted_page_never_reaches_reader) ... ok
+test_unsupported_tool_is_rejected_without_dispatch (test_public_web.PublicWebAnswerTests.test_unsupported_tool_is_rejected_without_dispatch) ... ok
+test_only_public_http_addresses_are_eligible (test_public_web.PublicWebSecurityTests.test_only_public_http_addresses_are_eligible) ... ok
+test_page_byte_cap_is_enforced_before_content_enters_model (test_public_web.PublicWebSecurityTests.test_page_byte_cap_is_enforced_before_content_enters_model) ... ok
+test_page_connects_to_pinned_ip_and_verifies_original_hostname (test_public_web.PublicWebSecurityTests.test_page_connects_to_pinned_ip_and_verifies_original_hostname) ... ok
+test_page_strips_active_content_and_limits_size (test_public_web.PublicWebSecurityTests.test_page_strips_active_content_and_limits_size) ... ok
+test_redirect_is_revalidated_before_second_connection (test_public_web.PublicWebSecurityTests.test_redirect_is_revalidated_before_second_connection) ... ok
+test_worker_enforces_wall_clock_deadline (test_public_web.PublicWebSecurityTests.test_worker_enforces_wall_clock_deadline) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.409s
+
+OK

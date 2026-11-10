@@ -1,0 +1,12 @@
+{
+  "canonical_task_entries_unchanged": true,
+  "canonical_only_root_metadata_changed": [
+    "sync"
+  ],
+  "production_conversation_request_message_counts_unchanged": true,
+  "production_app_version_observed_in_settings": "1.5.1",
+  "production_app_origin_observed_in_settings": "https://task.oirysimon.com",
+  "production_session_preserved": true,
+  "isolated_fixture_stopped": true,
+  "adb_reverse_9147_removed": true
+}

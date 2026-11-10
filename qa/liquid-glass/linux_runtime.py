@@ -16,7 +16,7 @@ REMOTE = '/home/simon/hermes-apks/qa-runtime'
 SSH = ['ssh','-i','/opt/data/ssh/android-testing','-o','UserKnownHostsFile=/opt/data/ssh/android-known_hosts',
        '-o','StrictHostKeyChecking=yes','-o','BatchMode=yes',HOST]
 SERVER = ('mobile_api.py','qa_server.py','account_auth.py','account_admin.py','account_routes.py',
-          'web_auth.py','conversations.py','hermes_chat.py','event_feed.py','releases.py')
+          'web_auth.py','conversations.py','hermes_chat.py','public_web.py','event_feed.py','releases.py')
 DATA = ('liquid-glass-synthetic.json','tasks.json','qa-cert.pem','qa-key.pem','qa-token','qa-password',
         'account.sqlite','conversations.sqlite')
 # Only filesystem location literals change in generated copies. Fail closed on upstream drift.
@@ -49,6 +49,7 @@ def package(root, bundle):
                     'integration/taskdb.py':Path('/opt/data/personal-assistant/taskdb.py'),
                     'qa/liquid-glass/verify_linux.py':HERE/'verify_linux.py',
                     'qa/liquid-glass/runtime.py':HERE/'runtime.py',
+                    'qa/liquid-glass/fixtures/public-source-replay.json':HERE/'fixtures/public-source-replay.json',
                     'qa/liquid-glass/live_mutate.py':HERE/'live_mutate.py',
                     'qa/liquid-glass/live_summary.py':HERE/'live_summary.py'})
     manifest = {}

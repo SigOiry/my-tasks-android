@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
  (seams/'MainActivity.java').write_text('''package com.simon.mytasks;
  import android.app.Activity;import android.app.AlertDialog;import org.json.*;
  class MainActivity extends Activity {
-  WorkspaceUi ui;String filter="Active",projectFilter="",query="",sortOrder="Project",selected="";
+  WorkspaceUi ui;TasksUi tasksUi;String filter="Active",projectFilter="",query="",sortOrder="Project",selected="";
   boolean showSearch,online,busy,editing,sortReverse,foreground=true;String colorMode="Project";android.widget.LinearLayout listPane;java.util.Map<Object,Object> dialogClosers=new java.util.HashMap<>();JSONArray tasks=new JSONArray();
   void navigate(String id){} void projectMenu(){} void sortMenu(){} void colorMenu(){} void settings(){}
   void showTaskActions(JSONObject t){} void quickChange(JSONObject t,String field,Object value){}
@@ -45,6 +45,7 @@ with tempfile.TemporaryDirectory(prefix='tasks-ui-check-',dir=SCRATCH) as work:
  }''')
  (seams/'R.java').write_text('''package com.simon.mytasks;
  final class R {static final class font {static final int inter_variable=1;}
+ static final class style {static final int SheetWindowMotion=5;}
  static final class drawable {static final int ic_more=2,ic_search=3,ic_flag=4;}}''')
  classes=work/'sdk';classes.mkdir()
  sources=[SRC/(n+'.java') for n in ['WorkspaceUi','GlassLayout','GlassDrawable','GlassPixels','CompletionMark','TasksUi','TaskRowView','TaskPresentation','UpdateEmphasis','PresentationPolicy','CompactPolicy','Core','NativeMotionPolicy']]

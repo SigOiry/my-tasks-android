@@ -23,6 +23,8 @@ def main():
     subprocess.run([javac, '--release', '8', '-cp', str(jar), '-d', str(output),
                     str(ROOT / 'src/com/simon/mytasks/ChatPresentationPolicy.java'),
                     str(ROOT / 'src/com/simon/mytasks/ChatRowPolicy.java'),
+                    str(ROOT / 'src/com/simon/mytasks/PresentationPolicy.java'),
+                    str(ROOT / 'src/com/simon/mytasks/Core.java'),
                     str(ROOT / 'tests/ChatRowPolicyTest.java'),
                     str(ROOT / 'tests/ChatPresentationPolicyTest.java')], check=True)
     subprocess.run([java, '-cp', str(output) + os.pathsep + str(jar),

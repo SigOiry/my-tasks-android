@@ -1,0 +1,109 @@
+[
+  {
+    "op": "scroll",
+    "dy": -3000,
+    "ms": 600
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-unread-start"
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-unread-after-ten"
+  },
+  {
+    "op": "tap",
+    "label": "Review the observatory proposal",
+    "ms": 600
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-update-review"
+  },
+  {
+    "op": "back",
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "Back to tasks",
+    "ms": 600
+  },
+  {
+    "op": "scroll",
+    "dy": -3000,
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "Confirm room accessibility and equipment",
+    "ms": 600
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-detail-forward"
+  },
+  {
+    "op": "tap",
+    "label": "Back to tasks",
+    "ms": 600
+  },
+  {
+    "op": "scroll",
+    "dy": -3000,
+    "ms": 600
+  },
+  {
+    "op": "longPress",
+    "label": "Confirm room accessibility and equipment",
+    "ms": 600
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-anchored-actions"
+  },
+  {
+    "op": "back",
+    "ms": 600
+  },
+  {
+    "op": "scroll",
+    "dy": -3000,
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "Today",
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "Active",
+    "ms": 600
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-tasks-after-navigation"
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  }
+]

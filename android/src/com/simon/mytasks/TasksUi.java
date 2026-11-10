@@ -37,7 +37,7 @@ final class TasksUi {
  private String colorMode;
  private final Runnable deferredRefresh=()->{if(!paused&&pendingRefresh)refresh();};
 
- TasksUi(MainActivity activity){a=activity;emphasis.onSlotAvailable(()->{if(list!=null)list.post(()->{if(!paused&&a.foreground&&list!=null)resume();});});}
+ TasksUi(MainActivity activity){a=activity;emphasis.onSlotAvailable(()->{if(list!=null)list.post(()->{if(effectsAtRest()&&a.foreground&&list!=null)resume();});});}
  void build(LinearLayout parent){
   if(list!=null){capture();pause();list.setAdapter(null);}
   paused=false;touching=scrolling=false;
@@ -73,15 +73,15 @@ final class TasksUi {
   View footer=new View(a);footer.setMinimumHeight(ui.dp(88));list.addFooterView(footer,null,false);
   adapter=new Rows();list.setAdapter(adapter);
   list.setRecyclerListener(v->{if(v instanceof TaskRowView)((TaskRowView)v).stopEmphasis();});
-  list.setOnTouchListener((v,event)->{int action=event.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){touching=true;stopRowMotion();}else if(action==android.view.MotionEvent.ACTION_UP||action==android.view.MotionEvent.ACTION_CANCEL){touching=false;if(pendingRefresh)list.postDelayed(deferredRefresh,200);}return false;});
-  list.setOnScrollListener(new AbsListView.OnScrollListener(){public void onScrollStateChanged(AbsListView v,int state){scrolling=state!=AbsListView.OnScrollListener.SCROLL_STATE_IDLE;if(scrolling)stopRowMotion();if(!scrolling&&pendingRefresh)list.postDelayed(deferredRefresh,200);}public void onScroll(AbsListView v,int first,int visible,int total){if(!paused)for(int i=0;i<v.getChildCount();i++)if(v.getChildAt(i) instanceof TaskRowView)((TaskRowView)v.getChildAt(i)).resume();}});
+  list.setOnTouchListener((v,event)->{int action=event.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){touching=true;stopRowMotion();pauseRowEmphasis();}else if(action==android.view.MotionEvent.ACTION_UP||action==android.view.MotionEvent.ACTION_CANCEL){touching=false;if(pendingRefresh)list.postDelayed(deferredRefresh,200);list.postDelayed(this::resume,200);}return false;});
+  list.setOnScrollListener(new AbsListView.OnScrollListener(){public void onScrollStateChanged(AbsListView v,int state){scrolling=state!=AbsListView.OnScrollListener.SCROLL_STATE_IDLE;if(scrolling){stopRowMotion();pauseRowEmphasis();}else{if(pendingRefresh)list.postDelayed(deferredRefresh,200);list.postDelayed(TasksUi.this::resume,200);}}public void onScroll(AbsListView v,int first,int visible,int total){if(effectsAtRest())for(int i=0;i<v.getChildCount();i++)if(v.getChildAt(i) instanceof TaskRowView)((TaskRowView)v.getChildAt(i)).resume();}});
   create=ui.button("+",()->a.navigate("NEW"));create.setEnabled(a.online&&!a.busy);ui.primary(create);create.setTextSize(28);create.setContentDescription("Create a new task");create.setTooltipText("New task");create.setPadding(0,0,0,0);create.setElevation(ui.dp(WorkspaceUi.ELEVATION_FLOATING));
   FrameLayout.LayoutParams add=new FrameLayout.LayoutParams(ui.dp(56),ui.dp(56),Gravity.BOTTOM|Gravity.END);add.setMargins(ui.dp(12),ui.dp(12),ui.dp(12),ui.dp(12));dock.addView(create,add);
   refresh();
  }
  void selectScope(String scope){
   scopeOrigin=scopeCapsule!=null&&scopeTrack!=null&&scopeTrack.getWidth()>0?scopeCapsule.getTranslationX()/scopeTrack.getWidth():Float.NaN;
-  a.captureDraft();a.filter=scope;resetAnchor();a.saveWorkspacePreferences();a.render();
+  a.captureDraft();a.filter=scope;resetAnchor();a.saveWorkspacePreferences();a.render();a.ui.enter(a.listPane,NativeMotionPolicy.duration("tab"));
  }
  void moreMenu(){
   String[] labels=TaskPresentation.menuScopes();android.app.AlertDialog[] holder=new android.app.AlertDialog[1];LinearLayout refinements=a.vertical();refinements.setPadding(a.ui.dp(16),a.ui.dp(8),a.ui.dp(16),0);
@@ -107,10 +107,16 @@ final class TasksUi {
    }
   }
   Collections.sort(shown,(left,right)->PresentationPolicy.compare(left,right,a.sortOrder,a.sortReverse,today,java.time.ZoneId.systemDefault()));
-  entries.clear();String last=null;
+  entries.clear();String last=null;int lastLane=-1;
   for(JSONObject task:shown){
-   String group="Smart".equals(a.sortOrder)?(PresentationPolicy.smartLane(task)==0?"Actionable":PresentationPolicy.smartLane(task)==1?"Waiting":"Inactive"):"Priority".equals(a.sortOrder)||"Importance".equals(a.sortOrder)?a.human(task.optString("priority"))+" importance":"Due date".equals(a.sortOrder)?a.dueLabel(task):"Project".equals(a.sortOrder)?PresentationPolicy.project(task):a.sortOrder;
-   if(!group.equals(last)){entries.add(new Entry(group,null));last=group;}
+   int lane=PresentationPolicy.smartLane(task);
+   if(lane!=lastLane){
+    String label=lane%3==0?"Actionable":lane%3==1?"Waiting":"Inactive";
+    if(lane>=3)label=lane==3?"Deleted":"Deleted · "+label;
+    entries.add(new Entry(label,null));lastLane=lane;last=null;
+   }
+   String group="Smart".equals(a.sortOrder)?null:"Priority".equals(a.sortOrder)||"Importance".equals(a.sortOrder)?a.human(task.optString("priority"))+" importance":"Due date".equals(a.sortOrder)?a.dueLabel(task):"Project".equals(a.sortOrder)?PresentationPolicy.project(task):a.sortOrder;
+   if(group!=null&&!group.equals(last)){entries.add(new Entry(group,null));last=group;}
    entries.add(new Entry(null,task));
   }
   if(shown.isEmpty())entries.add(new Entry(null,null));
@@ -150,7 +156,9 @@ final class TasksUi {
   // The Add action shares the floating navigation baseline, not a second action tier.
  }
  private boolean deferRefresh(){return paused||touching||scrolling||a.editing||a.busy||!a.dialogClosers.isEmpty();}
- void resume(){paused=false;if(pendingRefresh&&list!=null)list.post(deferredRefresh);if(list!=null&&list.isShown())for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).resume();}
+ boolean effectsAtRest(){return !paused&&!touching&&!scrolling&&!a.busy&&!a.editing&&a.dialogClosers.isEmpty();}
+ private void pauseRowEmphasis(){if(list!=null)for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).pause();}
+ void resume(){if(!a.foreground)return;paused=false;if(!effectsAtRest())return;if(pendingRefresh&&list!=null)list.post(deferredRefresh);if(list!=null&&list.isShown())for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).resume();}
  private boolean sameFilters(){return a.filter.equals(viewFilter)&&a.projectFilter.equals(projectFilter)&&a.query.equals(query)&&a.sortOrder.equals(sortOrder)&&a.sortReverse==reverse&&a.colorMode.equals(colorMode);}
  /** Filter changes deliberately reset reading position; polling never does. */
  void resetAnchor(){anchor.reset();anchorReset=true;if(list!=null&&restore!=null){list.removeCallbacks(restore);restore=null;}}
@@ -215,7 +223,7 @@ final class TasksUi {
   @Override public boolean isEnabled(int p){return entries.get(p).task!=null;}
   @Override public View getView(int position,View recycled,ViewGroup parent){
    Entry e=entries.get(position);WorkspaceUi ui=a.ui;
-   if(e.task!=null){TaskRowView row=recycled instanceof TaskRowView?(TaskRowView)recycled:new TaskRowView(a,emphasis);resetRowMotion(row);row.bind(e.task,"Project".equals(a.sortOrder));row.groupCorners(position==0||entries.get(position-1).task==null,position==entries.size()-1||entries.get(position+1).task==null);if(paused)row.pause();return row;}
+   if(e.task!=null){TaskRowView row=recycled instanceof TaskRowView?(TaskRowView)recycled:new TaskRowView(a,emphasis);resetRowMotion(row);row.bind(e.task,"Project".equals(a.sortOrder));row.groupCorners(position==0||entries.get(position-1).task==null,position==entries.size()-1||entries.get(position+1).task==null);if(!effectsAtRest())row.pause();return row;}
    if(e.group!=null){TextView heading=recycled instanceof TextView?(TextView)recycled:ui.text("",13,ui.secondary,true);heading.setText(e.group.toUpperCase(java.util.Locale.getDefault()));heading.setPadding(ui.dp(4),ui.dp(16),ui.dp(4),ui.dp(8));if(android.os.Build.VERSION.SDK_INT>=28)heading.setAccessibilityHeading(true);return heading;}
    LinearLayout empty=new LinearLayout(a);empty.setOrientation(LinearLayout.VERTICAL);empty.setPadding(ui.dp(20),ui.dp(24),ui.dp(20),ui.dp(24));
    empty.addView(ui.text("No tasks in this view",20,ui.ink,true));empty.addView(ui.text("Try another view, clear filters, or add a task when connected.",15,ui.secondary,false));

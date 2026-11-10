@@ -1,0 +1,25 @@
+{
+  "file": "/opt/data/workspace/my-tasks-android/qa/android-web-access-20261110/evidence/final-owner-colors-sort.mp4",
+  "sha256": "eab60f99d3f4a48fae86f5517fbaa24556f285f27c979ea94b37f8d7152f5625",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1080,
+        "height": 1080,
+        "r_frame_rate": "90000/1"
+      },
+      {
+        "r_frame_rate": "0/0"
+      },
+      {
+        "r_frame_rate": "0/0"
+      }
+    ],
+    "format": {
+      "duration": "35.650044"
+    }
+  },
+  "capture": "actual Android full display; fixed encoder canvas; not measured UI FPS"
+}

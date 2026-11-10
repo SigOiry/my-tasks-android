@@ -1,0 +1,1241 @@
+{
+  "widthDp": 411,
+  "heightDp": 797,
+  "fontScale": 1,
+  "density": 2.625,
+  "theme": "Light",
+  "reduceMotion": false,
+  "reduceTransparency": false,
+  "selected": "",
+  "destination": "Tasks",
+  "detailsMode": "Details",
+  "wide": false,
+  "editing": false,
+  "online": true,
+  "filter": "Active",
+  "projectFilter": "",
+  "sortOrder": "Project",
+  "nodes": [
+    {
+      "class": "com.android.internal.policy.DecorView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.ListView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        378
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 102.0952377319336,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        110,
+        1027,
+        236
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Tasks",
+      "label": "Tasks, Active, sorted by Project",
+      "bounds": [
+        53,
+        112,
+        775,
+        233
+      ],
+      "widthDp": 275.047607421875,
+      "heightDp": 46.095237731933594,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Search tasks",
+      "bounds": [
+        775,
+        110,
+        901,
+        236
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Task views, project, sort and settings",
+      "bounds": [
+        901,
+        110,
+        1027,
+        236
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.GlassLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        236,
+        1027,
+        378
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 54.095237731933594,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "opaqueMaterial": false
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        61,
+        244,
+        380,
+        370
+      ],
+      "widthDp": 121.52381134033203,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        236,
+        1027,
+        378
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 54.095237731933594,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Active",
+      "label": "Active, selected",
+      "bounds": [
+        61,
+        244,
+        380,
+        370
+      ],
+      "widthDp": 121.52381134033203,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": true,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Today",
+      "label": "Today",
+      "bounds": [
+        380,
+        244,
+        699,
+        370
+      ],
+      "widthDp": 121.52381134033203,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "All",
+      "label": "All",
+      "bounds": [
+        699,
+        244,
+        1019,
+        370
+      ],
+      "widthDp": 121.9047622680664,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "ACTIONABLE",
+      "label": "null",
+      "bounds": [
+        42,
+        378,
+        1038,
+        482
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 39.619049072265625,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "RESEARCH",
+      "label": "null",
+      "bounds": [
+        42,
+        482,
+        1038,
+        586
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 39.619049072265625,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Review the observatory proposal, High priority, Todo, Research, Overdue · Nov 9, 2026, New update",
+      "bounds": [
+        42,
+        586,
+        1038,
+        790
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 77.71428680419922,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Review the observatory proposal",
+      "bounds": [
+        42,
+        625,
+        168,
+        751
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        612,
+        912,
+        764
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 57.904762268066406,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Review the observatory proposal",
+      "label": "null",
+      "bounds": [
+        168,
+        612,
+        912,
+        663
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.428571701049805,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "● New update · High priority · Overdue · Nov 9, 2026",
+      "label": "null",
+      "bounds": [
+        168,
+        663,
+        912,
+        764
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 38.47618865966797,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "High priority. Actions for Review the observatory proposal",
+      "bounds": [
+        912,
+        625,
+        1038,
+        751
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Compare the long-term research plan with the updated workshop programme, Medium priority, In progress, Research, Nov 12, 2026",
+      "bounds": [
+        42,
+        790,
+        1038,
+        1004
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 81.52381134033203,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Compare the long-term research plan with the updated workshop programme",
+      "bounds": [
+        42,
+        834,
+        168,
+        960
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        816,
+        912,
+        978
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 61.71428680419922,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Compare the long-term research plan with the updated workshop programme",
+      "label": "null",
+      "bounds": [
+        168,
+        816,
+        912,
+        926
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 41.904762268066406,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": true,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Medium priority · Nov 12, 2026",
+      "label": "null",
+      "bounds": [
+        168,
+        926,
+        912,
+        978
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 1
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Medium priority. Actions for Compare the long-term research plan with the updated workshop programme",
+      "bounds": [
+        912,
+        834,
+        1038,
+        960
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Collect workshop reading notes · QA edited, High priority, In progress, Research, Jan 15, 2030, New update",
+      "bounds": [
+        42,
+        1004,
+        1038,
+        1218
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 81.52381134033203,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Collect workshop reading notes · QA edited",
+      "bounds": [
+        42,
+        1048,
+        168,
+        1174
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        1030,
+        912,
+        1192
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 61.71428680419922,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Collect workshop reading notes · QA edited",
+      "label": "null",
+      "bounds": [
+        168,
+        1030,
+        912,
+        1140
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 41.904762268066406,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "● New update · High priority · Jan 15, 2030",
+      "label": "null",
+      "bounds": [
+        168,
+        1140,
+        912,
+        1192
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "High priority. Actions for Collect workshop reading notes · QA edited",
+      "bounds": [
+        912,
+        1048,
+        1038,
+        1174
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "SYNTHETIC QA · Reviewed planning draft, Medium priority, Todo, Research, No due date",
+      "bounds": [
+        42,
+        1218,
+        1038,
+        1432
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 81.52381134033203,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete SYNTHETIC QA · Reviewed planning draft",
+      "bounds": [
+        42,
+        1262,
+        168,
+        1388
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        1244,
+        912,
+        1406
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 61.71428680419922,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "SYNTHETIC QA · Reviewed planning draft",
+      "label": "null",
+      "bounds": [
+        168,
+        1244,
+        912,
+        1354
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 41.904762268066406,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Medium priority · Todo",
+      "label": "null",
+      "bounds": [
+        168,
+        1354,
+        912,
+        1406
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 1
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Medium priority. Actions for SYNTHETIC QA · Reviewed planning draft",
+      "bounds": [
+        912,
+        1262,
+        1038,
+        1388
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Read the instrumentation briefing, Low priority, Todo, Research, No due date",
+      "bounds": [
+        42,
+        1432,
+        1038,
+        1621
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 72,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Read the instrumentation briefing",
+      "bounds": [
+        42,
+        1463,
+        168,
+        1589
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        1475,
+        912,
+        1578
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 39.238094329833984,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Read the instrumentation briefing",
+      "label": "null",
+      "bounds": [
+        168,
+        1475,
+        912,
+        1526
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.428571701049805,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Low priority · Todo",
+      "label": "null",
+      "bounds": [
+        168,
+        1526,
+        912,
+        1578
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 1
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Low priority. Actions for Read the instrumentation briefing",
+      "bounds": [
+        912,
+        1463,
+        1038,
+        1589
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "OPERATIONS",
+      "label": "null",
+      "bounds": [
+        42,
+        1621,
+        1038,
+        1725
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 39.619049072265625,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Book the team planning session, High priority, In progress, Operations, Overdue · Nov 9, 2026",
+      "bounds": [
+        42,
+        1725,
+        1038,
+        1914
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 72,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Book the team planning session",
+      "bounds": [
+        42,
+        1756,
+        168,
+        1882
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        1768,
+        912,
+        1871
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 39.238094329833984,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Book the team planning session",
+      "label": "null",
+      "bounds": [
+        168,
+        1768,
+        912,
+        1819
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.428571701049805,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "High priority · Overdue · Nov 9, 2026",
+      "label": "null",
+      "bounds": [
+        168,
+        1819,
+        912,
+        1871
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 19.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 1
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "High priority. Actions for Book the team planning session",
+      "bounds": [
+        912,
+        1756,
+        1038,
+        1882
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.TaskRowView",
+      "text": "",
+      "label": "Confirm room accessibility and equipment, Medium priority, Todo, Operations, Due tomorrow",
+      "bounds": [
+        42,
+        1914,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 81.52381134033203,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.CheckBox",
+      "text": "",
+      "label": "Complete Confirm room accessibility and equipment",
+      "bounds": [
+        42,
+        1958,
+        168,
+        2029
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647,
+      "checked": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        1940,
+        912,
+        2029
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 61.71428680419922,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Confirm room accessibility and equipment",
+      "label": "null",
+      "bounds": [
+        168,
+        1940,
+        912,
+        2029
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 41.904762268066406,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Medium priority. Actions for Confirm room accessibility and equipment",
+      "bounds": [
+        912,
+        1958,
+        1038,
+        2029
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "+",
+      "label": "Create a new task",
+      "bounds": [
+        859,
+        1850,
+        1006,
+        1997
+      ],
+      "widthDp": 56,
+      "heightDp": 56,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.simon.mytasks.GlassLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        1822,
+        828,
+        1997
+      ],
+      "widthDp": 299.4285583496094,
+      "heightDp": 66.66666412353516,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "opaqueMaterial": false
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1833,
+        435,
+        1986
+      ],
+      "widthDp": 145.5238037109375,
+      "heightDp": 58.28571319580078,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        1822,
+        828,
+        1997
+      ],
+      "widthDp": 299.4285583496094,
+      "heightDp": 66.66666412353516,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Tasks",
+      "label": "Tasks, selected",
+      "bounds": [
+        53,
+        1833,
+        435,
+        1986
+      ],
+      "widthDp": 145.5238037109375,
+      "heightDp": 58.28571319580078,
+      "clickable": true,
+      "enabled": true,
+      "selected": true,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Discussions",
+      "label": "Discussions",
+      "bounds": [
+        435,
+        1833,
+        817,
+        1986
+      ],
+      "widthDp": 145.5238037109375,
+      "heightDp": 58.28571319580078,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    }
+  ]
+}

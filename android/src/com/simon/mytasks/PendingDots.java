@@ -18,7 +18,7 @@ final class PendingDots extends View {
  PendingDots(MainActivity owner,String id){super(owner);a=owner;ui=a.ui;requestId=id;setMinimumWidth(ui.dp(48));setMinimumHeight(ui.dp(24));setContentDescription("Hermès reply in progress");setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);}
  @Override protected void onDraw(Canvas canvas){
   super.onDraw(canvas);removeCallbacks(frame);
-  boolean wave=NativeMotionPolicy.pendingWave("running",requestId,a.foreground,isShown()&&isAttachedToWindow()&&getGlobalVisibleRect(visible),ui.motionEnabled());
+  boolean wave=NativeMotionPolicy.pendingWave("running",requestId,a.foreground,hasWindowFocus()&&isShown()&&isAttachedToWindow()&&getGlobalVisibleRect(visible),ui.motionEnabled());
   paint.setColor(ui.secondary);long elapsed=SystemClock.uptimeMillis()-started;
   for(int i=0;i<3;i++){float level=wave?NativeMotionPolicy.dotLevel(elapsed,i):.65f;paint.setAlpha(Math.round(100+155*level));canvas.drawCircle(ui.dp(9+12*i),getHeight()/2f-(wave?ui.dp(3)*level:0),ui.dp(2.5f),paint);}
   if(wave)postDelayed(frame,40);

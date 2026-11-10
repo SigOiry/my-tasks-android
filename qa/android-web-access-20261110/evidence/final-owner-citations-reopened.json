@@ -1,0 +1,553 @@
+{
+  "widthDp": 411,
+  "heightDp": 797,
+  "fontScale": 1,
+  "density": 2.625,
+  "theme": "Light",
+  "reduceMotion": false,
+  "reduceTransparency": false,
+  "selected": "",
+  "destination": "Discussions",
+  "detailsMode": "Details",
+  "wide": false,
+  "editing": false,
+  "online": true,
+  "filter": "Active",
+  "projectFilter": "",
+  "sortOrder": "Smart",
+  "thread": "0e380d13-5f63-4d1b-921d-92bc27a263e4",
+  "boundTask": "",
+  "nodes": [
+    {
+      "class": "com.android.internal.policy.DecorView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        255
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 55.238094329833984,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Back to Discussions",
+      "bounds": [
+        42,
+        119,
+        168,
+        245
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        168,
+        110,
+        912,
+        255
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 55.238094329833984,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "QA · Observatory review",
+      "label": "null",
+      "bounds": [
+        168,
+        110,
+        912,
+        190
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 30.4761905670166,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Review the observatory proposal",
+      "label": "null",
+      "bounds": [
+        168,
+        190,
+        912,
+        255
+      ],
+      "widthDp": 283.4285583496094,
+      "heightDp": 24.761905670166016,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 1
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Conversation actions",
+      "bounds": [
+        912,
+        119,
+        1038,
+        245
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        255,
+        1038,
+        1881
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 619.4285888671875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.ConversationsUi$2",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        255,
+        1038,
+        1881
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 619.4285888671875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        255,
+        1038,
+        1881
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 5767.23828125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        63,
+        255,
+        1017,
+        1849
+      ],
+      "widthDp": 363.4285583496094,
+      "heightDp": 5755.0478515625,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        63,
+        255,
+        1017,
+        1849
+      ],
+      "widthDp": 363.4285583496094,
+      "heightDp": 1000,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        63,
+        255,
+        1017,
+        1849
+      ],
+      "widthDp": 363.4285583496094,
+      "heightDp": 1000,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        63,
+        255,
+        943,
+        1767
+      ],
+      "widthDp": 335.23809814453125,
+      "heightDp": 958.8571166992188,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "SYNTHETIC QA — replay of a real deployed public-web answer for citation UI verification; no new model or search call.\n\nTabaccheria N. 196, Via di Prosecco 15, Trieste–Opicina, has these listed opening hours:\n\n| Days | Hours |\n|---|---|\n| Monday–Saturday | 07:00–13:00 and 16:30–19:30 |\n| Sunday | No hours listed; appears to be closed |\n\nSource: Fermopoint’s shop listing. Holiday hours or temporary changes are not confirmed.\n\nSources:\nPage read: https:\/\/www.fermopoint.it\/punto-di-ritiro-e-di-spedizione-pacchi\/tabacchi-196-16129\nSearch result (page not read): https:\/\/www.fermopoint.it\/tutti-i-punti-di-ritiro-e-di-spedizione-pacchi\/Trieste-TS\nSearch result (page not read): https:\/\/www.paginebianche.it\/friuli-venezia-giulia\/trieste\/tabaccherie.html\nSearch result (page not read): https:\/\/www.cylex-italia.it\/trieste\/tabaccheria.html",
+      "label": "null",
+      "bounds": [
+        100,
+        255,
+        906,
+        1239
+      ],
+      "widthDp": 307.047607421875,
+      "heightDp": 748.5714111328125,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Open source · www.fermopoint.it",
+      "label": "Open source in browser: https:\/\/www.fermopoint.it\/punto-di-ritiro-e-di-spedizione-pacchi\/tabacchi-196-16129",
+      "bounds": [
+        100,
+        1239,
+        906,
+        1365
+      ],
+      "widthDp": 307.047607421875,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Open source · www.fermopoint.it",
+      "label": "Open source in browser: https:\/\/www.fermopoint.it\/tutti-i-punti-di-ritiro-e-di-spedizione-pacchi\/Trieste-TS",
+      "bounds": [
+        100,
+        1365,
+        906,
+        1491
+      ],
+      "widthDp": 307.047607421875,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Open source · www.paginebianche.it",
+      "label": "Open source in browser: https:\/\/www.paginebianche.it\/friuli-venezia-giulia\/trieste\/tabaccherie.html",
+      "bounds": [
+        100,
+        1491,
+        906,
+        1617
+      ],
+      "widthDp": 307.047607421875,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Open source · www.cylex-italia.it",
+      "label": "Open source in browser: https:\/\/www.cylex-italia.it\/trieste\/tabaccheria.html",
+      "bounds": [
+        100,
+        1617,
+        906,
+        1743
+      ],
+      "widthDp": 307.047607421875,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "3:39 PM",
+      "label": "Sent Nov 10, 2026, 3:39 PM",
+      "bounds": [
+        63,
+        1767,
+        173,
+        1828
+      ],
+      "widthDp": 41.904762268066406,
+      "heightDp": 23.238094329833984,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.simon.mytasks.GlassLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        1881,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 56.380950927734375,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "opaqueMaterial": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        1881,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 56.380950927734375,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.EditText",
+      "text": "",
+      "label": "Message Hermès; Send submits this draft",
+      "bounds": [
+        53,
+        1893,
+        901,
+        2018
+      ],
+      "widthDp": 323.047607421875,
+      "heightDp": 47.619049072265625,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 3
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Send to Hermès",
+      "bounds": [
+        901,
+        1892,
+        1027,
+        2018
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    }
+  ]
+}

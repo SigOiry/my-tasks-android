@@ -99,6 +99,11 @@ class Fixture:
             raise RuntimeError('Explicit synthetic provider failure')
         if '[fixture:slow]' in content:
             time.sleep(6)
+        if '[fixture:links]' in content:
+            replay=json.loads((Path(__file__).resolve().parent/'fixtures/public-source-replay.json').read_text())
+            if replay.get('synthetic') is not True or not replay['reply'].startswith('SYNTHETIC QA'):
+                raise RuntimeError('Explicit synthetic source replay required')
+            return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=replay['reply'],tool_calls=[]))])
         text = ('SYNTHETIC QA — fixture provider, no model or tools called.\n\n'
                 '1. Review the saved task context.\n2. Prepare the next step for human review.\n\n'
                 'Nothing was sent, applied or changed by this response.')

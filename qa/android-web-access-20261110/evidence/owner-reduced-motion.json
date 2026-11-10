@@ -1,0 +1,25 @@
+{
+  "file": "/opt/data/workspace/my-tasks-android/qa/android-web-access-20261110/evidence/owner-reduced-motion.mp4",
+  "sha256": "edae4f53bf2f277f1cb2b99ccdbd446d9951c6e9fe87d0ac44a2e5bd8ba94a2b",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1080,
+        "height": 1080,
+        "r_frame_rate": "90000/1"
+      },
+      {
+        "r_frame_rate": "0/0"
+      },
+      {
+        "r_frame_rate": "0/0"
+      }
+    ],
+    "format": {
+      "duration": "7.671522"
+    }
+  },
+  "capture": "actual Android full display; fixed encoder canvas; not measured UI FPS"
+}

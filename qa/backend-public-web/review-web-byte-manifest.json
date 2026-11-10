@@ -1,0 +1,91 @@
+{
+  "tracked_web_files": 17,
+  "all_byte_unchanged": true,
+  "files": [
+    {
+      "path": "server/web/INTER-LICENSE.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/app.css",
+      "sha256": "162eec5b7a9f74d8ac32d3dc749b1a7a29e7abc99003b5b0018e2837f2097ec3",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/app.js",
+      "sha256": "3f4dec2039262d89ce4904ac65b4a36e367e28824c3d849ba9c867d813d13315",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/conversations.mjs",
+      "sha256": "66199cc417699b06a7e494bc02dda76c431a61b38ee78c5c1d73edb4dbf94f8a",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/icon.svg",
+      "sha256": "fd58e79a5d38e293a13ece01516a95dd26217b345831fcacc35bb7e0edc74675",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/index.html",
+      "sha256": "aa563a383caaec408635d2fcdfe928a500b29d421214c3d272a2b348bcf6a086",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/inter-variable.woff2",
+      "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web/policy.mjs",
+      "sha256": "89e2d7b57f7d56f8e330676c80812edbd2dd87b6953958424e23aebe5b8801ca",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/INTER-LICENSE.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/app.css",
+      "sha256": "162eec5b7a9f74d8ac32d3dc749b1a7a29e7abc99003b5b0018e2837f2097ec3",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/app.js",
+      "sha256": "3f4dec2039262d89ce4904ac65b4a36e367e28824c3d849ba9c867d813d13315",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/conversations.mjs",
+      "sha256": "66199cc417699b06a7e494bc02dda76c431a61b38ee78c5c1d73edb4dbf94f8a",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/icon.svg",
+      "sha256": "fd58e79a5d38e293a13ece01516a95dd26217b345831fcacc35bb7e0edc74675",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/index.html",
+      "sha256": "aa563a383caaec408635d2fcdfe928a500b29d421214c3d272a2b348bcf6a086",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/inter-variable.woff2",
+      "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/manifest.json",
+      "sha256": "0df31c2fe4e23d23ed9a7915f36aef3d68490f67116dd62f57414445b2a170da",
+      "unchanged_from_HEAD": true
+    },
+    {
+      "path": "server/web_dist/policy.mjs",
+      "sha256": "89e2d7b57f7d56f8e330676c80812edbd2dd87b6953958424e23aebe5b8801ca",
+      "unchanged_from_HEAD": true
+    }
+  ]
+}

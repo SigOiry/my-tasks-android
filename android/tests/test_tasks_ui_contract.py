@@ -73,11 +73,11 @@ class TasksUiContractTest(unittest.TestCase):
   for required in ['int flag=TaskPresentation.flag(priority)',
                    'if(flag==TaskPresentation.FLAG_FILLED)overflow.setImageDrawable(filledFlag())',
                    'flag==TaskPresentation.FLAG_OUTLINE?R.drawable.ic_flag:R.drawable.ic_more',
-                   'TaskPresentation.flagColor(priority,android.graphics.Color.red(ui.canvas)<100,ui.secondary)']:
+                   '"Neutral".equals(a.colorMode)?ui.secondary:category']:
    self.assertIn(required,s)
  def test_compact_rows_and_accessible_scope_targets(self):
   row=self.source('TaskRowView');tasks=self.source('TasksUi')
-  self.assertIn('setMinimumHeight(ui.dp(64))',row)
+  self.assertIn('setMinimumHeight(ui.dp(72))',row)
   self.assertGreaterEqual(row.count('new LayoutParams(ui.dp(WorkspaceUi.ACTION_MIN),ui.dp(WorkspaceUi.ACTION_MIN))'),2)
   self.assertIn('tab.setMinHeight(ui.dp(48))',tasks)
  def test_clear_scope_persists_like_menu_and_tabs(self):

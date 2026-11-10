@@ -1,0 +1,208 @@
+[
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Smart"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-sort-light"
+  },
+  {
+    "op": "tap",
+    "label": "Project"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-project-light"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Color by \u00b7 Project"
+  },
+  {
+    "op": "tap",
+    "label": "Importance"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-importance-light"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Color by \u00b7 Importance"
+  },
+  {
+    "op": "tap",
+    "label": "Neutral"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-neutral-light"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Color by \u00b7 Neutral"
+  },
+  {
+    "op": "tap",
+    "label": "Project"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Project"
+  },
+  {
+    "op": "tap",
+    "label": "Importance"
+  },
+  {
+    "op": "state",
+    "field": "sortOrder",
+    "value": "Importance"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Importance"
+  },
+  {
+    "op": "tap",
+    "label": "Due date"
+  },
+  {
+    "op": "state",
+    "field": "sortOrder",
+    "value": "Due date"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Due date"
+  },
+  {
+    "op": "tap",
+    "label": "Recently updated"
+  },
+  {
+    "op": "state",
+    "field": "sortOrder",
+    "value": "Recently updated"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Recently updated"
+  },
+  {
+    "op": "tap",
+    "label": "Created date"
+  },
+  {
+    "op": "state",
+    "field": "sortOrder",
+    "value": "Created date"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Created date"
+  },
+  {
+    "op": "tap",
+    "label": "Smart"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Settings"
+  },
+  {
+    "op": "tap",
+    "label": "Dark",
+    "ms": 700
+  },
+  {
+    "op": "tap",
+    "label": "Close Settings"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-project-dark"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Sort \u00b7 Smart"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-sort-dark"
+  },
+  {
+    "op": "tap",
+    "label": "Smart"
+  },
+  {
+    "op": "tap",
+    "label": "Task views, project, sort and settings"
+  },
+  {
+    "op": "tap",
+    "label": "Settings"
+  },
+  {
+    "op": "tap",
+    "label": "Light",
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "Close Settings"
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-restored-light"
+  },
+  {
+    "op": "wait",
+    "ms": 4000
+  }
+]

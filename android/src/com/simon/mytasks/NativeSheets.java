@@ -6,7 +6,7 @@ final class NativeSheets {
  static int boundedHeight(int content,int available){return Math.max(1,Math.min(content,(int)(available*.86f)));}
  static void fit(MainActivity a,Dialog dialog,View panel,boolean fixedHeight){
   Window window=dialog.getWindow();if(window==null)return;
-  window.setBackgroundDrawable(a.ui.shape(a.card,0,28));window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);window.setDimAmount(.25f);window.setWindowAnimations(0);window.setGravity(a.wide?Gravity.CENTER:Gravity.BOTTOM);
+  window.setBackgroundDrawable(a.ui.shape(a.card,0,28));window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);window.setDimAmount(.25f);window.setWindowAnimations(a.ui.motionEnabled()?R.style.SheetWindowMotion:0);window.setGravity(a.wide?Gravity.CENTER:Gravity.BOTTOM);
   // GlassLayout cannot sample another window. Native background blur supplies the
   // actual Activity backdrop for this dialog; opaque fallback remains readable.
   if(android.os.Build.VERSION.SDK_INT>=31){boolean reduced=a.getSharedPreferences("appearance",android.content.Context.MODE_PRIVATE).getBoolean("reduce_transparency",false);try{for(String key:new String[]{"high_text_contrast_enabled","accessibility_reduce_transparency","reduce_transparency"})reduced|=android.provider.Settings.Secure.getInt(a.getContentResolver(),key,0)==1;}catch(SecurityException ignored){}WindowManager manager=a.getSystemService(WindowManager.class);if(!reduced&&manager!=null&&manager.isCrossWindowBlurEnabled()){window.setBackgroundDrawable(a.ui.shape(Color.argb(32,Color.red(a.card),Color.green(a.card),Color.blue(a.card)),0,28));window.setBackgroundBlurRadius(a.dp(24));}else{window.setBackgroundBlurRadius(0);window.setBackgroundDrawable(a.ui.shape(a.card,0,28));}}
@@ -14,7 +14,7 @@ final class NativeSheets {
   panel.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));int height=boundedHeight(panel.getMeasuredHeight(),available);window.setLayout(width,height);
   if(!a.wide){WindowManager.LayoutParams attributes=window.getAttributes();attributes.y=a.dp(8);window.setAttributes(attributes);}
   window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);window.getDecorView().setSystemUiVisibility(a.getWindow().getDecorView().getSystemUiVisibility());
-  if(a.ui.motionEnabled()){panel.setTranslationY(a.dp(a.wide?12:24));panel.setAlpha(.85f);panel.animate().translationY(0).alpha(1).setDuration(NativeMotionPolicy.duration("menu")).setInterpolator(new DecelerateInterpolator()).start();}
+  // trackDialog coordinates native decor entry and the window scrim together.
  }
  static void positionMenu(MainActivity a,Dialog dialog,View material,View anchor){
   fit(a,dialog,material,false);Window w=dialog.getWindow();if(w==null)return;Rect visible=new Rect();a.getWindow().getDecorView().getWindowVisibleDisplayFrame(visible);int width=Math.min(a.dp(anchor==null?360:320),visible.width()-a.dp(24));material.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));int height=boundedHeight(material.getMeasuredHeight(),visible.height());w.setLayout(width,height);

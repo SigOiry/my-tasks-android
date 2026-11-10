@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: evidence=/storage/emulated/0/Android/data/com.simon.mytasks.qa/files/evidence/final-owner-chat-ime-fold-scenario
+INSTRUMENTATION_RESULT: result=PASS scenario
+INSTRUMENTATION_CODE: -1

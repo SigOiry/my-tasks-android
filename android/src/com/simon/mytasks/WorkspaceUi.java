@@ -24,7 +24,7 @@ final class WorkspaceUi {
   canvas=color(dark?"#0D0F14":"#F5F5F7");surface=color(dark?"#1A1D24":"#ffffff");
   ink=color(dark?"#f5f5f7":"#1c1c1e");secondary=color(dark?"#aaaab3":"#63636b");border=color(dark?"#34363d":"#d9d9df");
   primary=color(dark?"#66aaff":"#0068E5");soft=color(dark?"#202e46":"#EDF3FF");danger=color(dark?"#ffb4ab":"#a3322c");onPrimary=color(dark?"#0b0d12":"#ffffff");
-  unread=primary;focus=primary;separator=color(dark?"#30333B":"#DFDFE4");
+  unread=PresentationPolicy.unreadColor(dark);focus=primary;separator=color(dark?"#30333B":"#DFDFE4");
  }
  static int color(String s){return Color.parseColor(s);}
  boolean motionEnabled(){return !context.getSharedPreferences("appearance",Context.MODE_PRIVATE).getBoolean("reduce_motion",false)&&android.animation.ValueAnimator.areAnimatorsEnabled()&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,1)>0&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,1)>0;}
@@ -63,7 +63,7 @@ final class WorkspaceUi {
  void navigatePage(View v,boolean returning){
   if(v==null)return;v.animate().cancel();v.setAlpha(1);v.setTranslationX(0);v.setTranslationY(0);
   if(!motionEnabled()||!v.isShown())return;
-  v.setTranslationX(dp(returning?-24:24));v.animate().translationX(0).setDuration(MOTION_NAVIGATION).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+  v.setTranslationX(dp(returning?-48:48));v.animate().translationX(0).setDuration(MOTION_NAVIGATION).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
  }
  /** Called after scope layout; origin is the old rendered X / track width. */
  void placeScopeCapsule(View capsule,ViewGroup scopes,int selected,float origin){
@@ -73,6 +73,40 @@ final class WorkspaceUi {
   float end=target.getLeft();boolean move=motionEnabled()&&!Float.isNaN(origin)&&width>0;
   capsule.setTranslationX(move?origin*width:end);
   if(move)capsule.animate().translationX(end).setDuration(210L).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+ }
+ /** One coordinated native-window entry: geometry and its real scrim share a clock. */
+ void dialogEnter(Window window){
+  if(window==null)return;window.setWindowAnimations(motionEnabled()?R.style.SheetWindowMotion:0);View decor=window.getDecorView();
+  decor.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener(){
+   android.animation.ValueAnimator animator;float target;
+   public void onViewAttachedToWindow(View v){
+    target=window.getAttributes().dimAmount;if(!motionEnabled()){v.setTranslationY(0);return;}
+    float offset=dp((window.getAttributes().gravity&Gravity.BOTTOM)==Gravity.BOTTOM?24:12);
+    v.setTranslationY(offset);window.setDimAmount(0);
+    animator=android.animation.ValueAnimator.ofFloat(0,1);animator.setDuration(MOTION_SHEET);animator.setInterpolator(new android.view.animation.DecelerateInterpolator());
+    animator.addUpdateListener(frame->{float f=(Float)frame.getAnimatedValue();if(!motionEnabled()){v.setTranslationY(0);window.setDimAmount(target);return;}v.setTranslationY(offset*(1-f));window.setDimAmount(target*f);});animator.start();
+   }
+   public void onViewDetachedFromWindow(View v){if(animator!=null){animator.removeAllUpdateListeners();animator.cancel();animator=null;}v.setTranslationY(0);}
+  });
+ }
+ /** Follow the real OS IME fraction, not an invented keyboard timer. */
+ void coordinateIme(View composer){
+  if(android.os.Build.VERSION.SDK_INT<30)return;
+  composer.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener(){
+   public void onViewAttachedToWindow(View v){for(ViewParent p=v.getParent();p instanceof ViewGroup;p=p.getParent())((ViewGroup)p).setClipChildren(false);}
+   public void onViewDetachedFromWindow(View v){v.setTranslationY(0);}
+  });
+  composer.setWindowInsetsAnimationCallback(new WindowInsetsAnimation.Callback(WindowInsetsAnimation.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE){
+   private int before,delta;private boolean tracking;private final int[] location=new int[2];
+   @Override public void onPrepare(WindowInsetsAnimation animation){if((animation.getTypeMask()&WindowInsets.Type.ime())==0)return;composer.setTranslationY(0);composer.getLocationInWindow(location);before=location[1];tracking=motionEnabled();}
+   @Override public WindowInsetsAnimation.Bounds onStart(WindowInsetsAnimation animation,WindowInsetsAnimation.Bounds bounds){if(tracking&&(animation.getTypeMask()&WindowInsets.Type.ime())!=0){composer.getLocationInWindow(location);delta=before-location[1];composer.setTranslationY(delta);}return bounds;}
+   @Override public WindowInsets onProgress(WindowInsets insets,java.util.List<WindowInsetsAnimation> animations){
+    if(!tracking||!motionEnabled()){composer.setTranslationY(0);return insets;}
+    for(WindowInsetsAnimation animation:animations)if((animation.getTypeMask()&WindowInsets.Type.ime())!=0)composer.setTranslationY(delta*(1-animation.getInterpolatedFraction()));
+    return insets;
+   }
+   @Override public void onEnd(WindowInsetsAnimation animation){if((animation.getTypeMask()&WindowInsets.Type.ime())!=0){tracking=false;composer.setTranslationY(0);}}
+  });
  }
  void press(View v){v.setOnTouchListener((view,event)->{if(!motionEnabled()){view.animate().cancel();view.setScaleX(1f);view.setScaleY(1f);return false;}int action=event.getActionMasked();if(action==MotionEvent.ACTION_DOWN)view.animate().scaleX(.975f).scaleY(.975f).setDuration(160).start();else if(action==MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL)view.animate().scaleX(1).scaleY(1).setDuration(200).start();return false;});}
  void input(EditText e){e.setTypeface(font);e.setTextColor(ink);e.setHintTextColor(secondary);e.setTextSize(16);e.setPadding(dp(12),dp(12),dp(12),dp(12));e.setMinHeight(dp(48));e.setBackground(shape(surface,border,14));}

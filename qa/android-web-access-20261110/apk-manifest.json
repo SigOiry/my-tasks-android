@@ -1,0 +1,20 @@
+{
+  "release": {
+    "file": "/opt/data/workspace/my-tasks-android/android/build/my-tasks.apk",
+    "package": "com.simon.mytasks",
+    "sha256": "64a9841451bbe4e77b2c6c87d88810f2b483bf1e5cbf390317adb9f1a5752411",
+    "linux_path": "/home/simon/hermes-apks/my-tasks.apk",
+    "version": "1.5.1",
+    "versionCode": 9,
+    "installed_sha256": "64a9841451bbe4e77b2c6c87d88810f2b483bf1e5cbf390317adb9f1a5752411"
+  },
+  "qa": {
+    "file": "/opt/data/cache/scratch/mytasks-owner-qa-final-20261110/my-tasks-qa.apk",
+    "package": "com.simon.mytasks.qa",
+    "sha256": "5463924171b841466483802cbf16fb7e7f73a95177b4b25b74e18c78a5195a93",
+    "linux_path": "/home/simon/hermes-apks/my-tasks-owner-qa.apk",
+    "version": "1.5.1",
+    "versionCode": 9,
+    "installed_sha256": "5463924171b841466483802cbf16fb7e7f73a95177b4b25b74e18c78a5195a93"
+  }
+}

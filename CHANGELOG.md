@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.6
+
+- Android-only project-hue/importance-intensity row tints, persistent Project/Importance/Neutral choices and stable canonical project mapping. The existing web presentation is unchanged.
+- Genuine external unread halos: stronger once-per-token arrival followed by sustained gentle breathing while visible/idle; bounded concurrency, lifecycle/interaction pauses, static reduced motion and unchanged exact-token acknowledgement.
+- Directional native navigation, moving capsules, coordinated menu/sheet entry and dismissal, outgoing/incoming message insertion, honest queued/running progress, keyboard/composer motion and preserved fold/draft/older-reading state.
+- Smart and traditional sorts retain separate actionable/waiting/inactive/deleted lanes, meaningful direction controls and saved preferences without canonical mutations.
+- Shared durable-chat backend gains bounded read-only public search/page retrieval, implicit opening-hours routing, actual search/read progress and persisted source URLs. Public-IP/DNS/redirect restrictions, isolated public research context, tool-free summaries/no-browse/writing paths, honest failures and idempotent replay remain enforced. No terminal, arbitrary files, email sending or task/calendar mutation tools.
+- Fixed pre-release review findings: failed private turns cannot enter a later public search query; the exact persisted current request is passed separately from merged model history. Research evidence/instructions share the existing 44,000-character synthesis budget without truncating persisted history. Corrected the isolated Android SDK test resource seam and reran its real compilation/anchor gate.
+- Android version `1.6`, versionCode `10`, original release signer. Install over the existing app without uninstalling. Release assets include the signed APK, exact metadata and checksums.
+
+Verification/evidence: `qa/releases/v1.6/README.md` and `qa/android-web-access-20261110/REPORT.md`. Real search was verified inside the deployed backend and in durable scratch-provider probes; native transport/motion recordings use the explicitly synthetic isolated provider. Combined live-provider Android search footage, Chrome first-run external-page completion, physical Samsung/One UI, exhaustive accessibility and installer behavior remain separate checks. This release does not claim those gaps closed.
+
 ## 1.5
 
 - Native Liquid Glass-inspired redesign: compact Tasks, grouped details/editing, anchored actions, readable update review, durable task/free conversations, keyboard-safe composition and deliberate folded/unfolded layouts.

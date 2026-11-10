@@ -1,0 +1,1278 @@
+{
+  "widthDp": 411,
+  "heightDp": 797,
+  "fontScale": 1,
+  "density": 2.625,
+  "theme": "Light",
+  "reduceMotion": false,
+  "reduceTransparency": false,
+  "selected": "bb7f1b845ec547cc8c7a95753a744766",
+  "destination": "Tasks",
+  "detailsMode": "Details",
+  "wide": false,
+  "editing": false,
+  "online": true,
+  "filter": "Active",
+  "projectFilter": "",
+  "sortOrder": "Smart",
+  "nodes": [
+    {
+      "class": "com.android.internal.policy.DecorView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1017,
+        1089
+      ],
+      "widthDp": 387.4285583496094,
+      "heightDp": 414.8571472167969,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1017,
+        1089
+      ],
+      "widthDp": 387.4285583496094,
+      "heightDp": 414.8571472167969,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1017,
+        1089
+      ],
+      "widthDp": 387.4285583496094,
+      "heightDp": 414.8571472167969,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.GlassLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1017,
+        1089
+      ],
+      "widthDp": 387.4285583496094,
+      "heightDp": 414.8571472167969,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "opaqueMaterial": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        8,
+        8,
+        1009,
+        1081
+      ],
+      "widthDp": 381.3333435058594,
+      "heightDp": 408.76190185546875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        29,
+        967,
+        155
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "✧  Hermes",
+      "label": "Hermes update review",
+      "bounds": [
+        50,
+        50,
+        736,
+        133
+      ],
+      "widthDp": 261.3333435058594,
+      "heightDp": 31.619047164916992,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Close",
+      "label": "Close update review and keep unread",
+      "bounds": [
+        736,
+        29,
+        967,
+        155
+      ],
+      "widthDp": 88,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.ScrollView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        155,
+        967,
+        458
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 115.42857360839844,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        155,
+        967,
+        458
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 182.09524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Book the team planning session",
+      "label": "null",
+      "bounds": [
+        61,
+        166,
+        956,
+        352
+      ],
+      "widthDp": 340.952392578125,
+      "heightDp": 70.85713958740234,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        61,
+        352,
+        62,
+        394
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 16,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "What’s new",
+      "label": "null",
+      "bounds": [
+        61,
+        394,
+        956,
+        458
+      ],
+      "widthDp": 340.952392578125,
+      "heightDp": 27.047618865966797,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        458,
+        967,
+        1049
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 225.14285278320312,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Acknowledgement was not confirmed. Your displayed summary is retained; refresh before retrying.",
+      "label": "null",
+      "bounds": [
+        50,
+        458,
+        967,
+        574
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 44.19047546386719,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Review latest update",
+      "label": "null",
+      "bounds": [
+        50,
+        574,
+        967,
+        700
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        700,
+        51,
+        711
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 4.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Mark reviewed",
+      "label": "null",
+      "bounds": [
+        50,
+        711,
+        967,
+        837
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": false,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        837,
+        51,
+        858
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 8,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        50,
+        858,
+        967,
+        984
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Open task",
+      "label": "null",
+      "bounds": [
+        50,
+        858,
+        498,
+        984
+      ],
+      "widthDp": 170.6666717529297,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Ask Hermes",
+      "label": "null",
+      "bounds": [
+        519,
+        858,
+        967,
+        984
+      ],
+      "widthDp": 170.6666717529297,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Open task and Ask Hermes keep this update unread.",
+      "label": "null",
+      "bounds": [
+        50,
+        984,
+        967,
+        1049
+      ],
+      "widthDp": 349.3333435058594,
+      "heightDp": 24.761905670166016,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.android.internal.policy.DecorView",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.FrameLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        0,
+        0,
+        1080,
+        2092
+      ],
+      "widthDp": 411.4285583496094,
+      "heightDp": 796.952392578125,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        2029
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 731.047607421875,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        110,
+        1038,
+        236
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Back to tasks",
+      "bounds": [
+        42,
+        110,
+        168,
+        236
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Tasks",
+      "label": "null",
+      "bounds": [
+        168,
+        131,
+        681,
+        214
+      ],
+      "widthDp": 195.42857360839844,
+      "heightDp": 31.619047164916992,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Edit",
+      "label": "null",
+      "bounds": [
+        681,
+        110,
+        912,
+        236
+      ],
+      "widthDp": 88,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.ImageButton",
+      "text": "",
+      "label": "Task options",
+      "bounds": [
+        912,
+        110,
+        1038,
+        236
+      ],
+      "widthDp": 48,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        236,
+        43,
+        257
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 8,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "com.simon.mytasks.MainActivity$3",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        257,
+        1038,
+        1849
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 606.4761962890625,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        42,
+        257,
+        1038,
+        1849
+      ],
+      "widthDp": 379.4285583496094,
+      "heightDp": 758.8571166992188,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        257,
+        1027,
+        383
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 48,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "New update",
+      "label": "null",
+      "bounds": [
+        85,
+        284,
+        785,
+        355
+      ],
+      "widthDp": 266.6666564941406,
+      "heightDp": 27.047618865966797,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Review",
+      "label": "null",
+      "bounds": [
+        785,
+        257,
+        1016,
+        383
+      ],
+      "widthDp": 88,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        383,
+        54,
+        415
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 12.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Book the team planning session",
+      "label": "null",
+      "bounds": [
+        53,
+        415,
+        1027,
+        609
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 73.9047622680664,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        609,
+        54,
+        641
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 12.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        641,
+        1027,
+        978
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 128.38095092773438,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Description",
+      "label": "null",
+      "bounds": [
+        90,
+        673,
+        990,
+        740
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 25.5238094329834,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        740,
+        91,
+        751
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 4.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "SYNTHETIC QA — A newer update arrived while review was open. Fixture sequence 1794319890996977574",
+      "label": "null",
+      "bounds": [
+        90,
+        751,
+        990,
+        946
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 74.28571319580078,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        978,
+        54,
+        1010
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 12.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1010,
+        1027,
+        1608
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 227.8095245361328,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1010,
+        990,
+        1147
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 52.19047546386719,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Project",
+      "label": "null",
+      "bounds": [
+        90,
+        1042,
+        540,
+        1115
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 27.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Operations",
+      "label": "null",
+      "bounds": [
+        540,
+        1040,
+        990,
+        1117
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 29.33333396911621,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1147,
+        990,
+        1150
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 1.1428571939468384,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1150,
+        990,
+        1287
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 52.19047546386719,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Priority",
+      "label": "null",
+      "bounds": [
+        90,
+        1182,
+        540,
+        1255
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 27.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "High",
+      "label": "null",
+      "bounds": [
+        540,
+        1180,
+        990,
+        1257
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 29.33333396911621,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1287,
+        990,
+        1290
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 1.1428571939468384,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1290,
+        990,
+        1427
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 52.19047546386719,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Status",
+      "label": "null",
+      "bounds": [
+        90,
+        1322,
+        540,
+        1395
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 27.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "In progress",
+      "label": "null",
+      "bounds": [
+        540,
+        1320,
+        990,
+        1397
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 29.33333396911621,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1427,
+        990,
+        1430
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 1.1428571939468384,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1430,
+        990,
+        1608
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 67.80952453613281,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Due date",
+      "label": "null",
+      "bounds": [
+        90,
+        1482,
+        540,
+        1555
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 27.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Overdue · Nov 9, 2026",
+      "label": "null",
+      "bounds": [
+        540,
+        1451,
+        990,
+        1587
+      ],
+      "widthDp": 171.42857360839844,
+      "heightDp": 51.80952453613281,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1608,
+        54,
+        1650
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 16,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1650,
+        1027,
+        1849
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 81.9047622680664,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "Source",
+      "label": "null",
+      "bounds": [
+        90,
+        1682,
+        990,
+        1749
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 25.5238094329834,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "android.view.View",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        90,
+        1749,
+        91,
+        1760
+      ],
+      "widthDp": 0.380952388048172,
+      "heightDp": 4.190476417541504,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.TextView",
+      "text": "manual",
+      "label": "null",
+      "bounds": [
+        90,
+        1760,
+        990,
+        1833
+      ],
+      "widthDp": 342.8571472167969,
+      "heightDp": 27.809524536132812,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    },
+    {
+      "class": "com.simon.mytasks.GlassLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1860,
+        1027,
+        2008
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 56.380950927734375,
+      "clickable": false,
+      "enabled": true,
+      "selected": false,
+      "opaqueMaterial": false
+    },
+    {
+      "class": "android.widget.LinearLayout",
+      "text": "",
+      "label": "null",
+      "bounds": [
+        53,
+        1860,
+        1027,
+        2008
+      ],
+      "widthDp": 371.047607421875,
+      "heightDp": 56.380950927734375,
+      "clickable": false,
+      "enabled": true,
+      "selected": false
+    },
+    {
+      "class": "android.widget.Button",
+      "text": "Discuss with Hermes",
+      "label": "null",
+      "bounds": [
+        69,
+        1871,
+        1011,
+        1997
+      ],
+      "widthDp": 358.8571472167969,
+      "heightDp": 48,
+      "clickable": true,
+      "enabled": true,
+      "selected": false,
+      "ellipsized": false,
+      "maxLines": 2147483647
+    }
+  ]
+}

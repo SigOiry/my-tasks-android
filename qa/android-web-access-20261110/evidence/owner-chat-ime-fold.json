@@ -1,0 +1,25 @@
+{
+  "file": "/opt/data/workspace/my-tasks-android/qa/android-web-access-20261110/evidence/owner-chat-ime-fold.mp4",
+  "sha256": "6e1f2e7b7eedc671aea18b206f466eec23dfa08443fbf3a5363a5ece24438e6b",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1080,
+        "height": 1080,
+        "r_frame_rate": "90000/1"
+      },
+      {
+        "r_frame_rate": "0/0"
+      },
+      {
+        "r_frame_rate": "0/0"
+      }
+    ],
+    "format": {
+      "duration": "31.845500"
+    }
+  },
+  "capture": "actual Android full display; fixed encoder canvas; not measured UI FPS"
+}

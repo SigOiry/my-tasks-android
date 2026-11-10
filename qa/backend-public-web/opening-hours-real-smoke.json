@@ -1,0 +1,109 @@
+{
+  "prompt": "What are the opening hours of tabaccheria N 196, Via di Prosecco 15, Trieste?",
+  "started_utc": "2026-11-10T14:04:09.546238+00:00",
+  "decision": "public",
+  "scratch_only": true,
+  "service_started": false,
+  "provider_calls": [
+    {
+      "tools": [
+        "public_search",
+        "public_page"
+      ],
+      "provider": "openai-codex",
+      "tool_calls": [
+        {
+          "name": "public_page",
+          "arguments": "{\"url\":\"https://www.oraridiapertura24.it/filiale/Trieste-Tabacchi%2520196-1691967O.html\"}"
+        }
+      ],
+      "seconds": 9.542
+    },
+    {
+      "tools": [
+        "public_search",
+        "public_page"
+      ],
+      "provider": "openai-codex",
+      "tool_calls": [
+        {
+          "name": "public_page",
+          "arguments": "{\"url\":\"https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco\"}"
+        }
+      ],
+      "seconds": 8.389
+    },
+    {
+      "tools": [
+        "public_search",
+        "public_page"
+      ],
+      "provider": "openai-codex",
+      "tool_calls": [],
+      "seconds": 9.324
+    },
+    {
+      "tools": [],
+      "provider": "openai-codex",
+      "tool_calls": [],
+      "seconds": 11.051
+    }
+  ],
+  "searches": [
+    {
+      "query": "What are the opening hours of tabaccheria N 196, Via di Prosecco 15, Trieste?",
+      "results": [
+        {
+          "url": "https://www.oraridiapertura24.it/filiale/Trieste-Tabacchi%2520196-1691967O.html",
+          "title": "ᐅ Orari di apertura „Tabacchi 196“ | Via Di Prosecco",
+          "description": "# Tabacchi 196 🕒 Aperto Aperto ancora 05:08 ore ## Indirizzo Tabacchi 196 a Trieste # Tabacchi 196 a Trieste | 0 Bewertungen | Vota ora! Via Di Prosecco 15 34151 Trieste ## Dettagli di contatto 040213272 040213272 * Aggiungi numero di Fax » www.fermopoint.it/pu... » rivenditatabacchi196 (rivenditatabacchi196@gmail.com) @ (rivenditatabacchi196@gmail.com) gmail (rivenditatabacchi196@gmail.com) . (rivenditatabacchi196@gmail.com) com (rivenditatabacchi196@gmail.com) ## Orari di apertura | Lunedi | 07:00-13:00 e 16:30-19:30 | | --- | --- | | Martedi | 07:00-13:00 e 16:30-19:30 | | Mercoledi | 07:00-13:00 e 16:30-19:30 | | Giovedi | 07:00-13:00 e 16:30-19:30 | | Venerdi | 07:00-13:00 e 16:30-19:30 | | Sabato | 07:00-13:00 e 16:30-19:30 | | Domenica | chiuso | | Adesso sono le ore 07:52 | |"
+        },
+        {
+          "url": "https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco",
+          "title": "UPS Via Di Prosecco - Trieste | Mapdoor",
+          "description": "## Address: Tabacchi Giornali Cancelleria 196, Via Di Prosecco 15, 34151 Trieste (FRI) (Directions from | to) ## Phone: 02-30303039 ## Website: www.ups.com ## Opening Hours Monday: 07:00-13:00, 16:30-19:30 Tuesday: 07:00-13:00, 16:30-19:30 Wednesday: 07:00-13:00, 16:30-19:30 Thursday: 07:00-13:00, 16:30-19:30 Friday: 07:00-13:00, 16:30-19:30 Saturday: 07:00-13:00, 16:30-19:30 Sunday: Closed ## Additional Instructions Icino alla chiesa di san bartolomeo di opicina ## Latest Drop off Time Mon-Thu: 12:30 (Express), 12:30 (Standard), 12:30 (International) Fri: 12:30 (Express), 13:30 (Standard), 12:30 (International) Sat-Sun: 12:30 (Express), 12:30 (Standard), 12:30 (International)"
+        },
+        {
+          "url": "https://www.cybertip.eu/en/gls/trieste-via-di-prosecco-15-tabacchi-196-p581556",
+          "title": "Trieste, via di prosecco 15 (Tabacchi 196) - GLS",
+          "description": "# Trieste, via di prosecco 15 (Tabacchi 196) - GLS Pickup point Trieste, via di prosecco 15 (Tabacchi 196) is located at via di prosecco 15 in Trieste. The carrier providing transport to this pickup point is GLS. ## Opening hours | Monday | 07:00-19:30 | | --- | --- | | Tuesday | 07:00-19:30 | | Wednesday | 07:00-19:30 | | Thursday | 07:00-19:30 | | Friday | 07:00-19:30 | | Saturday | 07:00-19:30 | | Sunday | - |"
+        },
+        {
+          "url": "https://infologistiche.it/brt-opicina-trieste/",
+          "title": "▷ NEGOZI BRT Opicina - Trieste - LA TUA FILIALE PIÙ VICINA QUI ✔️",
+          "description": "a Trieste ## Tabacchi 196 ### Indirizzo Via Di Prosecco, 15, 34151 Opicina – Trieste, Provincia di Trieste ### Orario Lunedì-Sabato: 07:00 – 13:00 16:30 – 19:30 ### E-mail Contattare BRT ### Telefono 040 213272"
+        }
+      ]
+    }
+  ],
+  "reads": [
+    {
+      "url": "https://www.oraridiapertura24.it/filiale/Trieste-Tabacchi%2520196-1691967O.html",
+      "error_type": "WebUnavailable"
+    },
+    {
+      "url": "https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco",
+      "text": "UPS Via Di Prosecco - Trieste | Mapdoor mapdoor Map List Find stores, banks, gas stations, pharmacies... Home > Italy > Trieste > Mail & Shipping > UPS > UPS Access Point > Tabacchi Giornali Cancelleria UPS Via Di Prosecco - Trieste Address: Tabacchi Giornali Cancelleria 196, Via Di Prosecco 15, 34151 Trieste (FRI) (Directions from | to ) Phone: 02-30303039 Website: www.ups.com Categories: Mail & Shipping Opening Hours Monday: 07:00-13:00, 16:30-19:30 Tuesday: 07:00-13:00, 16:30-19:30 Wednesday: 07:00-13:00, 16:30-19:30 Thursday: 07:00-13:00, 16:30-19:30 Friday: 07:00-13:00, 16:30-19:30 Saturday: 07:00-13:00, 16:30-19:30 Sunday: Closed Additional Instructions Icino alla chiesa di san bartolomeo di opicina Latest Drop off Time Mon-Thu: 12:30 (Express), 12:30 (Standard), 12:30 (International) Fri: 12:30 (Express), 13:30 (Standard), 12:30 (International) Sat-Sun: 12:30 (Express), 12:30 (Standard), 12:30 (International) Additional Services Staffed Locations Other UPS Access Point Locations UPS Access Point in Trieste UPS Access Point in Friuli Venezia Giulia UPS Access Point in Italy UPS Access Point worldwide Other UPS Access Point locations nearby 1. UPS Piazza Liberta' 3,8 km 2. UPS Via Giulia 3,9 km 3. UPS Corso Italia 4,6 km 4. UPS Via Delle Settefontane 5,0 km 5. UPS Viale Gabriele D'Annunzio 5,1 km Other mail & shipping locations nearby 1. FedEx OnSite via di prosecco 10 m 2. FedEx OnSite largo san tommaso 888 m ... more places nearby Last updated: 30 Oct 2026 About About Us Terms of Use Privacy Policy Cookie Policy Countries Italy Argentina Australia Austria (en) Österreich (de) Belgium Brazil Bulgaria Canada Chile China Colombia Costa Rica Croatia Cyprus Czechia Denmark Dominican Republic Finland France (en) France (fr) Germany (en) Deutschland (de) Ghana Greece Hungary Iceland India Indonesia Ireland Italy Japan Kenya Kuwait Luxembourg Malaysia Mexico Morocco Netherlands New Zealand Norway Oman Pakistan Panama Peru Philippines Poland Portugal Romania Russia Saudi Arabia Singapore Slovakia South Africa South Korea Spain Sweden Switzerland (en) Schweiz (de) Taiwan Thailand Tunisia Turkey Ukraine United Arab Emirates United Kingdom United States Venezuela Vietnam © 2026 Mapdoor. All rights reserved We are not in any way affiliated with or endorsed by any of the companies listed on this site. All brand and company names are a registered trademark of their respective owners. ×"
+    }
+  ],
+  "status": "succeeded",
+  "phases": [
+    "searching",
+    "answering",
+    "reading",
+    "answering",
+    "reading",
+    "answering"
+  ],
+  "seconds": 44.488,
+  "reply": "A public source request failed or was blocked; no verification from that request.\n\n**Tabaccheria N. 196**, Via di Prosecco 15, Trieste, is listed with these opening hours:\n\n| Days | Hours |\n|---|---|\n| Monday–Saturday | 07:00–13:00 and 16:30–19:30 |\n| Sunday | Closed |\n\nSource: [Mapdoor’s listing for Tabacchi Giornali Cancelleria 196](https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco).\n\nThese are third-party listed hours, not directly confirmed with the shop. Another public-source request failed, so holiday or temporary changes remain unverified.\n\nSources:\nSearch result (page not read): https://www.oraridiapertura24.it/filiale/Trieste-Tabacchi%2520196-1691967O.html\nPage read: https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco\nSearch result (page not read): https://www.cybertip.eu/en/gls/trieste-via-di-prosecco-15-tabacchi-196-p581556\nSearch result (page not read): https://infologistiche.it/brt-opicina-trieste/",
+  "error": null,
+  "replay_no_new_calls": true,
+  "reopen_exact_reply": true,
+  "source_urls": [
+    "https://mapdoor.com/it/fri/trieste/ups/via-di-prosecco",
+    "https://www.oraridiapertura24.it/filiale/Trieste-Tabacchi%2520196-1691967O.html",
+    "https://www.cybertip.eu/en/gls/trieste-via-di-prosecco-15-tabacchi-196-p581556",
+    "https://infologistiche.it/brt-opicina-trieste/"
+  ]
+}

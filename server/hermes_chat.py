@@ -1,5 +1,15 @@
-"""Hermes configured auxiliary model, deliberately with zero agent tools."""
+"""Configured auxiliary model, never an unrestricted Hermes agent.
+
+The durable conversation caller supplies only its public-web tool schemas;
+legacy task chat and summaries still supply tools=[]. Provider execution has a
+killable wall-clock bound (including Hermes queue/retry time).
+"""
 import json
+import logging
+import subprocess
+import sys
+from pathlib import Path
+from types import SimpleNamespace
 from threading import BoundedSemaphore
 from typing import Literal
 from fastapi import HTTPException
@@ -22,8 +32,45 @@ class ChatRequest(BaseModel):
 
 # Import lazily: health and tasks work even when Hermes provider dependencies fail.
 def call_llm(**kwargs):
-    from agent.auxiliary_client import call_llm as configured_call
-    return configured_call(**kwargs)
+    route = kwargs.pop('route_info', None)
+    timeout = max(.01, min(float(kwargs.get('timeout', 90)), 90))
+    try:
+        result = subprocess.run([sys.executable, str(Path(__file__).resolve()), '--provider-call'],
+                                input=json.dumps(kwargs, ensure_ascii=False), capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        raise TimeoutError('Configured model time budget exhausted') from None
+    if result.returncode or len(result.stdout) > 100000:
+        raise RuntimeError('Configured model unavailable')
+    try:
+        data = json.loads(result.stdout)
+        if not data.get('ok'):
+            raise ValueError()
+        if route is not None:
+            route.update(data.get('route', {}))
+        message = SimpleNamespace(content=data['content'], tool_calls=[SimpleNamespace(id=t['id'], function=SimpleNamespace(**t['function'])) for t in data['tool_calls']])
+        return SimpleNamespace(choices=[SimpleNamespace(message=message)])
+    except (ValueError, TypeError, KeyError):
+        raise RuntimeError('Configured model unavailable') from None
+
+
+def _provider_main():
+    logging.disable(logging.CRITICAL)
+    try:
+        request = sys.stdin.read(160001)
+        if len(request) > 160000:
+            raise ValueError()
+        kwargs = json.loads(request)
+        from agent.auxiliary_client import call_llm as configured_call
+        route = {}
+        response = configured_call(**kwargs, route_info=route)
+        message = response.choices[0].message
+        tools = [{'id': t.id, 'function': {'name': t.function.name, 'arguments': t.function.arguments}} for t in (getattr(message, 'tool_calls', None) or [])]
+        envelope = json.dumps({'ok': True, 'content': message.content, 'tool_calls': tools, 'route': {'provider': route.get('provider', 'unspecified')}}, ensure_ascii=False)
+        if len(envelope) > 90000:
+            raise ValueError()
+        print(envelope)
+    except Exception:
+        print(json.dumps({'ok': False}))
 
 
 _slots = BoundedSemaphore(2)
@@ -57,3 +104,7 @@ def answer(task, payload):
         raise HTTPException(503,'Hermes model unavailable; no message sent and no task changed')
     finally:
         _slots.release()
+
+
+if __name__ == '__main__' and sys.argv[1:] == ['--provider-call']:
+    _provider_main()

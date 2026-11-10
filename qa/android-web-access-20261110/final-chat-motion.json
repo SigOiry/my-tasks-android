@@ -1,0 +1,125 @@
+[
+  {
+    "op": "tap",
+    "label": "Discussions",
+    "ms": 700
+  },
+  {
+    "op": "tapIfPresent",
+    "label": "Back to Discussions",
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "QA \u00b7 Observatory review",
+    "ms": 700
+  },
+  {
+    "op": "text",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "text": "[fixture:slow] SYNTHETIC QA owner sending and running-state recording."
+  },
+  {
+    "op": "keyboard",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "ms": 800
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-chat-before-send-ime"
+  },
+  {
+    "op": "tap",
+    "label": "Send to Herm\u00e8s",
+    "ms": 1800
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-chat-transport-running"
+  },
+  {
+    "op": "wait",
+    "ms": 8000
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-chat-received"
+  },
+  {
+    "op": "text",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "text": "Unsent synthetic Fold draft\nretains selection and cursor."
+  },
+  {
+    "op": "keyboard",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "ms": 800
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-folded-chat-ime"
+  },
+  {
+    "op": "host",
+    "action": "unfold",
+    "ms": 1200
+  },
+  {
+    "op": "keyboard",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "ms": 800
+  },
+  {
+    "op": "assert",
+    "label": "Unsent synthetic Fold draft\nretains selection and cursor."
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-unfolded-chat-ime"
+  },
+  {
+    "op": "hideKeyboard",
+    "ms": 700
+  },
+  {
+    "op": "host",
+    "action": "fold",
+    "ms": 1200
+  },
+  {
+    "op": "assert",
+    "label": "Unsent synthetic Fold draft\nretains selection and cursor."
+  },
+  {
+    "op": "text",
+    "label": "Message Herm\u00e8s; Send submits this draft",
+    "text": ""
+  },
+  {
+    "op": "tap",
+    "label": "Back to Discussions",
+    "ms": 600
+  },
+  {
+    "op": "tapLast",
+    "label": "Tasks",
+    "ms": 700
+  },
+  {
+    "op": "scroll",
+    "dy": -3000,
+    "ms": 700
+  },
+  {
+    "op": "capture",
+    "name": "final-owner-return-tasks"
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  }
+]

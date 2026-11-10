@@ -1,0 +1,29 @@
+{
+  "before": [
+    {
+      "class": "com.simon.mytasks.ConversationsUi$2",
+      "bounds": [
+        42,
+        255,
+        1038,
+        1881
+      ],
+      "scrollY": 15161
+    }
+  ],
+  "after": [
+    {
+      "class": "com.simon.mytasks.ConversationsUi$2",
+      "bounds": [
+        42,
+        255,
+        1038,
+        1881
+      ],
+      "scrollY": 15161
+    }
+  ],
+  "same_scroll": true,
+  "same_visible_message_bounds": true,
+  "note": "Actual final APK, durable synthetic-provider reply after moving above latest; Jump to latest remains available."
+}

@@ -1,0 +1,8 @@
+OWNER_DEPLOYED_PROBE_BEGIN
+PHASE:searching
+PHASE:answering
+PHASE:reading
+PHASE:answering
+PHASE:answering
+{"reply": "**Tabaccheria N. 196**, Via di Prosecco 15, Trieste–Opicina, has these listed opening hours:\n\n| Days | Hours |\n|---|---|\n| Monday–Saturday | 07:00–13:00 and 16:30–19:30 |\n| Sunday | No hours listed; appears to be closed |\n\nSource: [Fermopoint’s shop listing](https://www.fermopoint.it/punto-di-ritiro-e-di-spedizione-pacchi/tabacchi-196-16129). Holiday hours or temporary changes are not confirmed.\n\nSources:\nPage read: https://www.fermopoint.it/punto-di-ritiro-e-di-spedizione-pacchi/tabacchi-196-16129\nSearch result (page not read): https://www.fermopoint.it/tutti-i-punti-di-ritiro-e-di-spedizione-pacchi/Trieste-TS\nSearch result (page not read): https://www.paginebianche.it/friuli-venezia-giulia/trieste/tabaccherie.html\nSearch result (page not read): https://www.cylex-italia.it/trieste/tabaccheria.html"}
+OWNER_DEPLOYED_PROBE_END

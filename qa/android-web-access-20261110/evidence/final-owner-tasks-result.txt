@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: evidence=/storage/emulated/0/Android/data/com.simon.mytasks.qa/files/evidence/final-owner-tasks
+INSTRUMENTATION_RESULT: result=PASS tasks
+INSTRUMENTATION_CODE: -1

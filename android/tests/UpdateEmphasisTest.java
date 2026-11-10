@@ -37,7 +37,7 @@ public final class UpdateEmphasisTest {
   check(ledger.claim("task","a:b",true,true),"identity pairs cannot collide via delimiters");
   ledger.pause();
   check(ledger.claim("task:a","B",true,true),"token case is exact, never normalized");
-  check(UpdateEmphasis.CYCLE_MS==1600L&&UpdateEmphasis.CYCLES==4,"four bounded 1.6-second breaths");
+  check(UpdateEmphasis.CYCLE_MS==1600L&&UpdateEmphasis.CYCLES==4,"bounded 1.6-second scheduling cycles (presenter resumes sustained rest)");
   ledger.clear();
   ledger.observe("edited-task","canonical-token");
   check(!ledger.claim("edited-task","canonical-token",true,true),"own canonical snapshot token stays static without acknowledging");

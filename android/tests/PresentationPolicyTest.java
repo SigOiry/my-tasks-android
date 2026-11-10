@@ -72,7 +72,36 @@ public final class PresentationPolicyTest {
   ok(((List<?>)invoke("projectOptions",new Class<?>[]{JSONArray.class,String.class,LocalDate.class},new JSONArray(),"Trash",today)).isEmpty(),"empty view offers only UI reset, never a fabricated project");
   JSONArray reversed=new JSONArray().put(upper).put(lower);
   ok(invoke("projectOptions",new Class<?>[]{JSONArray.class,String.class,LocalDate.class},reversed,"Active",today).equals(caseOptions),"case tie order independent of source order");
+  androidLaneOrdering();
   System.out.println("PASS "+checks+" presentation checks");
+ }
+ /** Android-only contract: independent pins, never shared with web fixtures. */
+ static void androidLaneOrdering()throws Exception{
+  LocalDate today=LocalDate.parse("2026-11-10");java.time.ZoneId zone=java.time.ZoneId.of("UTC");
+  List<JSONObject> fixture=new ArrayList<>();
+  String[] statuses={"todo","waiting","completed","todo","waiting","cancelled"};
+  for(int lane=0;lane<6;lane++)for(String key:new String[]{"a","b"}){
+   boolean first=key.equals("a");
+   fixture.add(new JSONObject().put("id",lane+key).put("status",statuses[lane]).put("deleted",lane>=3)
+    .put("project",first?"Alpha":"Zulu").put("priority",first?"high":"low")
+    .put("due_date",first?"2026-11-09":"2026-11-11")
+    .put("created_at",first?"2026-10-01T00:00:00Z":"2026-11-01T00:00:00Z")
+    .put("updated_at",first?"2026-11-01T00:00:00Z":"2026-11-09T00:00:00Z"));
+  }
+  String canonical=fixture.toString();
+  for(String mode:new String[]{"Smart","Project","Priority","Importance","Due date","Recently updated","Created date"})for(boolean reverse:new boolean[]{false,true}){
+   // Explicit lane order is immutable; only the chosen key reverses within it.
+   boolean bFirst=mode.equals("Recently updated")!=reverse;
+   List<String> expected=new ArrayList<>();
+   for(int lane=0;lane<6;lane++){expected.add(lane+(bFirst?"b":"a"));expected.add(lane+(bFirst?"a":"b"));}
+   for(int seed=0;seed<8;seed++){
+    List<JSONObject> sorted=new ArrayList<>(fixture);Collections.shuffle(sorted,new Random(seed));
+    sorted.sort((x,y)->PresentationPolicy.compare(x,y,mode,reverse,today,zone));
+    List<String> actual=new ArrayList<>();for(JSONObject t:sorted)actual.add(t.getString("id"));
+    ok(actual.equals(expected),"Android fixed lanes + meaningful direction "+mode+" reverse="+reverse+": "+actual+" expected "+expected);
+   }
+  }
+  ok(fixture.toString().equals(canonical),"Android lane sorting never mutates canonical tasks");
  }
  static int compare(JSONObject a,JSONObject b,String mode)throws Exception{return (Integer)invoke("compare",new Class<?>[]{JSONObject.class,JSONObject.class,String.class},a,b,mode);}
  static boolean matches(JSONObject task,String view,String project,String query,LocalDate today)throws Exception{

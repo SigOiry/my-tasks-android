@@ -46,6 +46,72 @@ class ConversationTests(unittest.TestCase):
             time.sleep(.01)
         self.fail('Request did not finish')
 
+    def test_research_citations_progress_replay_and_reopen_are_durable(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace as NS
+        phases = []
+        thread = self.create()
+        store = self.app.state.conversations
+        def provider(**kwargs):
+            if kwargs['tools']:
+                phases.append(store.get(thread['id'])['conversation']['latest_request'].get('web_phase'))
+            return NS(choices=[NS(message=NS(content='Evidence-backed answer', tool_calls=[]))])
+        source = 'https://www.python.org/downloads/'
+        with patch('hermes_chat.call_llm', side_effect=provider) as model, patch('public_web.search_public', return_value=[{'url': source, 'title': 'Python', 'description': 'Public evidence'}]) as search:
+            response, payload = self.send(thread, content='Search latest Python release')
+            self.assertEqual(response.status_code, 202)
+            final = self.wait(thread['id'], payload['request_id'])
+            self.assertEqual(final['status'], 'succeeded')
+            self.assertIn(source, final['assistant_message']['content'])
+            self.assertIsNone(final['web_phase'])
+            replay = self.client.post('/api/conversations/'+thread['id']+'/messages', headers=self.auth, json=payload)
+            self.assertEqual(replay.json()['request']['assistant_message'], final['assistant_message'])
+            self.assertEqual(search.call_count, 1)
+            self.assertEqual(model.call_count, 2)
+            self.assertEqual(phases, ['answering'])
+        from conversations import ConversationStore
+        reopened = ConversationStore(self.root/'conversations.sqlite')
+        self.assertIn(source, reopened.request(thread['id'], payload['request_id'])['assistant_message']['content'])
+        script = 'from conversations import ConversationStore; import sys,json; print(json.dumps(ConversationStore(sys.argv[1]).request(sys.argv[2],sys.argv[3])))'
+        fresh = subprocess.run([sys.executable, '-c', script, str(self.root/'conversations.sqlite'), thread['id'], payload['request_id']], capture_output=True, text=True, check=True)
+        self.assertEqual(json.loads(fresh.stdout)['assistant_message'], final['assistant_message'])
+
+    def test_failed_private_turn_never_enters_current_public_research(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace as NS
+        from conversations import SendMessage
+        private = 'The merger codename is Bluebird.'
+        public = 'Search latest Python release'
+        thread = self.create()
+        with patch('hermes_chat.call_llm', side_effect=RuntimeError('Injected provider failure')):
+            response, failed_payload = self.send(thread, content=private)
+            self.assertEqual(response.status_code, 202)
+            self.assertEqual(self.wait(thread['id'], failed_payload['request_id'])['status'], 'failed')
+        thread = self.app.state.conversations.get(thread['id'])['conversation']
+        seen = []
+        def provider(**kwargs):
+            seen.append(kwargs)
+            return NS(choices=[NS(message=NS(content='Public answer', tool_calls=[]))])
+        with patch('hermes_chat.call_llm', side_effect=provider), patch('public_web.search_public', return_value=[{
+                'url': 'https://www.python.org/', 'title': 'Python', 'description': 'Public release evidence'}]) as search:
+            response, payload = self.send(thread, content=public)
+            self.assertEqual(response.status_code, 202)
+            final = self.wait(thread['id'], payload['request_id'])
+            self.assertEqual(final['status'], 'succeeded')
+            self.assertEqual([call.args[0] for call in search.call_args_list], [public])
+            research = [call for call in seen if call['tools']]
+            self.assertTrue(research)
+            self.assertNotIn(private, json.dumps(research))
+            self.assertIn(public, json.dumps(research))
+            self.assertIn(private, json.dumps(seen[-1]['messages']))
+            self.assertEqual(seen[-1]['tools'], [])
+            replay = self.app.state.conversations.submit(thread['id'], SendMessage(**payload))
+            self.assertEqual(replay['request']['assistant_message'], final['assistant_message'])
+            self.assertEqual(search.call_count, 1)
+            self.assertEqual(len(seen), 2)
+        page = self.app.state.conversations.get(thread['id'])
+        self.assertEqual([m['content'] for m in page['messages'] if m['role'] == 'user'], [private, public])
+
     def test_async_persist_before_provider_replay_and_history_after_fresh_process(self):
         from threading import Event
         from types import SimpleNamespace

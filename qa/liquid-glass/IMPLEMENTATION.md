@@ -26,5 +26,21 @@ First tracer bullet retains direct SDK Java Views and replaces the presentation 
 ## Test-driven tracer bullets
 - New compact/full-thread global-chrome and expanded master-width assertions fail before implementation, then integrate production policy into Activity hierarchy. Concurrent renderer RED tests are isolated and may temporarily make the whole tree red while the independent component is being implemented.
 
+## Coordinated task presentation continuation
+
+Current requirements are in section 10 of `IMPLEMENTATION-PROMPT.txt`, superseding the older palette/order/two-breath motion rules. Preserve the existing native and in-progress web redesign. Shared task colors and deterministic ranking must be implemented in each client without mutating canonical task data or changing authentication/admission contracts.
+
+Live baseline verification: Android MCP reports local `Pixel_Fold`, Android 17, online. SSH/ADB reports folded CLOSED state 0, physical viewport 1080x2092, density 420. Production installed package `com.simon.mytasks` SHA-256 `420d04cbe8bec7f5be63f105b670eea6f07571ea1d66bc3fd57d549bdd8c76f2`; existing QA package SHA-256 `8f476d0565bd4d2711a3a65fc67a8428643e89c1611898c800fef73a11a4d193`. Production baseline was inspected read-only; real task captures remain private and are not deliverable evidence. Synthetic baseline is `evidence/colors-before-qa.png` with corresponding native JSON/result.
+
+The retained loopback fixture was stopped; its old PID was absent. Restarted the same isolated certificate/account/database using the documented command, owned PID 1414902 on Linux, without replacing sessions or certificate. Certificate expiry Nov 23 2026. Cert-verified normal API probe passed: health ok, anonymous tasks 401, native synthetic login ok, 11 synthetic tasks, 3 conversations, logout. ADB reverse port 9147 restored. Actual QA-package snapshot instrumentation passed without login/reset, preserving both installed sessions. Canonical fixture seed/isolation regression passed.
+
+Remaining acceptance is tracked below and must be updated with actual build/hash/native evidence; this setup verification is not completion.
+
+## Coordinated continuation verified artifact
+
+Final installed synthetic QA APK is `android/build/my-tasks-synthetic-qa.apk`, SHA-256 `fae6b6746503a046a8ce030bca3558049e79e1521d0900393cee0d9ebe368e99`; source, SCP destination and installed package hashes matched. Production installed APK stayed unchanged. Final native suite passed (58 Python tests plus JVM/controller/API gates), independent fixed-clock golden checks passed both policy clients, and web suites passed 101 JS / 72 Python tests. Native all-color/all-sort, preference restart, waiting/inactive/Trash, exact-token race and chat/IME/fold scenarios passed. Final native screenshots/three recordings and full limitations are in `qa/coordinated-evidence-20261110/REPORT.md` and its artifact manifest.
+
+This is a verified partial-delivery checkpoint, not full acceptance: the original production signing identity is missing; a live web local-timezone correction is blocked after withdrawn tool approval and no renewed authorization. The current web UI still uses Europe/Rome despite zone-aware policy tests passing. Remaining web capsule/direction-label polish, live-model invocation and full interrupted-effect resumption are explicitly unverified/incomplete in the report. No production mutation, release, web deployment or commit was performed.
+
 ## Remaining acceptance
-This ledger records work in progress, not completion. Screenshots prove rendering only; recordings must be reviewed for motion. Host tests are not runtime/Keystore/provider proof. Fixture replies are synthetic, never represented as actual model output. Physical Samsung/One UI checks require a physical device.
+See the precise blockers and limits in the coordinated report. Screenshots prove rendering only; recordings were decoded and inspected for local effects/navigation/IME/folding, not physical-device frame performance. Fixture replies are synthetic, never represented as actual model output. Physical Samsung/One UI checks require a physical device.

@@ -17,10 +17,21 @@ public final class PresentationPolicy {
   int hash=0x811c9dc5;for(byte b:identity.getBytes(java.nio.charset.StandardCharsets.UTF_8)){hash^=b&255;hash*=0x01000193;}
   return (int)(Integer.toUnsignedLong(hash)%6);
  }
+ public static int unreadColor(boolean dark){return dark?0xff66aaff:0xff005bc8;}
  public static int importanceColor(String priority,boolean dark){return "high".equals(priority)?(dark?0xffe7a296:0xffb55746):"medium".equals(priority)?(dark?0xffd4b26f:0xff936b2b):(dark?0xff82c8ba:0xff367d75);}
  public static int taskColor(JSONObject task,String mode,boolean dark,int neutral){
-  if("Importance".equals(mode))return importanceColor(value(task,"priority"),dark);
-  int slot=projectSlot(task);return "Project".equals(mode)&&slot>=0?(dark?PROJECT_DARK:PROJECT_LIGHT)[slot]:neutral;
+  // Importance changes intensity, never the canonical project's hue.
+  int slot=projectSlot(task);return !"Neutral".equals(mode)&&slot>=0?(dark?PROJECT_DARK:PROJECT_LIGHT)[slot]:neutral;
+ }
+ /** Opaque stable reading surface: priority strength within the same project hue. */
+ public static int rowTint(JSONObject task,String mode,boolean dark,int surface){
+  if("Neutral".equals(mode))return surface;
+  String priority=value(task,"priority");
+  float amount=("high".equals(priority)?(dark?20:14):"medium".equals(priority)?(dark?12:8):(dark?6:4))/100f;
+  int hue=taskColor(task,mode,dark,dark?PROJECT_DARK[5]:PROJECT_LIGHT[5]);
+  int result=0xff000000;
+  for(int shift:new int[]{16,8,0})result|=Math.round(((surface>>shift)&255)*(1-amount)+((hue>>shift)&255)*amount)<<shift;
+  return result;
  }
  public static String value(JSONObject task,String key){return task.isNull(key)?"":task.optString(key,"");}
  public static boolean terminal(JSONObject task){return "completed".equals(value(task,"status"))||"cancelled".equals(value(task,"status"));}
@@ -57,7 +68,8 @@ public final class PresentationPolicy {
  }
  public static String savedSort(String saved){return saved==null?"Smart":saved;}
  public static String[] sortModes(){return new String[]{"Smart","Project","Importance","Due date","Recently updated","Created date"};}
- public static int smartLane(JSONObject t){return terminal(t)?2:"waiting".equals(value(t,"status"))?1:0;}
+ /** Fixed presentation lanes in every mode, also preserving status order in Trash. */
+ public static int smartLane(JSONObject t){return (t.optBoolean("deleted")?3:0)+(terminal(t)?2:"waiting".equals(value(t,"status"))?1:0);}
  public static int smartScore(JSONObject t,LocalDate today,java.time.ZoneId zone){
   LocalDate due=parseDate(value(t,"due_date"));long days=due==null?Long.MAX_VALUE:java.time.temporal.ChronoUnit.DAYS.between(today,due);
   int score=days<0?50:days==0?40:days==1?25:days<=7?10:0;
@@ -70,9 +82,9 @@ public final class PresentationPolicy {
  public static String whySmart(){return "Actionable tasks first. Deadline: overdue +50, today +40, tomorrow +25, next 7 days +10. Importance: high +30, medium +15. In progress +6, unread update +6, age +1 per whole week (max 4). Ties: earliest due, higher importance, oldest creation, task ID. Waiting and inactive tasks stay below actionable work.";}
  public static int compare(JSONObject a,JSONObject b,String mode){return compare(a,b,mode,false,LocalDate.now(),java.time.ZoneId.systemDefault());}
  public static int compare(JSONObject a,JSONObject b,String mode,boolean reverse,LocalDate today,java.time.ZoneId zone){
-  int c=0;int direction=reverse?-1:1;
+  int c=Integer.compare(smartLane(a),smartLane(b));if(c!=0)return c;
+  int direction=reverse?-1:1;
   if("Smart".equals(mode)){
-   c=Integer.compare(smartLane(a),smartLane(b));if(c!=0)return c;
    c=Integer.compare(smartScore(b,today,zone),smartScore(a,today,zone));
   }else if("Project".equals(mode)){c=project(a).compareToIgnoreCase(project(b));if(c==0)c=project(a).compareTo(project(b));}
   else if("Priority".equals(mode)||"Importance".equals(mode))c=Integer.compare(Core.rank(value(a,"priority")),Core.rank(value(b,"priority")));

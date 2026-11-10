@@ -1,0 +1,28 @@
++ /opt/data/cache/android-build/jdk-17.0.2/bin/javac --release 8 -d /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/jvm /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/UpdateEmphasis.java /opt/data/workspace/my-tasks-android/android/tests/UpdateEmphasisTest.java
++ /opt/data/cache/android-build/jdk-17.0.2/bin/java -cp /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/jvm com.simon.mytasks.UpdateEmphasisTest
+UpdateEmphasisTest: 32 checks passed
++ /opt/data/cache/android-build/jdk-17.0.2/bin/javac --release 8 -d /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/jvm /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/TaskPresentation.java /opt/data/workspace/my-tasks-android/android/tests/TaskPresentationTest.java
++ /opt/data/cache/android-build/jdk-17.0.2/bin/java -cp /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/jvm com.simon.mytasks.TaskPresentationTest
+TaskPresentationTest: 37 checks passed
++ python3 /opt/data/workspace/my-tasks-android/android/tests/test_tasks_ui_contract.py
+test_clear_scope_persists_like_menu_and_tabs (__main__.TasksUiContractTest.test_clear_scope_persists_like_menu_and_tabs) ... ok
+test_compact_rows_and_accessible_scope_targets (__main__.TasksUiContractTest.test_compact_rows_and_accessible_scope_targets) ... ok
+test_opaque_palette_text_contrast (__main__.TasksUiContractTest.test_opaque_palette_text_contrast) ... ok
+test_priority_policy_drives_actual_icons_and_colors (__main__.TasksUiContractTest.test_priority_policy_drives_actual_icons_and_colors) ... ok
+test_process_state_and_floating_nav_clearance (__main__.TasksUiContractTest.test_process_state_and_floating_nav_clearance) ... ok
+test_row_has_distinct_controls_and_static_update_marker (__main__.TasksUiContractTest.test_row_has_distinct_controls_and_static_update_marker) ... ok
+test_scope_selection_is_visible_checked_and_saved (__main__.TasksUiContractTest.test_scope_selection_is_visible_checked_and_saved) ... ok
+test_tasks_virtualizes_and_retains_id_anchor (__main__.TasksUiContractTest.test_tasks_virtualizes_and_retains_id_anchor) ... ok
+test_unread_presentation_is_used_and_resets_recycled_context (__main__.TasksUiContractTest.test_unread_presentation_is_used_and_resets_recycled_context) ... ok
+test_visual_tokens_are_semantic_and_compatible (__main__.TasksUiContractTest.test_visual_tokens_are_semantic_and_compatible) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.004s
+
+OK
++ /opt/data/cache/android-build/jdk-17.0.2/bin/javac --release 8 -cp /opt/data/cache/android-build/sdk/platforms/android-35/android.jar -d /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/sdk /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/WorkspaceUi.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/GlassLayout.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/GlassDrawable.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/GlassPixels.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/CompletionMark.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/TasksUi.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/TaskRowView.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/TaskPresentation.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/UpdateEmphasis.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/PresentationPolicy.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/CompactPolicy.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/Core.java /opt/data/workspace/my-tasks-android/android/src/com/simon/mytasks/NativeMotionPolicy.java /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/seams/com/simon/mytasks/MainActivity.java /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/seams/com/simon/mytasks/R.java /opt/data/workspace/my-tasks-android/android/tests/TasksAnchorTest.java
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Tasks UI: SDK 35 / Java 8 isolated module compilation passed
++ /opt/data/cache/android-build/jdk-17.0.2/bin/java -cp /opt/data/cache/scratch/tasks-ui-check-rlhguy0i/sdk:/opt/data/cache/android-build/sdk/platforms/android-35/android.jar com.simon.mytasks.TasksAnchorTest
+TasksAnchorTest: 9 checks passed

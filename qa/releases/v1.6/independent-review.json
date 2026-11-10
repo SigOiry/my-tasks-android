@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "All three fixes verified against actual source and regression tests. Research uses the exact persisted current request, never merged history; missing current input fails closed. Final synthesis stays within 44,000 codepoints by trimming only retrieved prose, retaining complete JSON provenance and failure receipts or failing closed, without truncating durable history. Summaries remain tool-free; no-browse, legacy protocol, and replay behavior remain intact. The R.style.SheetWindowMotion test seam fixes actual SDK 35 compilation without bypassing it. All 97 backend tests passed from the required server working directory; Android checks passed (32 ledger, 37 presentation, 10 wiring, SDK compilation, 9 anchors), plus dialog-exit validation. No new security or logic regressions found. No files edited. An initial full-suite invocation from the repository root hit a relative-path smoke-test error; rerunning from server resolved it."
+}

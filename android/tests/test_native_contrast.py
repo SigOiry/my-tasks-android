@@ -20,7 +20,11 @@ def contrast(a, b):
 class NativeContrastTest(unittest.TestCase):
     def setUp(self):
         root = ET.parse(Path(__file__).resolve().parents[1] / 'res/values/styles.xml').getroot()
-        self.themes = {s.get('name'): {i.get('name'): i.text for i in s} for s in root}
+        # Window-animation styles are not reading/color themes. Keep the actual
+        # theme list explicit so a missing or newly added theme cannot be skipped.
+        self.themes = {s.get('name'): {i.get('name'): i.text for i in s}
+                       for s in root if s.get('name', '').startswith('MyTasks.')}
+        self.assertEqual(set(self.themes), {'MyTasks.Light', 'MyTasks.Dark'})
 
     def test_small_text_against_native_opaque_surfaces(self):
         for name, theme in self.themes.items():

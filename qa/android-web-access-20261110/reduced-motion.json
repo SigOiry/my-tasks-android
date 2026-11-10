@@ -1,0 +1,15 @@
+[
+ {"op":"tap","label":"Task views, project, sort and settings"},
+ {"op":"tap","label":"Settings"},
+ {"op":"tap","label":"Reduce motion","ms":500},
+ {"op":"tap","label":"Close Settings","ms":500},
+ {"op":"capture","name":"owner-reduced-motion-start"},
+ {"op":"wait","ms":10000},
+ {"op":"capture","name":"owner-reduced-motion-after-ten"},
+ {"op":"wait","ms":10000},
+ {"op":"wait","ms":6000},
+ {"op":"tap","label":"Task views, project, sort and settings"},
+ {"op":"tap","label":"Settings"},
+ {"op":"tap","label":"Reduce motion","ms":500},
+ {"op":"tap","label":"Close Settings"}
+]

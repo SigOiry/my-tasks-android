@@ -1,0 +1,20 @@
+[
+  {
+    "path": "/assets/icon.svg",
+    "status": 200,
+    "sha256": "fd58e79a5d38e293a13ece01516a95dd26217b345831fcacc35bb7e0edc74675",
+    "matches_deployed_file": true
+  },
+  {
+    "path": "/assets/app.css",
+    "status": 200,
+    "sha256": "162eec5b7a9f74d8ac32d3dc749b1a7a29e7abc99003b5b0018e2837f2097ec3",
+    "matches_deployed_file": true
+  },
+  {
+    "path": "/assets/app.js",
+    "status": 200,
+    "sha256": "3f4dec2039262d89ce4904ac65b4a36e367e28824c3d849ba9c867d813d13315",
+    "matches_deployed_file": true
+  }
+]

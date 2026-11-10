@@ -1,0 +1,8 @@
+V16_FIXED_PROBE_BEGIN
+PHASE:searching
+PHASE:answering
+PHASE:reading
+PHASE:answering
+PHASE:answering
+{"reply": "A public source request failed or was blocked; no verification from that request.\n\nI couldn’t verify the opening hours from Fermopoint: the available search result identifies **Tabacchi 196, Via di Prosecco 15, Trieste–Opicina**, but does not show its hours, and the page requests failed or were blocked.\n\nYou can check the [Fermopoint listing for Tabacchi 196]([unverified URL omitted]). I haven’t substituted hours from another directory, since you specifically requested Fermopoint’s listing.\n\nSources:\nSearch result (page not read): https://maps.apple.com/place?place-id=I16C05611010C61D0\nSearch result (page not read): https://cards.keenable.ai/w/01a1c616-c38d-7210-b5a3-c573489d1e63\nSearch result (page not read): https://fermopoint.it/tutti-i-punti-di-ritiro-e-di-spedizione-pacchi/trieste-TS\nSearch result (page not read): https://manifatturatabacchi.com/en/tenant-opening-hours"}
+V16_FIXED_PROBE_END

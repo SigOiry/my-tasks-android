@@ -1,0 +1,3 @@
+V16_PUBLIC_READ_BEGIN
+{"url": "https://www.python.org/robots.txt", "characters": 531, "excerpt": "# Directions for robots. See this URL: # http://www.robotstxt.org/robotstxt.html # for a description of the file format. User-agent: HTTrack User-agent: puf User-agent: MSIECrawler Disallow: / # The Krugle web crawler (though based on Nutch) is OK. U"}
+V16_PUBLIC_READ_END

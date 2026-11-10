@@ -1,0 +1,150 @@
+{
+  "real_provider": true,
+  "service_started": false,
+  "cases": [
+    {
+      "kind": "current",
+      "prompt": "Search for the latest stable Python release. Read an official source and give its version and release date with a source URL.",
+      "status": "succeeded",
+      "reply": "The latest stable release is **Python 3.15.2**, released on **October 25, 2026**, according to the official Python downloads page. Python 3.16 is listed separately as a pre-release.\n\nSource: https://www.python.org/downloads/\n\n*The provided page read used a fallback because interactive scripts did not run; the version and release date were visible in that fallback.*\n\nSources:\nSearch result (page not read): https://www.herodevs.com/blog-posts/python-end-of-life-dates-every-versions-support-timeline\nSearch result (page not read): https://devguide.python.org/versions/\nSearch result (page not read): https://en.wikipedia.org/wiki/History_of_Python\nSearch result (page not read): https://pytorch.org/\nSearch result (page not read): https://docs.python.org/3/whatsnew/changelog.html\nSearch result (page not read): https://www.python.org/doc/versions/\nPage read: https://www.python.org/downloads/\nSearch result (page not read): https://endoflife.date/python",
+      "seconds": 47.818,
+      "phases": [
+        "searching",
+        "answering",
+        "searching",
+        "answering",
+        "reading",
+        "answering"
+      ],
+      "provider_calls": [
+        {
+          "provider": "openai-codex",
+          "tools": [
+            "public_search",
+            "public_page"
+          ],
+          "seconds": 9.311
+        },
+        {
+          "provider": "openai-codex",
+          "tools": [
+            "public_search",
+            "public_page"
+          ],
+          "seconds": 8.251
+        },
+        {
+          "provider": "openai-codex",
+          "tools": [
+            "public_search",
+            "public_page"
+          ],
+          "seconds": 8.83
+        },
+        {
+          "provider": "openai-codex",
+          "tools": [],
+          "seconds": 9.748
+        }
+      ],
+      "searches": [
+        {
+          "query": "Search for the latest stable Python release. Read an official source and give its version and release date with a source URL.",
+          "urls": [
+            "https://www.herodevs.com/blog-posts/python-end-of-life-dates-every-versions-support-timeline",
+            "https://devguide.python.org/versions/",
+            "https://en.wikipedia.org/wiki/History_of_Python",
+            "https://pytorch.org/"
+          ]
+        },
+        {
+          "query": "latest stable Python release",
+          "urls": [
+            "https://docs.python.org/3/whatsnew/changelog.html",
+            "https://www.python.org/doc/versions/",
+            "https://www.python.org/downloads/",
+            "https://endoflife.date/python"
+          ]
+        }
+      ],
+      "reads": [
+        {
+          "url": "https://www.python.org/downloads/",
+          "final_url": "https://www.python.org/downloads/",
+          "characters": 8000
+        }
+      ],
+      "source_urls": [
+        "https://www.python.org/downloads/",
+        "https://www.herodevs.com/blog-posts/python-end-of-life-dates-every-versions-support-timeline",
+        "https://devguide.python.org/versions/",
+        "https://en.wikipedia.org/wiki/History_of_Python",
+        "https://pytorch.org/",
+        "https://docs.python.org/3/whatsnew/changelog.html",
+        "https://www.python.org/doc/versions/",
+        "https://endoflife.date/python"
+      ],
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    },
+    {
+      "kind": "greeting",
+      "prompt": "Hello!",
+      "status": "succeeded",
+      "reply": "Hello! How can I help you today?",
+      "seconds": 7.865,
+      "phases": [],
+      "provider_calls": [
+        {
+          "provider": "openai-codex",
+          "tools": [],
+          "seconds": 7.838
+        }
+      ],
+      "searches": [],
+      "reads": [],
+      "source_urls": [],
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    },
+    {
+      "kind": "failure_injected",
+      "prompt": "Search current Python release",
+      "status": "succeeded",
+      "reply": "Public web search failed; current information could not be verified.\n\nI couldn\u2019t verify the current Python release because the public web search failed.\n\nFor the latest stable version, check the official Python downloads page: [unverified URL omitted]",
+      "seconds": 9.64,
+      "phases": [
+        "answering"
+      ],
+      "provider_calls": [
+        {
+          "provider": "openai-codex",
+          "tools": [],
+          "seconds": 9.612
+        }
+      ],
+      "searches": [
+        {
+          "query": "Search current Python release",
+          "injected_failure": true
+        }
+      ],
+      "reads": [],
+      "source_urls": [],
+      "replay_no_new_calls": true,
+      "reopen_exact_reply": true
+    }
+  ],
+  "summary": {
+    "reply": "The conversation established the marker **ALPHA** and noted that a later request to search for the latest news was not carried out.",
+    "provider_calls": [
+      {
+        "provider": "openai-codex",
+        "tools": [],
+        "seconds": 9.021
+      }
+    ],
+    "search_count": 0,
+    "read_count": 0
+  }
+}

@@ -2,6 +2,12 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Android 1.6
+
+Version **1.6 / code 10** packages the owner continuation under tag `v1.6`, with the original signing identity and standard updater assets. It adds Android-only project-hue/importance tints, sustained unread halo breathing, native navigation/dialog/chat/IME motion, and waiting/inactive lanes in all ordering modes. The web UI presentation is unchanged. The shared durable-chat backend now offers bounded read-only public search/page retrieval with saved sources and actual search/read progress; it is not an unrestricted agent.
+
+Release verification: `qa/releases/v1.6/README.md`. The preceding 1.5.1/code9 native screenshots/recordings, deployed-provider proof and explicitly incomplete combined runtime checks are in `qa/android-web-access-20261110/REPORT.md`. The Android presentation is unchanged from that checkpoint; v1.6 also fixes reviewed backend query-isolation/context-budget defects. Publication does not imply that the remaining native runtime checks were completed.
+
 ## Android and web 1.5
 
 Version `1.5` (Android code 8, GitHub tag `v1.5`) extends the native Liquid Glass redesign with shared muted task colors, persisted Smart/traditional ordering and coordinated motion. Tasks, details/editing, update review, messaging and utilities use compact native Views and real bounded sampled/blurred glass controls, deliberate folded/unfolded layouts, IME-safe composition and explicit assistant-text-to-task review. Official build output: `android/build/my-tasks.apk`, signed with the original external release identity. See `CHANGELOG.md`, `android/REDESIGN.md` and `server/WEB-PRESENTATION.md` for verification and known limits, including the web's current Europe/Rome calendar. Native synthetic QA evidence is separate from the official release and is not a live-model invocation.
@@ -30,7 +36,7 @@ Server operators must provision the private owner account **before** starting th
 - Prose-first update summaries: **Context**, **New**, and optional **Suggested next steps**. Safe Markdown supports emphasis, lists and code without raw HTML, active source links or images. Acknowledgement applies only to the exact displayed update; conflicts require reviewing the newer summary.
 - Multiple saved conversations per task, plus a **Discussions** destination for task-bound and free chats. Select, rename, archive/reopen and load older messages. Sent history is stored privately on the server and shared by web and Android.
 - Durable, idempotent message admission: a response can finish after leaving its screen; reopening recovers request status and saved replies. Failed/interrupted requests are visible and never automatically replayed. Long model contexts use persisted rolling summaries while original messages remain available.
-- Hermès questions, analysis and email drafting, with **no agent tools, email sending or task execution**. This is not an unrestricted gateway into terminal/dashboard agent sessions.
+- Hermès questions, analysis and email drafting, with occasional **server-controlled public search and read-only page retrieval**. No terminal/file/email-send/task/calendar mutation tools, and no unrestricted terminal/dashboard agent session. Explicit no-browse requests and summaries stay tool-free; saved private context is excluded from research.
 - Optional reviewable speech transcription where the platform supports it; no automatic submission of dictation.
 - Light/dark themes, reduced-motion/transparency controls and width-adaptive compact/expanded layouts. Glass-inspired controls are distinct from solid readable content. This is not native iOS optical-refraction rendering.
 

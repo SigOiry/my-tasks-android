@@ -17,6 +17,8 @@ class NativeMotionMethodsTest(unittest.TestCase):
             self.fail('Set JAVA_HOME or put javac on PATH')
         if 'deferRefresh()' in task_methods:
             task_methods += '\n' + extract((ANDROID / 'src/com/simon/mytasks/TasksUi.java').read_text(), r'^ private boolean deferRefresh\(')
+        if 'a.ui.enter(' in task_methods and 'void enter(' not in methods:
+            methods += '\n' + extract((ANDROID / 'src/com/simon/mytasks/WorkspaceUi.java').read_text(), r'^ void enter\(')
         template = template.replace('// TASK_METHODS', task_methods).replace('// ACTIVITY_METHODS', activity_methods)
         with tempfile.TemporaryDirectory() as tmp:
             file = Path(tmp) / 'NativeMotionMethodsHarness.java'
@@ -48,8 +50,8 @@ class NativeMotionMethodsTest(unittest.TestCase):
         methods = '\n'.join(extract(source, pattern) for pattern in [r'^ void navigatePage\(', r'^ void enter\('])
         self.run_harness(methods, '''
  WorkspaceUi ui=new WorkspaceUi();View page=new View();ui.navigatePage(page,false);
- check(page.x==24&&page.y==0&&page.anim.targetX==0&&page.anim.duration==280,"forward page enters horizontally over 280ms");
- ui.navigatePage(page,true);check(page.x==-24&&page.y==0,"return reverses direction");
+ check(page.x==48&&page.y==0&&page.anim.targetX==0&&page.anim.duration==280,"forward page enters horizontally over 280ms");
+ ui.navigatePage(page,true);check(page.x==-48&&page.y==0,"return reverses direction");
  ui.enabled=false;page.anim.started=false;ui.navigatePage(page,false);
  check(page.x==0&&page.y==0&&page.alpha==1&&!page.anim.started,"reduced motion static");
  ui.enabled=true;ui.enter(page,200);check(page.y==6&&page.anim.targetY==0&&page.anim.duration==200,"message insertion retains Y behavior");
@@ -62,8 +64,8 @@ class NativeMotionMethodsTest(unittest.TestCase):
         self.run_harness(methods, '''
  Activity a=new Activity();a.unsaved=true;a.navigate("task1");
  check(!a.rendered&&!a.detailPane.anim.started,"no navigation before discard confirmation");
- a.confirmed.run();check(a.detailPane.x==24&&a.detailPane.y==0,"actual details navigation horizontal forward");
- a.unsaved=false;a.navigate("");check(a.listPane.x==-24&&a.listPane.y==0,"actual return navigation horizontal reverse");
+ a.confirmed.run();check(a.detailPane.x==48&&a.detailPane.y==0,"actual details navigation horizontal forward");
+ a.unsaved=false;a.navigate("");check(a.listPane.x==-48&&a.listPane.y==0,"actual return navigation horizontal reverse");
  ''', activity_methods=activity)
 
     def test_rendered_chat_and_task_returns_use_same_page_motion(self):
@@ -72,10 +74,10 @@ class NativeMotionMethodsTest(unittest.TestCase):
         activity = extract((ANDROID / 'src/com/simon/mytasks/MainActivity.java').read_text(), r'^ void renderPage\(')
         self.run_harness(methods, '''
  Activity a=new Activity();a.destination="Discussions";a.renderPage(false);
- check(a.rendered&&a.root.x==24,"discussion forward renders and transitions");
- a.renderPage(true);check(a.root.x==-24,"discussion return reverses");
- a.destination="Tasks";a.selected="task1";a.renderPage(true);check(a.detailPane.x==-24,"chat to task details reverses");
- a.selected="";a.renderPage(true);check(a.listPane.x==-24,"task list return reverses");
+ check(a.rendered&&a.root.x==48,"discussion forward renders and transitions");
+ a.renderPage(true);check(a.root.x==-48,"discussion return reverses");
+ a.destination="Tasks";a.selected="task1";a.renderPage(true);check(a.detailPane.x==-48,"chat to task details reverses");
+ a.selected="";a.renderPage(true);check(a.listPane.x==-48,"task list return reverses");
  ''', activity_methods=activity)
 
     def test_idle_reorder_animates_retained_tags_and_respects_safety_gates(self):
