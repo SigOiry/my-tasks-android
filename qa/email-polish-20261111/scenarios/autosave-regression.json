@@ -1,0 +1,55 @@
+[
+  {
+    "op": "tapIfPresent",
+    "label": "Back to draft"
+  },
+  {
+    "op": "await",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "keyboard",
+    "label": "Reply body, plain text",
+    "ms": 500
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "Synthetic QA typing across autosave.\nThis paragraph must keep focus and selection.",
+    "ms": 100
+  },
+  {
+    "op": "selection",
+    "label": "Reply body, plain text",
+    "start": 12,
+    "end": 20,
+    "ms": 10
+  },
+  {
+    "op": "retainInput",
+    "label": "Reply body, plain text",
+    "ms": 10
+  },
+  {
+    "op": "wait",
+    "ms": 2400
+  },
+  {
+    "op": "capture",
+    "name": "before-autosave-focus"
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme",
+    "visible": true
+  },
+  {
+    "op": "assertSelection",
+    "label": "Reply body, plain text",
+    "start": 12,
+    "end": 20
+  }
+]

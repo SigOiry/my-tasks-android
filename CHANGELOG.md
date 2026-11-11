@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.3 — Android reply workspace fixes
+
+- Keep live reply and assistant inputs attached during autosave, polling, folding and split-pane resizing; retain focus, selection and keyboard state instead of rebuilding the editor.
+- Make Email / AI assistant navigation and Draft / Improve / Ask actions explicit. Present readable suggested replies, an explicit Apply to draft action and a separate current/suggested comparison.
+- Fit instructions, writing controls and send review to compact, unfolded, landscape and 200% text windows; give the input priority above the keyboard.
+- Save dirty writing before Review or Assist, drain an autosave deferred by a busy read, reject stale preview responses, and preserve exact pending AI request identities.
+- Show each saved assistant message/proposal once, follow explicitly requested results without stealing editor focus, and keep restored per-draft instructions separate.
+- Replace raw receipt JSON and disabled editing controls with a readable, read-only sent/uncertain result. Preserve explicit send confirmation and no automatic resending.
+- Android version `1.6.3`, code `13`, original signer. No backend or web presentation changes. Native verification and remaining limits: `qa/email-polish-20261111/REPORT.md`.
+
 ## 1.6.2
 
 - Add contextual Reply to email-driven task updates and task details without acknowledging the update. Explicit selection resolves historical/multiple sources; future reviewed origins are bound to the exact task snapshot.

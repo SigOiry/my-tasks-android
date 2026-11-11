@@ -1,0 +1,57 @@
+[
+  {
+    "op": "hideKeyboard"
+  },
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "SYNTHETIC QA ONLY \u2014 confirm the reviewed email once; transport remains isolated.",
+    "ms": 10
+  },
+  {
+    "op": "tap",
+    "label": "Review reply",
+    "ms": 10
+  },
+  {
+    "op": "await",
+    "label": "Review exact reply"
+  },
+  {
+    "op": "capture",
+    "name": "final-review"
+  },
+  {
+    "op": "tap",
+    "label": "Send reply"
+  },
+  {
+    "op": "await",
+    "label": "Send this exact reply?"
+  },
+  {
+    "op": "capture",
+    "name": "final-send-confirmation"
+  },
+  {
+    "op": "tap",
+    "label": "Send reply",
+    "ms": 1200
+  },
+  {
+    "op": "await",
+    "label": "Sent \u00b7 saved receipt"
+  },
+  {
+    "op": "capture",
+    "name": "sent-receipt-before"
+  },
+  {
+    "op": "absent",
+    "label": "Review reply"
+  }
+]

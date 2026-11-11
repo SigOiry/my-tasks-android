@@ -1,0 +1,323 @@
+[
+  {
+    "op": "tapIfPresent",
+    "label": "Back to writing"
+  },
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "SYNTHETIC QA \u2014 typing remains stable while the reply autosaves.\nA second paragraph remains editable.",
+    "ms": 20
+  },
+  {
+    "op": "keyboard",
+    "label": "Reply body, plain text",
+    "ms": 500
+  },
+  {
+    "op": "retainInput",
+    "label": "Reply body, plain text",
+    "ms": 10
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 0",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 1",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 2",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 3",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 4",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 5",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 6",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 7",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 8",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "append",
+    "label": "Reply body, plain text",
+    "text": " 9",
+    "ms": 850
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "selection",
+    "label": "Reply body, plain text",
+    "start": 12,
+    "end": 20,
+    "ms": 10
+  },
+  {
+    "op": "wait",
+    "ms": 2200
+  },
+  {
+    "op": "assertSelection",
+    "label": "Reply body, plain text",
+    "start": 12,
+    "end": 20
+  },
+  {
+    "op": "capture",
+    "name": "final-typing-ime"
+  },
+  {
+    "op": "hideKeyboard"
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "tap",
+    "label": "Ask"
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "SYNTHETIC QA: explain how to make this reply more concise."
+  },
+  {
+    "op": "tap",
+    "label": "Ask assistant",
+    "ms": 20
+  },
+  {
+    "op": "keyboard",
+    "label": "AI instructions, not sent until you choose Ask",
+    "ms": 250
+  },
+  {
+    "op": "retainInput",
+    "label": "AI instructions, not sent until you choose Ask",
+    "ms": 10
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "My next unsent instruction remains mine.",
+    "ms": 10
+  },
+  {
+    "op": "selection",
+    "label": "AI instructions, not sent until you choose Ask",
+    "start": 3,
+    "end": 12,
+    "ms": 10
+  },
+  {
+    "op": "wait",
+    "ms": 4000
+  },
+  {
+    "op": "sameInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "assertSelection",
+    "label": "AI instructions, not sent until you choose Ask",
+    "start": 3,
+    "end": 12
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "focused",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "capture",
+    "name": "final-ai-poll-ime"
+  },
+  {
+    "op": "tap",
+    "label": "Improve"
+  },
+  {
+    "op": "sameInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "tap",
+    "label": "Draft"
+  },
+  {
+    "op": "sameInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "capture",
+    "name": "final-modes-ime"
+  },
+  {
+    "op": "wait",
+    "ms": 10000
+  },
+  {
+    "op": "hideKeyboard"
+  }
+]

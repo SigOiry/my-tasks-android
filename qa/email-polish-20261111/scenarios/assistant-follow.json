@@ -1,0 +1,36 @@
+[
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "tap",
+    "label": "Ask"
+  },
+  {
+    "op": "paneScroll",
+    "index": 0,
+    "dy": -100000
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Synthetic QA: show the result at the end, not hidden below older history."
+  },
+  {
+    "op": "tap",
+    "label": "Ask assistant"
+  },
+  {
+    "op": "wait",
+    "ms": 3300
+  },
+  {
+    "op": "atBottom",
+    "index": 0
+  },
+  {
+    "op": "capture",
+    "name": "assistant-result-bottom"
+  }
+]

@@ -25,9 +25,13 @@ with tempfile.TemporaryDirectory(prefix='email-native-tests-') as tmp:
  template=template.replace('// ACTUAL_METHODS',actual);harness=p/'EmailReplyUiMethodsHarness.java';harness.write_text(template)
  template2=(ROOT/'tests/CitationSourceUiHarness.java').read_text().replace('// ACTUAL_METHODS',method('CitationUi.java','chips')+'\n'+method('EmailReplyUi.java','sourceChooser'))
  harness2=p/'CitationSourceUiHarness.java';harness2.write_text(template2)
- files=[harness2]+[SRC/(s+'.java') for s in sources]+[ROOT/'tests'/(t+'.java') for t in tests]+list((ROOT/'tests/email-stubs').rglob('*.java'))+[harness]
+ harness3=p/'EmailAssistantHistoryHarness.java';harness3.write_text((ROOT/'tests/EmailAssistantHistoryHarness.java').read_text().replace('// ACTUAL_METHODS',method('EmailReplyUi.java','refreshHistory')))
+ hinge_methods=['fitPane','fitPaneForMode','split','reflow','capture','put','showEditor','openAssistant']
+ harness4=p/'EmailReplyHingeUiHarness.java';harness4.write_text((ROOT/'tests/EmailReplyHingeUiHarness.java').read_text().replace('// ACTUAL_METHODS','\n'.join(method('EmailReplyUi.java',n) for n in hinge_methods)))
+ view_group=p/'android/view/ViewGroup.java';view_group.parent.mkdir(parents=True);view_group.write_text('package android.view;public class ViewGroup {public static class LayoutParams {public int width,height;public LayoutParams(int w,int h){width=w;height=h;}}}')
+ files=[harness2,harness3,harness4,view_group]+[SRC/(s+'.java') for s in sources]+[ROOT/'tests'/(t+'.java') for t in tests]+list((ROOT/'tests/email-stubs').rglob('*.java'))+[harness]
  subprocess.run([JAVAC,'--release','8','-cp',str(JAR),'-d',str(p),*map(str,files)],check=True,timeout=30)
- for t in tests+['EmailReplyUiMethodsHarness','CitationSourceUiHarness']:subprocess.run([str(JAVA),'-cp',str(p)+os.pathsep+str(JAR),'com.simon.mytasks.'+t],check=True,timeout=15)
+ for t in tests+['EmailReplyUiMethodsHarness','EmailAssistantHistoryHarness','CitationSourceUiHarness','EmailReplyHingeUiHarness']:subprocess.run([str(JAVA),'-cp',str(p)+os.pathsep+str(JAR),'com.simon.mytasks.'+t],check=True,timeout=15)
  # Same production observer against the OEM vendor Consumer signature.
  vendor=p/'vendor';vendor.mkdir();provider=vendor/'androidx/window/extensions/WindowExtensionsProvider.java';provider.parent.mkdir(parents=True);provider.write_text((ROOT/'tests/email-stubs/androidx/window/extensions/WindowExtensionsProvider.java').read_text().replace('java.util.function.Consumer','androidx.window.extensions.core.util.function.Consumer'))
  consumer=vendor/'androidx/window/extensions/core/util/function/Consumer.java';consumer.parent.mkdir(parents=True);consumer.write_text('package androidx.window.extensions.core.util.function;public interface Consumer<T>{void accept(T value);}')

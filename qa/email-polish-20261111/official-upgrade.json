@@ -1,0 +1,14 @@
+{
+  "package": "com.simon.mytasks",
+  "version_code": 13,
+  "version_name": "1.6.3",
+  "installed_sha256": "1dc646db6da41fa81b77f4f44f4384958052903730edb93ac9a3b4cb1c4d3014",
+  "certificate_sha256": "a30330e687f078beaa6870254c2f5ce47d22c6e4e9e970ef4b2abc087d3137da",
+  "previous_version_code": 10,
+  "install_method": "Android MCP install over existing package; no uninstall or data clear",
+  "foreground": "com.simon.mytasks/com.simon.mytasks.MainActivity",
+  "authenticated_tasks_visible": true,
+  "saved_project_sort_retained": true,
+  "production_writes_submitted": false,
+  "private_app_data_read_or_exported": false
+}

@@ -1,0 +1,25 @@
+[
+  {
+    "op": "hideKeyboard",
+    "ms": 600
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "keyboard",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "capture",
+    "name": "font200-final"
+  },
+  {
+    "op": "visibleInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "assertIme"
+  }
+]

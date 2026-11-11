@@ -1,0 +1,89 @@
+[
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "host",
+    "action": "offline"
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "SYNTHETIC QA \u2014 offline writing must remain intact.",
+    "ms": 10
+  },
+  {
+    "op": "keyboard",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "retainInput",
+    "label": "Reply body, plain text",
+    "ms": 10
+  },
+  {
+    "op": "wait",
+    "ms": 2500
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "assertText",
+    "label": "Reply body, plain text",
+    "text": "SYNTHETIC QA \u2014 offline writing must remain intact."
+  },
+  {
+    "op": "assert",
+    "label": "Request not confirmed. Local writing is retained. Refresh before retrying."
+  },
+  {
+    "op": "capture",
+    "name": "offline-writing-retained"
+  },
+  {
+    "op": "host",
+    "action": "online"
+  },
+  {
+    "op": "tap",
+    "label": "Reply options"
+  },
+  {
+    "op": "tap",
+    "label": "Save now"
+  },
+  {
+    "op": "wait",
+    "ms": 1200
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertText",
+    "label": "Reply body, plain text",
+    "text": "SYNTHETIC QA \u2014 offline writing must remain intact."
+  },
+  {
+    "op": "hideKeyboard"
+  },
+  {
+    "op": "assert",
+    "label": "Saved"
+  },
+  {
+    "op": "capture",
+    "name": "offline-recovered"
+  }
+]

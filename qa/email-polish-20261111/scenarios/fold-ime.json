@@ -1,0 +1,80 @@
+[
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "Synthetic fold roundtrip.\nThe cursor and keyboard stay available."
+  },
+  {
+    "op": "wait",
+    "ms": 1000
+  },
+  {
+    "op": "keyboard",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "selection",
+    "label": "Reply body, plain text",
+    "start": 10,
+    "end": 14
+  },
+  {
+    "op": "retainInput",
+    "label": "Reply body, plain text",
+    "ms": 5
+  },
+  {
+    "op": "host",
+    "action": "unfold"
+  },
+  {
+    "op": "assertText",
+    "label": "Reply body, plain text",
+    "text": "Synthetic fold roundtrip.\nThe cursor and keyboard stay available."
+  },
+  {
+    "op": "assertSelection",
+    "label": "Reply body, plain text",
+    "start": 10,
+    "end": 14
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "capture",
+    "name": "unfolded-keyboard-retained"
+  },
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "assertSelection",
+    "label": "Reply body, plain text",
+    "start": 10,
+    "end": 14
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "capture",
+    "name": "folded-keyboard-retained"
+  },
+  {
+    "op": "hideKeyboard"
+  }
+]

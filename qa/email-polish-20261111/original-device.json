@@ -1,0 +1,7 @@
+{
+  "accelerometer_rotation": "1",
+  "user_rotation": "0",
+  "font_scale": "1.0",
+  "night": "Night mode: no",
+  "posture": "Committed state: DeviceState{identifier=0, name='CLOSED', app_accessible=true, cancel_when_requester_not_on_top=false}\n----------------------\nBase state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}\nOverride state: DeviceState{identifier=0, name='CLOSED', app_accessible=true, cancel_when_requester_not_on_top=false}"
+}

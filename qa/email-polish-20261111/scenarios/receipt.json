@@ -1,0 +1,22 @@
+[
+  {
+    "op": "assert",
+    "label": "Reply sent"
+  },
+  {
+    "op": "absent",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "absent",
+    "label": "AI assistant"
+  },
+  {
+    "op": "assert",
+    "label": "Done"
+  },
+  {
+    "op": "capture",
+    "name": "sent-receipt-readable"
+  }
+]

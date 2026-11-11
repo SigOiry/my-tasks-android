@@ -1,0 +1,59 @@
+[
+  {
+    "op": "tapIfPresent",
+    "label": "Back to writing"
+  },
+  {
+    "op": "tapIfPresent",
+    "label": "Email"
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "tap",
+    "label": "Improve"
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "SYNTHETIC QA improve wording, keep meaning."
+  },
+  {
+    "op": "tap",
+    "label": "Improve draft"
+  },
+  {
+    "op": "wait",
+    "ms": 3500
+  },
+  {
+    "op": "assert",
+    "label": "Apply to draft"
+  },
+  {
+    "op": "assert",
+    "label": "Compare drafts"
+  },
+  {
+    "op": "tap",
+    "label": "Compare drafts"
+  },
+  {
+    "op": "assert",
+    "label": "Current draft"
+  },
+  {
+    "op": "assert",
+    "label": "Suggested draft"
+  },
+  {
+    "op": "capture",
+    "name": "proposal-readable-comparison"
+  },
+  {
+    "op": "tap",
+    "label": "Done"
+  }
+]

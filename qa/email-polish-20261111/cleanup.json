@@ -1,0 +1,13 @@
+{
+  "synthetic_receipts": 2,
+  "fixture_stopped": true,
+  "adb_reverse_9147_removed": true,
+  "settings_restored": {
+    "accelerometer_rotation": "1",
+    "user_rotation": "0",
+    "font_scale": "1.0"
+  },
+  "night_mode": "no",
+  "posture": "closed",
+  "foreground": "com.simon.mytasks/.MainActivity"
+}

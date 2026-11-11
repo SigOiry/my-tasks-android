@@ -1,0 +1,19 @@
+[
+  {
+    "op": "tap",
+    "label": "Workshop schedule \u2014 review\nWorkshop team <team@example.test> \u00b7 2026-11-10T15:00:00+01:00\nowner@example.test \u00b7 historical\nSYNTHETIC QA email. Could you review the revised workshop schedule and confirm whether Friday works? 3"
+  },
+  {
+    "op": "await",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "text",
+    "label": "Reply body, plain text",
+    "text": "Synthetic QA final unsent draft, preserved across checks."
+  }
+]

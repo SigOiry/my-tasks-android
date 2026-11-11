@@ -36,6 +36,10 @@ def display_observer(stop):
     elif name=='host-online':device.adb('reverse','tcp:9147','tcp:9147')
     elif name=='host-fold':device.fold(0)
     elif name=='host-unfold':device.fold(2)
+    elif name in ('host-rotate-landscape','host-rotate-portrait'):
+     device.shell('settings','put','system','accelerometer_rotation','0');device.shell('settings','put','system','user_rotation','1' if name.endswith('landscape') else '0')
+    elif name in ('host-font-200','host-font-100'):device.shell('settings','put','system','font_scale','2.0' if name.endswith('200') else '1.0')
+    elif name in ('host-dark','host-light'):device.shell('cmd','uimode','night','yes' if name.endswith('dark') else 'no')
     elif name in ('host-newer-update','host-conflict'):
      action=name.removeprefix('host-');result=device.remote('/home/simon/hermes-apks/qa-runtime/venv/bin/python /home/simon/hermes-apks/qa-runtime/qa/liquid-glass/live_mutate.py --root /home/simon/hermes-apks/qa-runtime/scratch/runtime '+action);(device.EVIDENCE/(name+'-result.json')).write_text(result)
     elif name.startswith('host-'):raise RuntimeError('Unknown QA host action')

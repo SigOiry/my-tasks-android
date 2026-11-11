@@ -1,0 +1,75 @@
+[
+  {
+    "op": "hideKeyboard"
+  },
+  {
+    "op": "host",
+    "action": "unfold"
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "retainInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "retainInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "qaHinge",
+    "enabled": true
+  },
+  {
+    "op": "hingeSafe",
+    "split": true
+  },
+  {
+    "op": "capture",
+    "name": "injected-hinge-split"
+  },
+  {
+    "op": "hingeToggle",
+    "label": "Email",
+    "split": false
+  },
+  {
+    "op": "hingeSafe",
+    "split": false
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "capture",
+    "name": "injected-hinge-hidden"
+  },
+  {
+    "op": "hingeToggle",
+    "label": "AI assistant",
+    "split": true
+  },
+  {
+    "op": "hingeSafe",
+    "split": true
+  },
+  {
+    "op": "sameInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "sameInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "capture",
+    "name": "injected-hinge-restored"
+  },
+  {
+    "op": "qaHinge",
+    "enabled": false
+  }
+]

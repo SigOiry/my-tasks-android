@@ -1,0 +1,74 @@
+[
+  {
+    "op": "assert",
+    "label": "Email"
+  },
+  {
+    "op": "assert",
+    "label": "AI assistant"
+  },
+  {
+    "op": "assert",
+    "label": "Review reply"
+  },
+  {
+    "op": "assert",
+    "label": "AI writing assistant"
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "assert",
+    "label": "Draft"
+  },
+  {
+    "op": "assert",
+    "label": "Improve"
+  },
+  {
+    "op": "assert",
+    "label": "Ask"
+  },
+  {
+    "op": "tap",
+    "label": "Draft"
+  },
+  {
+    "op": "assert",
+    "label": "Generate draft"
+  },
+  {
+    "op": "tap",
+    "label": "Improve"
+  },
+  {
+    "op": "assert",
+    "label": "Improve draft"
+  },
+  {
+    "op": "tap",
+    "label": "Ask"
+  },
+  {
+    "op": "assert",
+    "label": "Ask assistant"
+  },
+  {
+    "op": "capture",
+    "name": "assistant-controls"
+  },
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "assert",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "capture",
+    "name": "editor-controls"
+  }
+]

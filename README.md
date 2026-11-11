@@ -2,6 +2,12 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Android reply workspace polish — 1.6.3
+
+Version **1.6.3 / code 13** fixes reply-composer keyboard interruptions and clarifies the native writing flow. Email and AI assistant panes keep their live inputs through autosave, AI polling and size-only fold/rotation changes. Draft, Improve and Ask have explicit actions; suggestions are readable previews with Apply to draft and Compare drafts. Short windows and 200% text give input priority above the keyboard. Review waits for saved writing, stale previews cannot replace newer edits, and sent results are read-only receipts rather than raw provider data.
+
+This is an Android-only follow-up: the shared backend and web presentation are unchanged. Pixel Fold emulator acceptance, injected nonzero-hinge geometry checks and verification limits are documented in `qa/email-polish-20261111/REPORT.md`.
+
 ## Contextual email replies and conversations — 1.6.2
 
 Version **1.6.2 / code 12** adds a shared, persistent email reply workspace to Android and web, without redesigning unrelated task screens.

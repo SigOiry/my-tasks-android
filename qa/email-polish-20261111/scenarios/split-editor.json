@@ -1,0 +1,70 @@
+[
+  {
+    "op": "tapIfPresent",
+    "label": "Back to writing"
+  },
+  {
+    "op": "tap",
+    "label": "Email"
+  },
+  {
+    "op": "host",
+    "action": "fold"
+  },
+  {
+    "op": "tap",
+    "label": "AI assistant"
+  },
+  {
+    "op": "text",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Unsent fold/rotate instruction retained exactly."
+  },
+  {
+    "op": "keyboard",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "selection",
+    "label": "AI instructions, not sent until you choose Ask",
+    "start": 7,
+    "end": 11
+  },
+  {
+    "op": "host",
+    "action": "unfold"
+  },
+  {
+    "op": "assertText",
+    "label": "AI instructions, not sent until you choose Ask",
+    "text": "Unsent fold/rotate instruction retained exactly."
+  },
+  {
+    "op": "assertSelection",
+    "label": "AI instructions, not sent until you choose Ask",
+    "start": 7,
+    "end": 11
+  },
+  {
+    "op": "assertIme"
+  },
+  {
+    "op": "visibleInput",
+    "label": "AI instructions, not sent until you choose Ask"
+  },
+  {
+    "op": "visibleInput",
+    "label": "Reply body, plain text"
+  },
+  {
+    "op": "capture",
+    "name": "split-ai-ime"
+  },
+  {
+    "op": "capture",
+    "name": "split-editor-before"
+  },
+  {
+    "op": "hideKeyboard"
+  }
+]

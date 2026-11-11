@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [],
+  "summary": "Read-only review of the current EmailReplyUi, EmailReplyController and MainActivity source/diffs found no substantive defects. Explicit Hide/Show captures inputs before setting mode and focus, then recomputes hinge geometry without recapturing stale focus; repeated reflow is safe, and hinge reopening does not depend on stale parent measurements. Reviewed draft/generation/preview fences and regression harness coverage. git diff --check passed. No files modified or device used; tests were not rerun, and this verdict does not attest to the pending native GREEN verification.",
+  "scope": "Independent source review; native GREEN checks independently executed and verified by parent",
+  "date": "2026-11-11"
+}

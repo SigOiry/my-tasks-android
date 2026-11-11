@@ -1,0 +1,2 @@
+INSTRUMENTATION_RESULT: result=FAIL AssertionError: autosave/poll must not detach the live editor: Reply body, plain text
+INSTRUMENTATION_CODE: 0
