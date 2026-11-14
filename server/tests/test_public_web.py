@@ -102,6 +102,23 @@ class PublicWebAnswerTests(unittest.TestCase):
         from types import SimpleNamespace as NS
         return NS(choices=[NS(message=NS(content=text, tool_calls=list(calls)))])
 
+    def test_researched_synthesis_requests_explicit_receipt_bound_markdown_links(self):
+        from public_web import normal_answer
+        url = 'https://www.python.org/'
+        content = 'The [Python release](https://www.python.org/) is available.'
+        seen = []
+        def provider(**kwargs):
+            seen.append(kwargs)
+            return self.response('Research complete' if kwargs['tools'] else content)
+        with patch('public_web.search_public',return_value=[{'url':url,'title':'Python','description':'Release information'}]):
+            result = normal_answer([{'role':'user','content':'What is the current Python release?'}],provider,current_request='What is the current Python release?')
+        instruction = seen[-1]['messages'][0]['content']
+        self.assertIn('[relevant claim/label](exact supplied URL)',instruction)
+        self.assertIn('provider citation tokens',instruction)
+        self.assertEqual(result.original_content,content)
+        self.assertEqual(result.citation_metadata['sources'][0]['url'],url)
+        self.assertNotIn('offset',str(result.citation_metadata))
+
     def test_current_request_searches_then_reads_but_private_context_never_reaches_researcher(self):
         from public_web import normal_answer
         from types import SimpleNamespace as NS

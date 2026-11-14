@@ -46,12 +46,13 @@ public final class ConversationReviewHarness {
   @Override void reviewConversationAsTask(String text){reviewed=text;}
   void fullMessage(String text){viewed=text;}
  }
+ static class CitationUi {static void sources(MessageActivity a,JSONObject turn){a.viewed="sources";}}
  static class Messages {
   MessageActivity a=new MessageActivity();String copied="";
   void copyOriginal(String text){copied=text;}
   // MESSAGE_METHOD
  }
- static void review(){
+ static void review()throws Exception{
   String original="  # Proposal\nRaw **assistant** content; {\"title\":\"do not parse\"}  ";
   Activity a=new Activity();JSONObject before=a.draft;
   a.reviewConversationAsTask(original);
@@ -75,7 +76,7 @@ public final class ConversationReviewHarness {
    JSONObject prior=blocked.draft;blocked.reviewConversationAsTask(original);check(blocked.pending==null&&blocked.draft==prior&&blocked.captures==0,"entry guard "+scenario);
   }
   for(String role:new String[]{"assistant","user","system","tool"}){
-   Messages m=new Messages();m.messageMenu(role,original);
+   Messages m=new Messages();m.messageMenu(new JSONObject().put("role",role).put("content",original));
    List<String> labels=Arrays.asList(m.a.dialog.labels);
    check(labels.contains("Copy original")&&labels.contains("View original text"),"original actions retained");
    check(labels.contains("Review as new task")==role.equals("assistant"),"only assistant offers manual review");
@@ -84,5 +85,5 @@ public final class ConversationReviewHarness {
    if(role.equals("assistant")){m.a.dialog.action.select(null,labels.indexOf("Review as new task"));check(m.a.reviewed.equals(original),"review forwards exact content");}
   }
  }
- public static void main(String[] args){menu();if(!args[0].equals("menu"))review();System.out.println("Conversation integration regressions: "+checks+" assertions passed");}
+ public static void main(String[] args)throws Exception{menu();if(!args[0].equals("menu"))review();System.out.println("Conversation integration regressions: "+checks+" assertions passed");}
 }

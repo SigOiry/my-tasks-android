@@ -1,0 +1,19 @@
+{
+  "synthetic_state_only": true,
+  "real_configured_provider": true,
+  "free_discussion": true,
+  "production_tasks_mutated": false,
+  "mail_send_calls": 0,
+  "status": "succeeded",
+  "answer_contains_saved_code": true,
+  "saved_email_receipts": 2,
+  "saved_scan_receipts": 1,
+  "replay_no_model_call": true,
+  "provenance_survives_reopen": true,
+  "source_hashes": {
+    "conversations.py": "b77739bc3f257f0cb1642dcfb5a26b3910f4d05cecb5db7198971251e80efba9",
+    "public_web.py": "fbe430f92f1f9cd469e1ddcd45133daf68d3186a1ba9f3e151af4b312e679870",
+    "mobile_api.py": "350b976a6707eca157f2ea4db0a80aa0492d3a068fe2a9fa41d357be0d746cb7",
+    "task_knowledge_context.py": "54ca03bea56c7af99b051f8b6dcab129a2cba39a3a0d7fb89c892a3c7a060dd6"
+  }
+}

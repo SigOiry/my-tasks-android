@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "scenarios": [
+    {
+      "layout": "compact100",
+      "flow": "task",
+      "passed": true
+    },
+    {
+      "layout": "compact100",
+      "flow": "inline",
+      "passed": true
+    }
+  ],
+  "qa_apk_sha256": "e51be106984789580219544740e0f55b2f2f43dd109d5f2449f77d8a8d61b837",
+  "installed_and_source_hashes_reverified": true,
+  "backend_changed_modules": [
+    "server/conversations.py",
+    "server/public_web.py"
+  ],
+  "backend_hashes_reverified": true,
+  "old_matrix": "pre-fix; not rerun",
+  "fixture_pid_before": 1117416,
+  "fixture_pid": 1182147,
+  "protected_fixture_files_unchanged": true,
+  "email_workspace_table_counts": {
+    "jobs": 0,
+    "proposals": 0,
+    "confirmations": 0,
+    "drafts": 0,
+    "requests": 0
+  },
+  "font_scale": "1.0",
+  "fold_state": "Committed state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}\n----------------------\nBase state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}\nOverride state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}",
+  "loopback_listener": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      2048       127.0.0.1:9147      0.0.0.0:*    users:((\"python\",pid=1182147,fd=6))",
+  "production_package_path_hash_unchanged": true,
+  "same_conversation_return_verified": true,
+  "scope": "Two compact100 native smoke scenarios; synthetic receipts only, no real provider/mail; no native race scenario."
+}

@@ -2,6 +2,14 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Searchable saved knowledge and contextual sources — 1.6.4
+
+Version **1.6.4 / code 14** adds saved task/email knowledge lookup in chat, clickable web-source text on Android, and related-source access from the message context menu rather than appended source chips. Long-press a reply or use its text-selection actions to inspect relevant emails and open linked tasks; **Copy original** preserves the saved model text.
+
+Private knowledge is the existing read-only derived index, not a second task store or a complete mailbox mirror. Private lookup is separated from public research. Web links in modern messages are enabled only when their exact safe URL corresponds to a saved source receipt; unanchored sources remain available through the message menu rather than being attributed to an arbitrary sentence. Legacy messages without citation metadata retain their explicit-URL fallback, labeled legacy/unverified; that is not evidence of a recorded search. Existing browser presentation and the original Android account/signing identity are preserved.
+
+Verification and platform limits are recorded under `qa/chat-search-20261114/`.
+
 ## Android reply workspace polish — 1.6.3
 
 Version **1.6.3 / code 13** fixes reply-composer keyboard interruptions and clarifies the native writing flow. Email and AI assistant panes keep their live inputs through autosave, AI polling and size-only fold/rotation changes. Draft, Improve and Ask have explicit actions; suggestions are readable previews with Apply to draft and Compare drafts. Short windows and 200% text give input priority above the keyboard. Review waits for saved writing, stale previews cannot replace newer edits, and sent results are read-only receipts rather than raw provider data.

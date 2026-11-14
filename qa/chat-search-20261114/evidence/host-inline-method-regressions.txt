@@ -1,0 +1,8 @@
+test_actual_span_sources_task_and_fences (test_inline_citations.InlineCitationsTest.test_actual_span_sources_task_and_fences) ... InlineCitationHarness passed: actual spans, source selection, task navigation, account/surface fences
+ok
+test_selection_menu_and_accessibility_wiring (test_inline_citations.InlineCitationsTest.test_selection_menu_and_accessibility_wiring) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.457s
+
+OK

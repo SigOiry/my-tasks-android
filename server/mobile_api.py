@@ -240,6 +240,8 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
     def chat(payload: ChatRequest):
         db = dashboard.taskdb.Store(db_path).read()
         task = dashboard.enrich(dashboard.find_task(db,payload.task_id),db)
+        if task.get('deleted'):
+            raise HTTPException(404,'Task unavailable')
         return answer(task,payload)
 
     from conversations import ConversationStore, install_routes
@@ -262,7 +264,8 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
                                              and row['reference'] in task.get('source_references', [])]
         return enriched
 
-    install_routes(router,conversations,saved_task)
+    from task_knowledge_context import KnowledgeContext
+    install_routes(router,conversations,saved_task,KnowledgeContext(db_path))
     app.include_router(router)
     from email_workspace import EmailWorkspace
     from email_routes import install_routes as install_email_routes

@@ -43,6 +43,17 @@ The browser uses a private opaque HttpOnly/Secure/SameSite session after passwor
 
 See `WEB.md` for session expiry/revocation, browser privacy, CSP, notification limits and detailed QA. `CONTRACT.md` documents the API.
 
+## Saved task knowledge
+
+See `TASK-KNOWLEDGE.md` for the optional private, locally derived evidence index,
+read-only global/task-scoped retrieval and backend deployment checklist. Free
+Discussions can search saved task/mail evidence without selecting a task, using
+saved/mail/task intent or explicit `search_scope: "private"`. Task-linked chats
+and Discussions with private history are tool-free and never use public research;
+start a fresh free Discussion for unrelated public questions. Ordinary fresh public
+Discussions retain their existing bounded public-research boundary. Saved receipts
+and original prose remain immutable and replay never reruns retrieval or a provider.
+
 ## User-visible limitations
 
 - Browser notifications work while the page is open; closed-browser push is not implemented.

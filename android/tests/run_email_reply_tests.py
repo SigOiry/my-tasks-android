@@ -19,7 +19,7 @@ def method(file,name,signature=None):
    if not depth:return s[m.start():start+t.end()]
  raise RuntimeError('Unclosed production method')
 with tempfile.TemporaryDirectory(prefix='email-native-tests-') as tmp:
- p=Path(tmp);sources=['Core','ConversationState','ConversationClient','EmailReplyState','EmailReplyClient','EmailReplyController','ComposerLayoutPolicy','CitationPolicy','ChatPresentationPolicy','ChatRowPolicy','PresentationPolicy','EmailReplyDiffPolicy','ComposerWindowObserver']
+ p=Path(tmp);sources=['Core','ConversationState','ConversationClient','EmailReplyState','EmailReplyClient','EmailReplyController','ComposerLayoutPolicy','SafeMarkdown','CitationPolicy','ChatPresentationPolicy','ChatRowPolicy','PresentationPolicy','EmailReplyDiffPolicy','ComposerWindowObserver']
  tests=['EmailReplyStateTest','EmailReplyClientTest','EmailReplyControllerTest','EmailReplyRaceTest','CitationTitleTest','CitationWarningsTest','EmailReplyDiffTest','ComposerHingeTest','ComposerWindowObserverTest']
  template=(ROOT/'tests/EmailReplyUiMethodsHarness.java').read_text();actual='\n'.join(method('EmailReplyUi.java',n) for n in ['capture','recipients'])
  template=template.replace('// ACTUAL_METHODS',actual);harness=p/'EmailReplyUiMethodsHarness.java';harness.write_text(template)

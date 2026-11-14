@@ -176,8 +176,8 @@ public final class MainActivity extends Activity {
  JSONObject empty(){JSONObject o=new JSONObject();try{o.put("title","").put("description","").put("notes","").put("project","").put("due_date","").put("priority","medium").put("status","todo");}catch(Exception ignored){}return o;}
  void renderPage(boolean returning){render();ui.navigatePage(destination.equals("Discussions")?root:selected.isEmpty()?listPane:detailPane,returning);}
  void navigate(String id){
-  if(busy){notice("Please wait","A request is still in progress.");return;}if(id.equals(selected)){if(!id.isEmpty()){pendingSummary=id;maybeSummary();}return;}captureDraft();
-  Runnable go=()->{selected=id;pendingSummary=id;draft=null;detailY=0;detailsMode="Details";editing=id.equals("NEW");render();ui.navigatePage(id.isEmpty()?listPane:detailPane,id.isEmpty());};
+  if(busy){notice("Please wait","A request is still in progress.");return;}if(id.equals(selected)){if(!id.isEmpty()){if(!destination.equals("Tasks")||!detailsMode.equals("Details")){destination="Tasks";detailsMode="Details";render();}pendingSummary=id;maybeSummary();}return;}captureDraft();final Store.Account owner=account;final long generation=surfaces.generation();
+  Runnable go=()->{if(!alive(owner)||!surfaces.current(generation))return;destination="Tasks";selected=id;pendingSummary=id;draft=null;detailY=0;detailsMode="Details";editing=id.equals("NEW");render();ui.navigatePage(id.isEmpty()?listPane:detailPane,id.isEmpty());};
   if(dirty())confirm("Discard unsaved changes?","Unsaved task fields will be lost. Conversation drafts remain saved per thread.",go);else go.run();
  }
  void reviewConversationAsTask(String original){

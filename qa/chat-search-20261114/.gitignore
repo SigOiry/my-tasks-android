@@ -1,0 +1,19 @@
+# Retain detailed local captures without publishing login/discovery artifacts.
+evidence/*
+!evidence/matrix-results.json
+!evidence/installed-build-receipt.json
+!evidence/final-backend-source-manifest.json
+!evidence/final-verification.json
+!evidence/host-inline-method-regressions.txt
+!evidence/chat-receipts-compact100-display.png
+!evidence/chat-receipts-expanded100-display.png
+!evidence/source-longpress-menu-display.png
+!evidence/related-sources-expanded100-display.png
+!evidence/saved-email-compact200-display.png
+!evidence/inline-browser-compact100-display.png
+!evidence/release-verification.json
+!evidence/review-final.json
+!evidence/live-search-proof.json
+!evidence/post-fix-verification.json
+!evidence/postfix-installed-build-receipt.json
+!evidence/postfix-backend-source-manifest.json

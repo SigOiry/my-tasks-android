@@ -1,4 +1,4 @@
-# My Tasks — native Android 1.5.0-glass-preview (7)
+# My Tasks — native Android 1.6.4 (14)
 
 Native Java, package `com.simon.mytasks`, minimum SDK 26, compile/target SDK 35. This is an Android APK, not a web wrapper or native iOS component. No app-library/Gradle dependencies; JVM tests use a checksum-pinned JSON jar that is not packaged in the APK.
 
@@ -33,7 +33,7 @@ Requires Python 3, platform android-35 and build-tools 35.0.0 (`aapt2`, `d8`, `z
 - Uncertain delivery offers status checking and explicit exact-identity replay. Definitively rejected admissions are distinct from provider failure. Failed/interrupted requests offer **review** of a new request; sending still requires an explicit tap. Server restart interruption never automatically runs a model again. Newly typed follow-ups are never cleared by acceptance/completion.
 - Drafts/modes/selection/history/pending bindings are thread-keyed and app-private. Account epochs guard queued work and callbacks. Disconnecting or changing connection clears local credentials/caches/search/drafts/pending bindings; server history remains private and durable. Same-account ordinary Activity recreation retains durable drafts. Backup is disabled. Local content caches use Android sandbox/device encryption, not separate application-level content encryption.
 - One assistant: **Hermès**, the backend-configured assistant without tools. Free questions, analysis and email drafting are supported; chat cannot send mail, run tools or modify tasks. Existing terminal/dashboard Hermes sessions are not imported. Previously discarded stateless chats cannot be reconstructed.
-- Responses are selectable safe Markdown with inert link labels, not raw HTML or active links/images. Platform voice recognition starts only after a privacy notice: the selected recognizer may send audio to its provider. My Tasks itself records no audio and requests no microphone permission. Transcript insertion is guarded by account and conversation identity and is always editable, never auto-sent.
+- Responses are selectable safe Markdown without raw HTML or active images. In chat, explicit web labels/URLs become tappable only when the exact safe URL matches a saved citation receipt; unavailable/unanchored attribution is not guessed. Long-press, selection and accessible message actions expose related saved emails/tasks and other sources, without appended source chips; **Copy original** preserves the stored text. Platform voice recognition starts only after a privacy notice: the selected recognizer may send audio to its provider. My Tasks itself records no audio and requests no microphone permission. Transcript insertion is guarded by account and conversation identity and is always editable, never auto-sent.
 
 ## Connection and notifications
 

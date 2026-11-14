@@ -16,7 +16,9 @@ public class NativeMotionMethodsHarness {
 // METHODS
  }
  static class NativeMotionPolicy {static long duration(String s){return 280;}}
- static class Activity {String filter,selected="",pendingSummary="",draft,detailsMode;boolean rendered,busy,editing,unsaved;int detailY;Runnable confirmed;
+ static class Store {static class Account{}}
+ static class Surfaces {long generation(){return 0;}boolean current(long g){return true;}}
+ static class Activity {Store.Account account=new Store.Account();Surfaces surfaces=new Surfaces();boolean alive(Store.Account a){return a==account;}String filter,selected="",pendingSummary="",draft,detailsMode;boolean rendered,busy,editing,unsaved;int detailY;Runnable confirmed;
  WorkspaceUi ui=new WorkspaceUi();java.util.List<Object> dialogClosers=new java.util.ArrayList<>();String destination="Tasks";View root=new View(),listPane=new View(),detailPane=new View();
  void captureDraft(){}void saveWorkspacePreferences(){}void render(){rendered=true;}boolean dirty(){return unsaved;}void maybeSummary(){}void notice(String a,String b){}void confirm(String a,String b,Runnable r){confirmed=r;}
 // ACTIVITY_METHODS

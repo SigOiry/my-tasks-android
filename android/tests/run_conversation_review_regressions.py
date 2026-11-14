@@ -32,16 +32,16 @@ if mode != 'menu':
     template = template.replace('// EMPTY_METHOD', method('MainActivity.java','empty'))
     template = template.replace('// MESSAGE_METHOD', method('ConversationsUi.java','messageMenu'))
 else:
-    template = template.replace('// REVIEW_METHOD', 'void reviewConversationAsTask(String text){}').replace('// EMPTY_METHOD','').replace('// MESSAGE_METHOD','void messageMenu(String role,String original){}')
+    template = template.replace('// REVIEW_METHOD', 'void reviewConversationAsTask(String text){}').replace('// EMPTY_METHOD','').replace('// MESSAGE_METHOD','void messageMenu(JSONObject turn){}')
 if mode != 'menu':
     editor = method('MainActivity.java', 'buildTaskEditor')
     assert 'if(selected.equals("NEW"))' in editor and 'DRAFT' in editor and 'Review' in editor, 'NEW editor must visibly label the unsaved proposal DRAFT and request review'
     assert 'Create task' in editor and '()->save(false)' in editor, 'Canonical reviewed Create route retained'
-    assert 'messageMenu(turn.optString("role"),original)' in method('ConversationsUi.java', 'renderMessages'), 'Actual longpress must route role and original text'
+    assert 'messageMenu(turn)' in method('ConversationsUi.java', 'renderMessages'), 'Actual longpress must route role and original text'
 thread_menu = method('ConversationsUi.java', 'threadMenu')
 assert 'ConversationActionPolicy.threadActions(task,' in thread_menu and 'String action=keys[i]' in thread_menu, 'Production menu must use keyed policy'
 assert not re.search(r'if\(i==', thread_menu), 'Hidden entries must not shift numeric action routes'
 with tempfile.TemporaryDirectory(prefix='conversation-review-') as tmp:
     work = Path(tmp); harness=work/'ConversationReviewHarness.java'; harness.write_text(template)
-    subprocess.run([javac,'--release','8','-cp',str(cp),'-d',str(work),str(harness),str(policy)],check=True)
+    subprocess.run([javac,'--release','8','-cp',str(cp),'-d',str(work),str(harness),str(policy),*[str(SRC/(n+'.java')) for n in ['CitationPolicy','SafeMarkdown','ConversationState','PresentationPolicy','Core']]],check=True)
     subprocess.run([java,'-cp',str(work)+os.pathsep+str(cp),'com.simon.mytasks.ConversationReviewHarness',mode],check=True)

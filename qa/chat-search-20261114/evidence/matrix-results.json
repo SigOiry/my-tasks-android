@@ -1,0 +1,42 @@
+[
+  {
+    "layout": "compact100",
+    "flow": "task",
+    "passed": true
+  },
+  {
+    "layout": "compact100",
+    "flow": "inline",
+    "passed": true
+  },
+  {
+    "layout": "compact200",
+    "flow": "task",
+    "passed": true
+  },
+  {
+    "layout": "compact200",
+    "flow": "inline",
+    "passed": true
+  },
+  {
+    "layout": "expanded200",
+    "flow": "task",
+    "passed": true
+  },
+  {
+    "layout": "expanded200",
+    "flow": "inline",
+    "passed": true
+  },
+  {
+    "layout": "expanded100",
+    "flow": "task",
+    "passed": true
+  },
+  {
+    "layout": "expanded100",
+    "flow": "inline",
+    "passed": true
+  }
+]

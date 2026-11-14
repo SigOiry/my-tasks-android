@@ -1,0 +1,18 @@
+{
+  "production_android_sources_still_match_installed": true,
+  "final_backend_sources_match_deployed": true,
+  "installed_hash_reverified": true,
+  "same_conversation_return_verified": true,
+  "font_scale": "1.0",
+  "fold_state": "Committed state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}\n----------------------\nBase state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}\nOverride state: DeviceState{identifier=2, name='OPENED', app_accessible=true, cancel_when_requester_not_on_top=false}",
+  "fixture_pid": 1117416,
+  "email_workspace_table_counts": {
+    "jobs": 0,
+    "proposals": 0,
+    "confirmations": 0,
+    "drafts": 0,
+    "requests": 0
+  },
+  "loopback_listener": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      2048       127.0.0.1:9147      0.0.0.0:*    users:((\"python\",pid=1117416,fd=6))",
+  "host_probe": "{\"tls_verified\": true, \"health\": {\"status\": \"ok\"}, \"anonymous_tasks\": 401, \"native_login\": \"ok\", \"tasks\": 13, \"conversations\": 4}"
+}
