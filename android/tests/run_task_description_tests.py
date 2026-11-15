@@ -50,7 +50,7 @@ public class DescriptionBindingHarness {
   System.out.println("PASS actual Android description binding callbacks (host UI seams)");
  }
 }'''.replace('// METHOD',method)
-with tempfile.TemporaryDirectory(prefix='task-description-',dir=os.environ.get('TMPDIR','/opt/data/cache/scratch')) as d:
+with tempfile.TemporaryDirectory(prefix='task-description-') as d:
  p=Path(d);(p/'DescriptionBindingHarness.java').write_text(harness)
  subprocess.run([str(java/'javac'),'--release','8','-d',d,str(SRC/'SafeMarkdown.java'),str(SRC/'TaskDescriptionText.java'),str(ROOT/'tests/TaskDescriptionTextTest.java'),str(p/'DescriptionBindingHarness.java')],check=True)
  for name in ['TaskDescriptionTextTest','DescriptionBindingHarness']:
@@ -67,7 +67,7 @@ detail_entry=details[:details.index(detail_marker)]+'  editor=vertical();buildTa
 gates=[line for line in production_method('buildTaskReading').splitlines() if 'if(!text(draft,"description").isEmpty())readingDescription(' in line]
 assert len(gates)==1,'Missing real optional description dispatch'
 lifecycle=(ROOT/'tests/DescriptionLifecycleHarness.java').read_text().replace('// METHODS','\n'.join(production_method(n) for n in ['render','renderPage','navigate','openTaskConversation','onConfigurationChanged','readingDescription'])).replace('// DETAIL_ENTRY',detail_entry).replace('// DESCRIPTION_GATE',gates[0])
-with tempfile.TemporaryDirectory(prefix='description-lifecycle-',dir=os.environ.get('TMPDIR','/opt/data/cache/scratch')) as d:
+with tempfile.TemporaryDirectory(prefix='description-lifecycle-') as d:
  p=Path(d);(p/'DescriptionLifecycleHarness.java').write_text(lifecycle)
  (p/'Insets.java').write_text('package android.graphics;public class Insets {public int top,bottom,left,right;}')
  subprocess.run([str(java/'javac'),'--release','8','-cp',str(cp),'-d',d,str(SRC/'SafeMarkdown.java'),str(SRC/'TaskDescriptionText.java'),str(p/'DescriptionLifecycleHarness.java'),str(p/'Insets.java')],check=True)
