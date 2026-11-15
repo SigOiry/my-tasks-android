@@ -2,6 +2,10 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Compact task descriptions — 1.6.5
+
+Version **1.6.5 / code 15** opens Android and web task details with a concise Markdown overview, including **bold** labels. **See more** reveals the complete original; **See less** restores the overview. Editing still uses the full saved description. The API derives the overview from the entire description without rewriting canonical task data or acknowledging updates.
+
 ## Searchable saved knowledge and contextual sources — 1.6.4
 
 Version **1.6.4 / code 14** adds saved task/email knowledge lookup in chat, clickable web-source text on Android, and related-source access from the message context menu rather than appended source chips. Long-press a reply or use its text-selection actions to inspect relevant emails and open linked tasks; **Copy original** preserves the saved model text.

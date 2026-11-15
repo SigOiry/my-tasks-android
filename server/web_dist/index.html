@@ -308,9 +308,17 @@
 </datalist>
 </label>
 </div>
-<label for="description">Description</label>
-<textarea id="description" name="description" rows="4" placeholder="The context you need to move forward…">
-</textarea>
+<section class="task-description" aria-labelledby="description-heading">
+<div class="description-heading"><h3 id="description-heading">Description</h3><button id="description-edit" type="button" aria-expanded="false" aria-controls="description-editor">Edit description</button></div>
+<div id="description-reader">
+<div id="description-preview" class="description-markdown"></div>
+<button id="description-toggle" type="button" aria-expanded="false" aria-controls="description-preview" hidden>See more</button>
+</div>
+<div id="description-editor" hidden>
+<label for="description" class="sr-only">Full original description</label>
+<textarea id="description" name="description" rows="6" placeholder="The context you need to move forward…"></textarea>
+</div>
+</section>
 <label for="notes">Your notes</label>
 <textarea id="notes" name="notes" rows="3" placeholder="Private working notes">
 </textarea>

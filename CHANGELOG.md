@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.5 — Compact task descriptions
+
+- Open Android and browser task details with a concise, Markdown-formatted overview derived from the complete description.
+- Use **See more** to reveal the complete original and **See less** to return to the overview. Editing always uses the full original description.
+- Add a read-only, derived API summary without changing canonical descriptions, task revisions, unread tokens, notes or source evidence.
+- Retain the original Android package and release signing identity; version `1.6.5`, code `15`.
+
 ## 1.6.3 — Android reply workspace fixes
 
 - Keep live reply and assistant inputs attached during autosave, polling, folding and split-pane resizing; retain focus, selection and keyboard state instead of rebuilding the editor.

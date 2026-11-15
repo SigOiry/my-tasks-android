@@ -101,6 +101,7 @@ async function request(path,{method='GET',body,timeout=25000}={}) {
 
 function clearPrivate(reason='') {
  state.epoch++;
+ descriptionExpanded=false;$('description-preview').replaceChildren();show('description-toggle',false);
  emailWorkspace?.clear();
  taskOpening=false;
  for(const id of ['delete-confirm','restore-task'])$(id).disabled=false;
@@ -260,12 +261,12 @@ function updateLocal(task) {
  render();
 }
 async function openTask(id) {
- const epoch=state.epoch;
+ const epoch=state.epoch,generation=state.editorGeneration,snapshot=JSON.stringify(fields());
  if (!currentSession(epoch) || taskOpening || !allowClose()) return;
  taskOpening=true;
  try {
   const task=state.online?await request('/api/tasks/'+encodeURIComponent(id)):state.data.tasks.find(t=>t.id===id);
-  if(!currentSession(epoch))return;
+  if(!currentSession(epoch)||generation!==state.editorGeneration||snapshot!==JSON.stringify(fields()))return;
   if (!task) throw new Error('Task unavailable.');
   if (task.notification?.unread && !task.deleted) showUpdates(task);
   else showTask(task);
@@ -315,7 +316,12 @@ async function acknowledge() {
   show('updates-refresh');
  }
 }
-function fields() {return Object.fromEntries(new FormData(form).entries());}
+function fields() {
+ const values=Object.fromEntries(new FormData(form).entries()),original=state.selected?.description;
+ // Textareas normalize CRLF/CR on assignment. Unchanged context must round-trip exactly.
+ if(typeof original==='string'&&values.description===original.replace(/\r\n?/g,'\n'))values.description=original;
+ return values;
+}
 function allowClose() {
  if (!state.dirty || !state.authenticated) return true;
  return window.confirm('Discard your unsaved edits? They have not been saved.');
@@ -339,13 +345,34 @@ function closeTask() {
  state.editorGeneration++;
  state.dirty=false;$('task-dialog').close();state.selected=null;syncTaskPresentation();state.recognition?.abort();state.recognition=null;
 }
+let descriptionExpanded=false;
+function renderDescription() {
+ // Disabled Trash controls are excluded from FormData; read canonical context.
+ const full=(state.selected?.deleted?state.selected.description:fields().description)||'';
+ const short=Array.from(full).length<=360&&full.split('\n').length<=5;
+ const supplied=full===(state.selected?.description??'')?state.selected?.description_summary:null;
+ const summary=typeof supplied==='string'&&supplied.trim()?supplied:'';
+ const concise=(value,limit=600,maxLines=8)=>{const lines=value.split('\n').slice(0,maxLines).join('\n'),points=Array.from(lines);return points.slice(0,limit).join('')+(points.length>limit||lines!==value?'…':'');};
+ // Retain every item of the backend's bounded (<=1600 character) summary.
+ const preview=short?full:summary?concise(summary,1800,16):'**Preview:** '+concise(Array.from(full).slice(0,300).join(''))+'…';
+ const toggle=!short&&preview!==full;
+ $('description-preview').replaceChildren(...markdownNodes((descriptionExpanded&&toggle?full:preview)||'No description.'));
+ show('description-toggle',toggle);
+ $('description-toggle').textContent=descriptionExpanded&&toggle?'See less':'See more';
+ $('description-toggle').setAttribute('aria-expanded',String(descriptionExpanded&&toggle));
+}
 function showTask(task=null) {
  state.editorGeneration++;
+ descriptionExpanded=false;
  state.selected=task;state.dirty=false;form.reset();
  for (const key of ['title','description','notes','project','due_date','status','priority']) {
   form.elements.namedItem(key).value=task?.[key]??(key==='status'?'todo':key==='priority'?'medium':'');
   form.elements.namedItem(key).disabled=!!task?.deleted;
  }
+ renderDescription();show('description-editor',!task);show('description-reader',!!task);
+ $('description-edit').disabled=!!task?.deleted;
+ $('description-edit').textContent=task?'Edit description':'Preview description';
+ $('description-edit').setAttribute('aria-expanded',String(!task));
  state.snapshot=JSON.stringify(fields());
  paletteStyle($('task-dialog'),task||{});
  message('detail-heading',task?.title||'New task');message('detail-context',task?.deleted?'IN TRASH':task?.project||'TASK DETAILS');
@@ -398,10 +425,11 @@ async function saveTask(event) {
  const epoch=state.epoch,generation=state.editorGeneration;
  if (!currentSession(epoch) || !state.online || $('save-task').disabled) return;
  $('save-task').disabled=true;message('detail-error');
- const selected=state.selected,payload=editPayload(selected,fields());
+ const selected=state.selected,submittedSnapshot=JSON.stringify(fields()),payload=editPayload(selected,fields());
  try {
   const task=await mutate(selected?'/api/tasks/'+encodeURIComponent(selected.id):'/api/tasks',selected?'PATCH':'POST',payload);
   if(!currentSession(epoch)||generation!==state.editorGeneration)return;
+  if(JSON.stringify(fields())!==submittedSnapshot){state.selected=task;state.snapshot=submittedSnapshot;state.dirty=true;renderDescription();message('save-task','Save changes');toast('Changes saved. Newer edits remain unsaved.');return;}
   state.dirty=false;showTask(task);toast(selected?'Changes saved':'Task created');
  } catch(error) {
   if(!currentSession(epoch)||generation!==state.editorGeneration)return;
@@ -745,6 +773,14 @@ window.addEventListener('resize',()=>{if($('task-dialog').open)presentTaskDialog
 window.visualViewport?.addEventListener('resize',syncVisualViewport);
 window.visualViewport?.addEventListener('scroll',syncVisualViewport);
 form.addEventListener('input',()=>{state.dirty=JSON.stringify(fields())!==state.snapshot;});form.addEventListener('change',()=>{state.dirty=JSON.stringify(fields())!==state.snapshot;});
+$('description-toggle').addEventListener('click',()=>{descriptionExpanded=!descriptionExpanded;renderDescription();});
+$('description-edit').addEventListener('click',()=>{
+ const editing=$('description-editor').hidden;
+ show('description-editor',editing);show('description-reader',!editing);
+ $('description-edit').textContent=editing?'Preview description':'Edit description';
+ $('description-edit').setAttribute('aria-expanded',String(editing));
+ if(editing)$('description').focus();else{descriptionExpanded=false;renderDescription();}
+});
 form.addEventListener('submit',saveTask);
 $('details-tab').addEventListener('click',()=>switchPanel('details'));$('hermes-tab').addEventListener('click',()=>switchPanel('hermes'));
 $('updates-close').addEventListener('click',()=>{$('updates-dialog').close();state.gate=null;});
@@ -758,7 +794,7 @@ $('updates-refresh').addEventListener('click',async()=>{const epoch=state.epoch;
 $('delete-task').addEventListener('click',()=>{$('confirm-dialog').showModal();});
 $('delete-cancel').addEventListener('click',()=>$('confirm-dialog').close());$('delete-confirm').addEventListener('click',deleteTask);$('restore-task').addEventListener('click',restoreTask);
 $('copy-edits').addEventListener('click',()=>{const values=fields();copyText(Object.entries(values).map(([key,value])=>key.replace('_',' ')+':\n'+value).join('\n\n'));});
-$('reload-task').addEventListener('click',async()=>{const epoch=state.epoch;if(!currentSession(epoch)||!state.selected)return;if(!window.confirm('Load the latest version? Your current form edits will be replaced. Copy them first if you want to keep them.'))return;try{const task=await request('/api/tasks/'+encodeURIComponent(state.selected.id));if(!currentSession(epoch))return;state.dirty=false;if(task.notification?.unread)showUpdates(task);else showTask(task);}catch(error){if(currentSession(epoch))message('detail-error',errorText(error));}});
+$('reload-task').addEventListener('click',async()=>{const epoch=state.epoch,generation=state.editorGeneration,snapshot=JSON.stringify(fields());if(!currentSession(epoch)||!state.selected)return;if(!window.confirm('Load the latest version? Your current form edits will be replaced. Copy them first if you want to keep them.'))return;try{const task=await request('/api/tasks/'+encodeURIComponent(state.selected.id));if(!currentSession(epoch)||generation!==state.editorGeneration||snapshot!==JSON.stringify(fields()))return;state.dirty=false;if(task.notification?.unread)showUpdates(task);else showTask(task);}catch(error){if(currentSession(epoch)&&generation===state.editorGeneration)message('detail-error',errorText(error));}});
 $('chat-form').addEventListener('submit',sendChat);$('voice').addEventListener('click',startVoice);
 $('nav-tasks').addEventListener('click',()=>destination('tasks'));$('nav-discussions').addEventListener('click',()=>destination('discussions'));
 $('new-free').addEventListener('click',()=>createConversation());

@@ -215,10 +215,11 @@ def create_app(*, db_path=None, token_file=None, metadata_path=None, apk_dir=Non
     allowed = {('/tasks','GET'),('/tasks','POST'),('/tasks/{task_id}','GET'),
                ('/tasks/{task_id}','PATCH'),('/tasks/{task_id}','DELETE'),
                ('/tasks/{task_id}/restore','POST'),('/tasks/{task_id}/updates/read','POST')}
+    from description_summary import with_description_summary
     for route in dashboard.create_router(db_path).routes:
         methods = {method for method in route.methods if (route.path,method) in allowed}
         if methods:
-            router.add_api_route(route.path, route.endpoint, methods=methods, status_code=route.status_code)
+            router.add_api_route(route.path, with_description_summary(route.endpoint), methods=methods, status_code=route.status_code)
     from event_feed import EventFeed
     from fastapi import Query
     feed = EventFeed(metadata_path, dashboard, db_path)

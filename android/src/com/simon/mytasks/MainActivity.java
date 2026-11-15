@@ -37,6 +37,7 @@ public final class MainActivity extends Activity {
  final Map<String,Button> viewButtons=new LinkedHashMap<>();TextView listCount,notificationState;
  int bg,card,ink,muted,line,accent;int listY,detailY;
  LinearLayout root,listPane,detailPane,listItems,editor;TextView stateLabel;
+ final TaskDescriptionText.State descriptionState=new TaskDescriptionText.State();String descriptionSelection="";
  ScrollView listScroll,detailScroll;EditText title,description,notes,due,project;Spinner priority,status;
  String[] priorities={"high","medium","low"},statuses={"inbox","todo","in_progress","waiting","completed","cancelled"};
  final Handler main=new Handler(Looper.getMainLooper());
@@ -85,6 +86,9 @@ public final class MainActivity extends Activity {
  void rule(LinearLayout parent){View v=new View(this);v.setBackgroundColor(line);parent.addView(v,new LinearLayout.LayoutParams(-1,dp(1)));}
  void pair(LinearLayout parent,View a,View b){LinearLayout row=horizontal();row.addView(a,new LinearLayout.LayoutParams(0,-2,1));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMarginStart(dp(8));row.addView(b,p);add(parent,row);}
  void render(){
+  // A selected task may never render its description (empty, conversation, editor).
+  if(!descriptionSelection.equals(selected)||selected.isEmpty()||authState!=AuthPolicy.State.FULL)descriptionState.bind("",null);
+  descriptionSelection=selected;
   boolean restoreEmailKeyboard=emailUi!=null&&emailUi.keyboardVisible();
   if(emailUi!=null){emailUi.detach();emailUi=null;}
   if(tasksUi!=null)tasksUi.capture();
@@ -223,13 +227,13 @@ public final class MainActivity extends Activity {
   JSONObject n=draft.optJSONObject("notification");if(!editing&&n!=null&&n.optBoolean("unread")){
     LinearLayout update=horizontal();update.setPadding(dp(12),0,dp(4),0);update.setBackground(ui.shape(ui.soft,0,16));TextView updateLabel=heading("New update",14);updateLabel.setTextColor(accent);update.addView(updateLabel,new LinearLayout.LayoutParams(0,-2,1));Button review=button("Review",()->{pendingSummary=selected;maybeSummary();});ui.quiet(review);update.addView(review);add(editor,update);space(editor,12);
   }
-  if(draft.optBoolean("deleted")){add(editor,heading("In trash",14));add(editor,heading(text(draft,"title"),24));readingSection("Description",text(draft,"description"));space(editor,16);Button restore=primary("Restore task",()->mutation("POST","/api/tasks/"+Api.segment(selected)+"/restore",revision(),false));restore.setEnabled(online&&!busy);add(editor,restore);return;}
+  if(draft.optBoolean("deleted")){add(editor,heading("In trash",14));add(editor,heading(text(draft,"title"),24));readingDescription(text(draft,"description"),draft.opt("description_summary") instanceof String?text(draft,"description_summary"):"");space(editor,16);Button restore=primary("Restore task",()->mutation("POST","/api/tasks/"+Api.segment(selected)+"/restore",revision(),false));restore.setEnabled(online&&!busy);add(editor,restore);return;}
   if(editing||selected.equals("NEW"))buildTaskEditor();else buildTaskReading();
   final ScrollView scroll=detailScroll;final int savedY=detailY;scroll.post(()->scroll.scrollTo(0,savedY));
  }
  void buildTaskReading(){
   TextView taskTitle=heading(text(draft,"title"),25);if(Build.VERSION.SDK_INT>=28)taskTitle.setTypeface(android.graphics.Typeface.create(ui.font,600,false));taskTitle.setTextIsSelectable(true);add(editor,taskTitle);space(editor,12);
-  if(!text(draft,"description").isEmpty())readingSection("Description",text(draft,"description"));
+  if(!text(draft,"description").isEmpty())readingDescription(text(draft,"description"),draft.opt("description_summary") instanceof String?text(draft,"description_summary"):"");
   LinearLayout facts=vertical();facts.setPadding(dp(14),0,dp(14),0);facts.setBackground(ui.shape(card,0,20));
   readingFact(facts,"Project",PresentationPolicy.project(draft));rule(facts);readingFact(facts,"Priority",human(text(draft,"priority")));rule(facts);readingFact(facts,"Status",human(text(draft,"status")));rule(facts);readingFact(facts,"Due date",dueLabel(draft));add(editor,facts);space(editor,16);
   if(!text(draft,"notes").isEmpty())readingSection("Notes",text(draft,"notes"));sourceContext();
@@ -241,6 +245,23 @@ public final class MainActivity extends Activity {
  void readingFact(LinearLayout parent,String name,String value){
   boolean large=getResources().getConfiguration().fontScale>=1.5f;LinearLayout row=large?vertical():horizontal();row.setMinimumHeight(dp(52));row.setPadding(0,dp(8),0,dp(8));TextView caption=label(name,15,muted);TextView content=label(value,16,name.equals("Status")?accent:ink);content.setTextIsSelectable(true);
   if(!large){row.addView(caption,new LinearLayout.LayoutParams(0,-2,1));content.setGravity(Gravity.END|Gravity.CENTER_VERTICAL);row.addView(content,new LinearLayout.LayoutParams(0,-2,1));}else{add(row,caption);add(row,content);}add(parent,row);
+ }
+ void readingDescription(String value,String summary){
+  descriptionState.bind(selected,value,summary);
+  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,20));
+  TextView caption=heading("Description",13);caption.setTextColor(muted);add(group,caption);space(group,4);
+  TextView body=label("",16,ink);body.setTextIsSelectable(true);body.setAutoLinkMask(0);body.setLinksClickable(false);add(group,body);
+  Button more=button("See more",()->{});ui.quiet(more);more.setMinHeight(dp(48));add(group,more);
+  Button original=button("Original text",()->{});ui.quiet(original);original.setMinHeight(dp(48));add(group,original);
+  Runnable update=()->{
+   caption.setText(descriptionState.plain()?"Description · original text":!descriptionState.expanded&&descriptionState.hasSummary()?"Description · summary":!descriptionState.expanded&&descriptionState.shortened()?"Description · selected excerpts":"Description");
+   body.setText(MarkdownText.render(descriptionState.document()));
+   more.setText(descriptionState.expanded?"See less":"See more");more.setContentDescription(descriptionState.expanded?"Show less description":"Show full description");more.setVisibility(descriptionState.shortened()?View.VISIBLE:View.GONE);
+   original.setText(descriptionState.original?"Formatted text":"Original text");original.setVisibility(descriptionState.expanded||!descriptionState.shortened()?View.VISIBLE:View.GONE);
+  };
+  more.setOnClickListener(v->{descriptionState.toggleExpanded();update.run();});
+  original.setOnClickListener(v->{descriptionState.toggleOriginal();update.run();});
+  update.run();add(editor,group);space(editor,12);
  }
  void readingSection(String name,String value){
   LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,20));TextView caption=heading(name,13);caption.setTextColor(muted);add(group,caption);space(group,4);TextView t=label("",16,ink);t.setText(MarkdownText.render(value));t.setTextIsSelectable(true);t.setAutoLinkMask(0);add(group,t);add(editor,group);space(editor,12);

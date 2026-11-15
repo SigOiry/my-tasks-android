@@ -76,6 +76,17 @@ p { color: var(--muted); }
 .icon-button { width: 44px; padding: 0; border: 0; background: transparent; }
 .eyebrow, .nav-label { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .7px; }
 .eyebrow { margin-bottom: 6px; }
+.task-description { min-width: 0; margin-block: 16px; }
+.description-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.description-heading h3 { margin: 0; }
+.description-heading button { font-size: 12px; }
+.description-markdown { line-height: 1.65; overflow-wrap: anywhere; white-space: normal; }
+.description-markdown p { color: var(--ink); margin-bottom: 12px; }
+.description-markdown strong { font-weight: 700; }
+.description-markdown ul, .description-markdown ol { padding-left: 24px; margin-block: 10px; }
+.description-markdown li + li { margin-top: 6px; }
+.description-markdown pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.description-markdown > :last-child { margin-bottom: 10px; }
 .hint { font-size: 13px; line-height: 1.6; }
 .error { color: var(--danger); white-space: pre-wrap; overflow-wrap: anywhere; }
 .error:empty, .hint:empty { display: none; }

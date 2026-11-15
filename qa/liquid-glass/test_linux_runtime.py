@@ -44,6 +44,14 @@ class LinuxPackagingTests(unittest.TestCase):
                 self.assertEqual((bundle/relative).read_bytes(), (HERE/helper).read_bytes())
                 self.assertEqual((bundle/relative).stat().st_mode & 0o777, 0o600)
                 self.assertIn(relative, json.loads((bundle/'source-manifest.json').read_text()))
+            # Current real task routes import both helpers; omitting either makes
+            # the isolated runtime fail at app construction rather than serve QA.
+            for name in ('description_summary.py', 'task_knowledge_context.py'):
+                relative = 'server/' + name
+                self.assertIn(relative, files, 'Current task-route dependency missing')
+                self.assertEqual((bundle/relative).read_bytes(), (module.REPO/'server'/name).read_bytes())
+                entry = json.loads((bundle/'source-manifest.json').read_text())[relative]
+                self.assertEqual(entry['source_sha256'], entry['bundle_sha256'])
             self.assertIn('integration/plugin_api.py',files)
             self.assertIn('integration/taskdb.py',files)
             self.assertNotIn('/opt/data/',(bundle/'server/mobile_api.py').read_text().split('def create_app')[0])
