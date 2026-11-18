@@ -69,7 +69,7 @@ public class TasksLaneMethodsHarness {
    }
   }
   ui.a.filter="All";ui.a.projectFilter="Alpha";ui.a.query="waiting";ui.refresh();
-  check(tokens(ui).get(0).equals("#Waiting")&&ui.count.text.startsWith("1 tasks"),"filtered waiting-only lane labelled, no fabricated actionable group");
+  check(tokens(ui).get(0).equals("#Waiting")&&ui.count.text.startsWith("1 task ·"),"filtered waiting-only lane labelled, no fabricated actionable group");
   ui.a.query="no-such-task";ui.refresh();check(tokens(ui).equals(Arrays.asList("EMPTY")),"empty view unchanged");
   check(ui.resets==0&&ui.captures==ui.restores,"sort changes preserve capture/restore anchor path");
   System.out.println("Actual TasksUi.refresh lane/group checks passed: "+checks);

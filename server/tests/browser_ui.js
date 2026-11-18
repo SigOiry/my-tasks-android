@@ -32,6 +32,8 @@
  await wait(()=>$('detail-heading').textContent===title);
  const created=(await api('/api/tasks')).tasks.find(t=>t.title===title);
  assert(!!created&&created.notes==='Private scratch notes'&&created.priority==='high','UI create persists notes and priority');
+ $('task-edit').click();
+ assert(!$('task-editor').hidden,'explicit Edit opens the saved task before mutation');
  change('#title','Keep this unsaved draft');
  await api('/api/tasks/'+created.id,'PATCH',{revision:created.revision,notes:'Concurrent scratch edit'});
  $('task-form').requestSubmit();await wait(()=>!$('conflict').hidden);

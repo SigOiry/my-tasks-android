@@ -17,7 +17,24 @@ export function renderCitations(turn,{document=globalThis.document,request,alive
  for(const [i,source] of presentation.sources.entries()){
   const details=make('details'),chip=make('summary',`${i+1} · ${source.available?source.label:'Source unavailable'}`),panel=make('div');details.className='citation-source';panel.className='citation-panel';chip.setAttribute('aria-label',`Source ${i+1}: ${source.label}`);details.append(chip,panel);
   const display=s=>{panel.replaceChildren();panel.append(make('strong',s.subject||s.label||source.label));for(const field of ['sender','date','excerpt'])if(typeof s[field]==='string'&&s[field])panel.append(make('p',s[field]));if(s.available===false)panel.append(make('p',s.reason||'This source is unavailable or the account is disconnected.'));if(source.url&&s.available!==false){const link=make('a','Open source ↗');link.setAttribute('href',source.url);link.setAttribute('target','_blank');link.setAttribute('rel','noopener noreferrer');panel.append(link);}};display(source);
-  if(source.kind==='email'&&source.available&&request){let loaded=false,generation=0;details.addEventListener('toggle',async()=>{if(!details.open||loaded)return;loaded=true;const ticket=++generation;panel.replaceChildren(make('p','Loading private source…'));try{const result=await request('/api/tasks/'+encodeURIComponent(source.task_id)+'/email-sources/'+encodeURIComponent(source.resource_id));if(!alive()||ticket!==generation)return;const row=result?.source;if(!row||typeof row!=='object')throw new Error('Source unavailable.');display({...source,...row});}catch(e){if(alive()&&ticket===generation)display({...source,available:false,reason:e.message||'Source unavailable.'});}});}
+  if(source.kind==='email'&&source.available&&request){
+   let loaded=false,loading=false,failed=false,generation=0;
+   const status=make('p',''),retry=make('button','Retry source');status.className='citation-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');retry.type='button';retry.hidden=true;details.append(status,retry);
+   const load=async()=>{
+    if(!alive()||loaded||loading)return;loading=true;
+    // Disabling the focused native button blurs it; keep focus on its stable disclosure.
+    if(document.activeElement===retry)chip.focus({preventScroll:true});
+    retry.disabled=true;const ticket=++generation;panel.setAttribute('aria-busy','true');status.textContent='Loading private source…';
+    try{
+     const result=await request('/api/tasks/'+encodeURIComponent(source.task_id)+'/email-sources/'+encodeURIComponent(source.resource_id));
+     if(!alive()||ticket!==generation)return;const row=result?.source;if(!row||typeof row!=='object')throw new Error('Source unavailable.');
+     display({...source,...row});loaded=true;failed=false;status.textContent=row.available===false?'Source unavailable.':'Source loaded.';
+     retry.hidden=true;
+    }catch(e){if(alive()&&ticket===generation){failed=true;display({...source,available:false,reason:e.message||'Source unavailable.'});status.textContent='Could not load the source. Retry when ready.';retry.hidden=false;}}
+    finally{if(alive()&&ticket===generation){loading=false;retry.disabled=false;panel.setAttribute('aria-busy','false');}}
+   };
+   retry.addEventListener('click',load);details.addEventListener('toggle',()=>{if(details.open&&!failed)return load();});
+  }
   root.append(details);
  }
  return {text:presentation.text,element:root};

@@ -35,7 +35,7 @@ public final class PresentationPolicy {
  }
  /** Neutral text strengthened for the more visible task surfaces. */
  public static int rowUnreadColor(boolean dark){return dark?0xffabd0ff:0xff00499f;}
- public static int rowSecondary(boolean dark){return dark?0xffc4c4ce:0xff494951;}
+ public static int rowSecondary(boolean dark){return dark?0xffc6c6d0:0xff494951;}
  /** Same category hue, darker light-theme cue for 3:1 on tinted surfaces. */
  public static int taskCueColor(int category,boolean dark){
   if(dark)return category;int result=0xff000000;

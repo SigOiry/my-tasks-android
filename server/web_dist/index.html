@@ -114,6 +114,7 @@
 </use>
 </svg> Discussions</button>
 </nav>
+<button id="command-trigger" class="command-trigger" aria-haspopup="dialog" aria-controls="command-dialog"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg><span>Find an action</span><kbd>Ctrl K</kbd></button>
 <button id="new-task" class="primary">
 <svg class="ui-icon" aria-hidden="true" focusable="false">
 <use href="#icon-plus">
@@ -166,7 +167,7 @@
 <use href="#icon-more">
 </use>
 </svg>
-<span class="sr-only">Views and filters</span>
+<span class="filter-label">Filters</span>
 </summary>
 <section class="filterbar" aria-label="Task filters">
 <label class="search">
@@ -212,6 +213,7 @@
 <nav id="extra-views" class="scope-menu" aria-label="Additional task views">
 </nav>
 <div class="filter-utilities">
+<button id="command-mobile" type="button" aria-haspopup="dialog" aria-controls="command-dialog">Find an action</button>
 <button id="refresh" type="button">
 <svg class="ui-icon" aria-hidden="true" focusable="false">
 <use href="#icon-refresh">
@@ -228,8 +230,15 @@
 <nav id="views" class="task-scopes" aria-label="Task views">
 </nav>
 </div>
-<p id="filter-summary" class="filter-summary">
-</p>
+<div class="task-list-context">
+<p id="filter-summary" class="filter-summary" role="status"></p>
+<button id="updates-only" type="button" aria-pressed="false" aria-controls="task-list">Updates only</button>
+<button id="clear-task-filters" class="text-button" type="button" hidden>Clear filters</button>
+</div>
+<div class="task-list-feedback">
+<p id="task-list-status" role="status" hidden></p>
+<button id="task-list-retry" type="button" hidden>Retry loading tasks</button>
+</div>
 <div id="global-error" class="notice error" role="alert" hidden>
 </div>
 <section id="task-list" aria-label="Tasks" aria-live="polite">
@@ -276,13 +285,30 @@
 </svg>
 </button>
 </header>
-<nav class="detail-tabs" aria-label="Task panels">
-<button id="details-tab" aria-pressed="true">Details</button>
-<button id="hermes-tab" aria-pressed="false">Discussions</button>
+<nav class="detail-tabs" role="tablist" aria-label="Task panels">
+<button id="details-tab" type="button" role="tab" aria-selected="true" aria-controls="details-panel" tabindex="0">Task</button>
+<button id="source-tab" type="button" role="tab" aria-selected="false" aria-controls="source-panel" tabindex="-1">Context</button>
+<button id="hermes-tab" type="button" role="tab" aria-selected="false" aria-controls="hermes-panel" tabindex="-1">Discussions</button>
 </nav>
-<div id="details-panel">
+<div id="details-panel" role="tabpanel" aria-labelledby="details-tab" tabindex="0">
 <form id="task-form">
 <div class="detail-body">
+<div id="task-reader">
+<div class="task-read-actions"><button id="task-edit" type="button">Edit task</button></div>
+<dl id="task-read-metadata" class="task-read-metadata"></dl>
+<section class="task-description" aria-labelledby="description-heading">
+<h3 id="description-heading">Description</h3>
+<div id="description-reader">
+<div id="description-preview" class="description-markdown"></div>
+<button id="description-toggle" type="button" aria-expanded="false" aria-controls="description-preview" hidden>See more</button>
+</div>
+</section>
+<section class="task-read-notes" aria-labelledby="task-notes-heading">
+<h3 id="task-notes-heading">Your notes</h3>
+<p id="task-read-notes"></p>
+</section>
+</div>
+<div id="task-editor" hidden>
 <label for="title">Task title</label>
 <input id="title" name="title" required maxlength="1000" placeholder="What needs to happen?">
 <div class="field-grid">
@@ -308,28 +334,15 @@
 </datalist>
 </label>
 </div>
-<section class="task-description" aria-labelledby="description-heading">
-<div class="description-heading"><h3 id="description-heading">Description</h3><button id="description-edit" type="button" aria-expanded="false" aria-controls="description-editor">Edit description</button></div>
-<div id="description-reader">
-<div id="description-preview" class="description-markdown"></div>
-<button id="description-toggle" type="button" aria-expanded="false" aria-controls="description-preview" hidden>See more</button>
-</div>
-<div id="description-editor" hidden>
-<label for="description" class="sr-only">Full original description</label>
+<div id="description-editor">
+<label for="description">Full original description</label>
 <textarea id="description" name="description" rows="6" placeholder="The context you need to move forward…"></textarea>
 </div>
-</section>
 <label for="notes">Your notes</label>
 <textarea id="notes" name="notes" rows="3" placeholder="Private working notes">
 </textarea>
-<section class="sources">
-<h3>Source context</h3>
-<button id="detail-reply" type="button" class="text-button">Reply / open draft</button>
-<div id="source-links">
 </div>
-<p id="source-accounts" class="hint">
-</p>
-</section>
+
 <div id="conflict" class="notice" hidden>
 <strong>This task changed elsewhere.</strong>
 <p>Your edits are still here. Copy them before loading the latest version, then reapply only the changes you intend. No force overwrite is available.</p>
@@ -342,25 +355,33 @@
 <p id="detail-error" class="error" role="alert">
 </p>
 </div>
-<footer class="dialog-footer">
+<footer id="task-edit-actions" class="dialog-footer" hidden>
 <div class="spacer">
 </div>
-<button class="close-dialog" type="button">Cancel</button>
+<button id="task-edit-cancel" type="button" hidden>Cancel</button>
 <button id="save-task" class="primary" type="submit">Save changes</button>
 </footer>
 </form>
 </div>
-<section id="hermes-panel" hidden>
+<section id="source-panel" role="tabpanel" aria-labelledby="source-tab" tabindex="0" hidden>
+<h3>Source context</h3>
+<p class="hint">Links and accounts saved with this task. Message content is not loaded here.</p>
+<div id="source-links"></div>
+<p id="source-accounts" class="hint"></p>
+<button id="detail-reply" type="button" class="text-button">Reply / open draft</button>
+</section>
+<section id="hermes-panel" role="tabpanel" aria-labelledby="hermes-tab" tabindex="0" hidden>
 <h3>Discussions with Hermès</h3>
-<p class="hint">Uses this saved task and conversation history. Unsaved task edits are not sent. No tools, sending mail or task changes.</p>
+<p class="hint">Uses this saved task and conversation history. Unsaved task edits are not sent. Discussions cannot send email or change tasks.</p>
 <label for="task-thread">Saved discussions</label>
 <select id="task-thread">
 <option value="">Select a discussion</option>
 </select>
 <div class="button-row">
-<button id="task-thread-open">Open discussion</button>
+<button id="task-thread-open" disabled>Open discussion</button>
 <button id="task-thread-new" class="primary">+ New discussion</button>
 <button id="task-thread-more" hidden>Load more</button>
+<button id="task-thread-retry" hidden>Retry discussions</button>
 </div>
 <p id="task-thread-status" class="hint" role="status">
 </p>
@@ -371,9 +392,9 @@
 <dialog id="chat-dialog" class="chat-dialog" aria-labelledby="chat-title">
 <header class="dialog-header">
 <div>
-<p id="chat-context" class="eyebrow">
-</p>
 <h2 id="chat-title">Discussion</h2>
+<p id="chat-context" class="hint">
+</p>
 </div>
 <button id="chat-close" aria-label="Close discussion">
 <svg class="ui-icon" aria-hidden="true" focusable="false">
@@ -411,7 +432,7 @@
 </textarea>
 <div class="chat-actions">
 <label for="chat-mode" class="sr-only">Conversation mode</label>
-<select id="chat-mode">
+<select id="chat-mode" aria-describedby="chat-mode-hint">
 <option value="question">Question</option>
 <option value="email_draft">Email draft</option>
 </select>
@@ -426,6 +447,8 @@
 <span class="sr-only">Send</span>
 </button>
 </div>
+<p class="hint" id="chat-mode-hint" hidden></p>
+<p class="hint" id="chat-draft-state" hidden></p>
 <p class="hint voice-disclosure sr-only" id="voice-hint">Voice transcription is editable and never sends automatically. Your browser may use a remote speech service; permission is requested only when you choose Microphone.</p>
 </form>
 </dialog>
@@ -442,11 +465,10 @@
 </footer>
 </form>
 </dialog>
-<dialog id="updates-dialog" class="small-dialog update-sheet" aria-labelledby="updates-heading">
+<dialog id="updates-dialog" class="small-dialog update-sheet" aria-labelledby="updates-title">
 <header class="dialog-header">
 <div>
-<p class="eyebrow">NEW UPDATE</p>
-<h2 id="updates-heading">Task updated</h2>
+<h2 id="updates-title"></h2>
 </div>
 <button id="updates-close" class="icon-button" aria-label="Close update review">
 <svg class="ui-icon" aria-hidden="true" focusable="false">
@@ -456,15 +478,15 @@
 </button>
 </header>
 <div class="update-body">
-<p id="updates-title">
-</p>
+<h3 id="updates-heading">Task updated</h3>
 <div id="updates-summary" class="safe-markdown">
 </div>
 <p id="updates-error" class="error" role="alert">
 </p>
 </div>
 <footer class="dialog-footer">
-<button id="updates-ack" class="primary">Mark reviewed</button>
+<p id="updates-review-help" class="hint">Mark reviewed acknowledges only the update shown here. Opening the task, asking Hermès, replying or closing leaves it unread.</p>
+<button id="updates-ack" class="primary" aria-describedby="updates-review-help">Mark reviewed</button>
 <button id="updates-open">Open task</button>
 <button id="updates-discuss">Ask Hermès</button>
 <button id="updates-reply" type="button" class="text-button">Reply</button>
@@ -539,7 +561,7 @@
 </section>
 <section class="settings-section">
 <h3>Private session</h3>
-<p>Authentication uses a secure server cookie. Passwords are never saved by this app in browser storage. Tasks and loaded discussions stay in page memory; conversation history persists privately on the server. Preferences and an opaque alert cursor are stored locally. Signing out clears local state, not saved server history.</p>
+<p>Authentication uses a secure server cookie. Passwords are never saved by this app in browser storage. Tasks and loaded discussions stay in page memory; conversation history and saved email drafts persist privately on the server. Preferences and an opaque alert cursor are stored locally. Unsaved email writing is also kept in this browser for recovery, so use a trusted device. Signing out clears local state, not saved server history.</p>
 <div class="button-row">
 <button id="change-password">Change password</button>
 <button id="logout" class="danger">Sign out</button>
@@ -549,13 +571,20 @@
 </section>
 <section class="settings-section">
 <h3>About Hermès</h3>
-<p>Questions, analysis and drafts using saved conversation history. Hermès has no tools and cannot send email or change tasks. Voice transcription is optional, editable and never sent automatically; your browser may use a remote speech service.</p>
+<p>Questions, analysis and drafts using saved conversation history. Task discussions use saved private context; free discussions can use saved knowledge and bounded public-web research. Chat cannot send email or change tasks. The separate email workspace requires your explicit review and confirmation before sending. Voice transcription is optional, editable and never sent automatically; your browser may use a remote speech service.</p>
 </section>
 <section class="settings-section">
 <h3>Typography &amp; licenses</h3>
 <p>Inter by the Inter Project authors. Self-hosted under the SIL Open Font License 1.1. No external font service.</p>
 <a href="/assets/INTER-LICENSE.txt" target="_blank" rel="noopener noreferrer">Read Inter license</a>
 </section>
+</dialog>
+<dialog id="command-dialog" class="command-dialog" aria-labelledby="command-title">
+<header class="command-header"><h2 id="command-title">Find an action</h2><button id="command-close" class="icon-button" aria-label="Close action menu"><svg class="ui-icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></header>
+<input id="command-query" type="search" placeholder="Tasks, discussions, settings…" aria-label="Find an action" aria-controls="command-results" autocomplete="off" spellcheck="false">
+<p id="command-help" class="hint">Type to filter. Use ↑ ↓ to choose, Enter to open, Esc to close.</p>
+<div id="command-results" aria-label="Available actions"></div>
+<p id="command-empty" role="status" hidden>No matching actions. Try “tasks” or “settings”.</p>
 </dialog>
 <div id="toast" role="status" hidden>
 </div>

@@ -22,7 +22,7 @@ class NativeContrastTest(unittest.TestCase):
         root = ET.parse(Path(__file__).resolve().parents[1] / 'res/values/styles.xml').getroot()
         # Window-animation styles are not reading/color themes. Keep the actual
         # theme list explicit so a missing or newly added theme cannot be skipped.
-        self.themes = {s.get('name'): {i.get('name'): i.text for i in s}
+        self.themes = {s.attrib['name']: {i.attrib['name']: i.text or '' for i in s}
                        for s in root if s.get('name', '').startswith('MyTasks.')}
         self.assertEqual(set(self.themes), {'MyTasks.Light', 'MyTasks.Dark'})
 
@@ -33,9 +33,12 @@ class NativeContrastTest(unittest.TestCase):
                     with self.subTest(theme=name, foreground=fg, background=bg):
                         self.assertGreaterEqual(contrast(theme[fg], theme[bg]), 4.5)
 
-    def test_primary_button_labels(self):
-        self.assertGreaterEqual(contrast('#ffffff', self.themes['MyTasks.Light']['android:colorAccent']), 4.5)
-        self.assertGreaterEqual(contrast('#0b0d12', self.themes['MyTasks.Dark']['android:colorAccent']), 4.5)
+    def test_control_accent_glyph_contrast(self):
+        # Completion uses surface on the light accent and canvas on the dark
+        # accent; filled action buttons have their own action/onAction test.
+        for name, theme in self.themes.items():
+            foreground = 'android:colorButtonNormal' if name.endswith('Light') else 'android:colorBackground'
+            self.assertGreaterEqual(contrast(theme[foreground], theme['android:colorAccent']), 4.5)
 
 
 if __name__ == '__main__':

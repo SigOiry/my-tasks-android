@@ -20,12 +20,15 @@ class TasksUiContractTest(unittest.TestCase):
  def test_opaque_palette_text_contrast(self):
   s=self.source('WorkspaceUi')
   palette={name:(dark,light) for name,dark,light in re.findall(r'(\w+)=color\(dark\?"(#[0-9a-fA-F]{6})":"(#[0-9a-fA-F]{6})"\)',s)}
+  palette.update({name:(value,value) for name,value in re.findall(r'(\w+)=color\("(#[0-9a-fA-F]{6})"\)',s)})
+  for name,dark,light in re.findall(r'(\w+)=dark\?(\w+):(\w+);',s):
+   palette[name]=(palette[dark][0],palette[light][1])
   def luminance(color):
    rgb=[int(color[i:i+2],16)/255 for i in (1,3,5)]
    linear=[c/12.92 if c<=0.04045 else ((c+0.055)/1.055)**2.4 for c in rgb]
    return sum(c*w for c,w in zip(linear,[0.2126,0.7152,0.0722]))
   for mode in [0,1]:
-   for foreground,background in [('ink','surface'),('secondary','surface'),('primary','surface'),('primary','soft'),('onPrimary','primary')]:
+   for foreground,background in [('ink','surface'),('secondary','surface'),('primary','surface'),('primary','soft'),('onPrimary','primary'),('onAction','action')]:
     x,y=sorted([luminance(palette[foreground][mode]),luminance(palette[background][mode])])
     self.assertGreaterEqual((y+0.05)/(x+0.05),4.5,(mode,foreground,background))
  def test_tasks_virtualizes_and_retains_id_anchor(self):
@@ -43,7 +46,9 @@ class TasksUiContractTest(unittest.TestCase):
    self.assertRegex(s,r'void '+api+r'\(')
   self.assertIn('Bundle',s)
   self.assertIn('emphasis.observe(',s)
-  self.assertIn('NAVIGATION_CLEARANCE=104',s)
+  self.assertIn('NAVIGATION_CLEARANCE=0',s)
+  self.assertIn('parent.addView(create,new LinearLayout.LayoutParams(-1,-2))',s)
+  self.assertNotIn('list.addFooterView(',s)
   self.assertIn('setClipToPadding(false)',s)
   self.assertIn('ui.dp(NAVIGATION_CLEARANCE)',s)
  def test_row_has_distinct_controls_and_static_update_marker(self):

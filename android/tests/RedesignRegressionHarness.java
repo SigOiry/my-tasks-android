@@ -7,6 +7,9 @@ public class RedesignRegressionHarness extends Context {
  UiReadGate quietGate=new UiReadGate();JSONArray tasks=new JSONArray();JSONObject draft,snapshot;String selected="synthetic",banner="",detailsMode="Details",destination="Tasks",pendingSummary="";
  TasksUi tasksUi=new TasksUi(this);ConversationUi conversationUi;TextView stateLabel;UpdateSheet summaryUi;final Queue main=new Queue();int confirmations;
  EditText title,description,notes,project,due;Spinner priority,status;String[] priorities={"high","medium","low"},statuses={"inbox","todo","in_progress","waiting","completed","cancelled"};ScrollView listScroll,detailScroll;int listY,detailY;Controller conversations=new Controller();
+ void captureTaskPresentation(){}
+ // This harness has no deferred presentation state; M5NativeHarness tests the actual accessor.
+ int capturedDetailY(){return detailScroll==null?detailY:detailScroll.getScrollY();}
  void settings(){}void saveWorkspacePreferences(){}void buildListRows(){}boolean isDestroyed(){return false;}boolean alive(Store.Account a){return authState==AuthPolicy.State.FULL&&store.current(a);}
  void notice(String a,String b){}void confirm(String title,String message,Runnable action){confirmations++;action.run();}
  void render(){

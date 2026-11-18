@@ -16,19 +16,21 @@ test('task defaults to safe Markdown API summary with accessible expand and coll
  assert.equal(h.get('description').value,original);
 });
 
-test('edited draft preview never reuses a stale server summary or alters the exact save payload',async()=>{
- const h=await harness();h.showTask(task);h.get('description-edit').listeners.click();
+test('explicit edit saves the original draft, then the reader never reuses a stale server summary',async()=>{
+ const h=await harness();h.showTask(task);h.get('task-edit').listeners.click();
  const draft='  **Draft context**\n'+('New draft only. '.repeat(80))+'\nfinal draft  ';
- h.get('description').value=draft;h.get('task-form').listeners.input();h.get('description-edit').listeners.click();
- assert.match(text(h.get('description-preview')),/Draft context/);assert.ok(!text(h.get('description-preview')).includes('Decision:'));
- h.get('description-toggle').listeners.click();assert.equal(h.get('description').value,draft);assert.equal(h.state.dirty,true);
+ h.get('description').value=draft;h.get('task-form').listeners.input();
+ assert.equal(h.get('task-reader').hidden,true);assert.equal(h.get('description').value,draft);assert.equal(h.state.dirty,true);
+ h.context.fetch=async(path,options)=>{h.calls.push({path,options});return {ok:true,status:200,json:async()=>path.startsWith('/api/events')?{events:[],cursor:0,has_more:false}:{...task,description:draft,description_summary:null,revision:2}};};
  await h.saveTask({preventDefault(){}});
+ assert.equal(h.get('task-reader').hidden,false);assert.match(text(h.get('description-preview')),/Draft context/);assert.ok(!text(h.get('description-preview')).includes('Decision:'));
+ h.get('description-toggle').listeners.click();assert.match(text(h.get('description-preview')),/final draft/);
  const posted=h.calls.find(c=>c.options?.method==='PATCH');assert.equal(JSON.parse(posted.options.body).description,draft);assert.ok(!('description_summary' in JSON.parse(posted.options.body)));
 });
 test('deleted task retains canonical summary and full read-only description despite disabled form controls',async()=>{
  const h=await harness(),canonical=original.replace(/\n/g,'\r\n');h.showTask({...task,deleted:true,description:canonical});
  assert.ok(!Object.fromEntries(new h.context.FormData().entries()).description);
- assert.equal(h.get('description').disabled,true);assert.equal(h.get('description-edit').disabled,true);assert.equal(h.get('description-editor').hidden,true);
+ assert.equal(h.get('description').disabled,true);assert.equal(h.get('task-edit').hidden,true);assert.equal(h.get('description-editor').hidden,true);
  assert.match(text(h.get('description-preview')),/Decision:/);assert.equal(h.get('description-toggle').hidden,false);
  h.get('description-toggle').listeners.click();assert.match(text(h.get('description-preview')),/Final: keep this/);
  assert.equal(h.get('description-toggle').attributes['aria-expanded'],'true');assert.equal(h.get('description').value,canonical);
@@ -45,12 +47,12 @@ for(const operation of ['open','reload'])test(`delayed ${operation} cannot repla
  h.context.fetch=()=>new Promise(resolve=>{release=()=>resolve({ok:true,status:200,json:async()=>task});});
  const pending=operation==='open'?h.openTask(task.id):h.get('reload-task').listeners.click();
  await new Promise(resolve=>setImmediate(resolve));
- h.showTask({...task,id:'replacement',description_summary:'**Replacement** summary'});h.get('notes').value='Unsaved replacement';h.get('task-form').listeners.input();release();await pending;
+ h.showTask({...task,id:'replacement',description_summary:'**Replacement** summary'});h.get('task-edit').listeners.click();h.get('notes').value='Unsaved replacement';h.get('task-form').listeners.input();release();await pending;
  assert.equal(h.state.selected.id,'replacement');assert.equal(h.get('notes').value,'Unsaved replacement');assert.match(text(h.get('description-preview')),/Replacement/);
 });
 
 test('switching, closing and reopening reset expansion while ordinary renders preserve drafts',async()=>{
- const h=await harness();h.showTask(task);h.get('description-toggle').listeners.click();h.get('notes').value='Local notes';h.get('task-form').listeners.input();h.render();
+ const h=await harness();h.showTask(task);h.get('description-toggle').listeners.click();h.get('task-edit').listeners.click();h.get('notes').value='Local notes';h.get('task-form').listeners.input();h.render();
  assert.equal(h.get('description-toggle').attributes['aria-expanded'],'true');assert.equal(h.get('notes').value,'Local notes');
  h.showTask({...task,id:'other',description_summary:'**Other task**'});assert.equal(h.get('description-toggle').attributes['aria-expanded'],'false');
  h.get('description-toggle').listeners.click();h.closeTask();h.showTask(task);assert.equal(h.get('description-toggle').attributes['aria-expanded'],'false');assert.match(text(h.get('description-preview')),/Decision:/);
@@ -62,7 +64,7 @@ for(const description of ['', '  ', '**Short** context.'])test(`empty/short desc
 for(const full of ['x'.repeat(12000), '😀漢字'.repeat(4000), '**unfinished\n```\n'+('context\n'.repeat(500))])test('old server fallback is bounded and Unicode-safe, original survives expansion/editing',async()=>{
  const h=await harness();h.showTask({...task,description:full,description_summary:null});const preview=text(h.get('description-preview'));
  assert.ok(Array.from(preview).length<650);assert.ok(!/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(preview));assert.equal(h.get('description-toggle').hidden,false);
- h.get('description-toggle').listeners.click();assert.equal(h.get('description').value,full);h.get('description-edit').listeners.click();assert.equal(h.get('description-editor').hidden,false);assert.equal(h.get('description').value,full);
+ h.get('description-toggle').listeners.click();assert.equal(h.get('description').value,full);h.get('task-edit').listeners.click();assert.equal(h.get('description-editor').hidden,false);assert.equal(h.get('description').value,full);
 });
 test('untrusted summary and full Markdown never create active content',async()=>{
  const h=await harness(),attack='<script>alert(1)</script> <img src=x onerror=alert(1)> [click](javascript:alert(1)) ![pixel](https://tracker.invalid/p) **bold**';
@@ -75,13 +77,13 @@ test('untrusted summary and full Markdown never create active content',async()=>
 
 test('unchanged browser-normalized CRLF editor saves the exact canonical original',async()=>{
  const h=await harness(),canonical='  **Original**\r\n\r\nFinal action.  ';
- h.showTask({...task,description:canonical});h.get('description').value=canonical.replace(/\r\n?/g,'\n');
+ h.showTask({...task,description:canonical});h.get('task-edit').listeners.click();h.get('description').value=canonical.replace(/\r\n?/g,'\n');
  h.get('notes').value='Notes-only edit';h.get('task-form').listeners.input();await h.saveTask({preventDefault(){}});
  assert.equal(JSON.parse(h.calls.find(c=>c.options?.method==='PATCH').options.body).description,canonical);
 });
 
 test('typing during an in-flight save retains newer description draft and preview',async()=>{
- const h=await harness();h.showTask(task);let release;
+ const h=await harness();h.showTask(task);h.get('task-edit').listeners.click();let release;
  h.context.fetch=async(path)=>path.startsWith('/api/events')?{ok:true,status:200,json:async()=>({events:[],cursor:0,has_more:false})}:new Promise(resolve=>{release=()=>resolve({ok:true,status:200,json:async()=>({...task,revision:2})});});
  const saving=h.saveTask({preventDefault(){}});await new Promise(resolve=>setImmediate(resolve));
  const newer='**Newer unsaved draft** '+('more context '.repeat(80));h.get('description').value=newer;h.get('task-form').listeners.input();release();await saving;

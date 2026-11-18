@@ -35,7 +35,7 @@ class NativeAccountWiring(unittest.TestCase):
     def test_mandatory_gate_precedes_private_workspace(self):
         source = (SRC / 'MainActivity.java').read_text()
         gate = source.index('if(authState!=AuthPolicy.State.FULL){new AuthUi(this).build(root);return;}')
-        for private_surface in ('if(wide)buildRail(shell)', 'conversationUi.buildGlobal(workspace)', 'if(wide||selected.isEmpty())buildList()'):
+        for private_surface in ('if(railNavigation)buildRail(shell)', 'conversationUi.buildGlobal(workspace)', 'if(wide||selected.isEmpty())buildList()'):
             self.assertLess(gate, source.index(private_surface))
         create = source[source.index('@Override public void onCreate'):source.index('@Override protected void onResume')]
         self.assertNotIn('store.cached()', create)

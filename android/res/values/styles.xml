@@ -1,28 +1,28 @@
 <resources>
  <style name="MyTasks.Light" parent="android:style/Theme.Material.Light.NoActionBar">
   <item name="android:fontFamily">@font/inter_variable</item>
-  <item name="android:colorAccent">#005ac8</item>
-  <item name="android:colorControlActivated">#005ac8</item>
-  <item name="android:colorControlNormal">#63636b</item>
-  <item name="android:colorButtonNormal">#ffffff</item>
-  <item name="android:colorBackground">#f2f2f7</item>
-  <item name="android:windowBackground">#f2f2f7</item>
-  <item name="android:textColorPrimary">#1c1c1e</item>
-  <item name="android:textColorSecondary">#63636b</item>
-  <item name="android:textColorHint">#63636b</item>
+  <item name="android:colorAccent">#245CC6</item>
+  <item name="android:colorControlActivated">#245CC6</item>
+  <item name="android:colorControlNormal">#536176</item>
+  <item name="android:colorButtonNormal">#FFFFFF</item>
+  <item name="android:colorBackground">#F4F6FA</item>
+  <item name="android:windowBackground">#F4F6FA</item>
+  <item name="android:textColorPrimary">#17243B</item>
+  <item name="android:textColorSecondary">#536176</item>
+  <item name="android:textColorHint">#536176</item>
   <item name="android:windowActionModeOverlay">true</item>
  </style>
  <style name="MyTasks.Dark" parent="android:style/Theme.Material.NoActionBar">
   <item name="android:fontFamily">@font/inter_variable</item>
-  <item name="android:colorAccent">#66aaff</item>
-  <item name="android:colorControlActivated">#66aaff</item>
-  <item name="android:colorControlNormal">#aaaab3</item>
-  <item name="android:colorButtonNormal">#1c1c1e</item>
-  <item name="android:colorBackground">#0b0d12</item>
-  <item name="android:windowBackground">#0b0d12</item>
-  <item name="android:textColorPrimary">#f5f5f7</item>
-  <item name="android:textColorSecondary">#aaaab3</item>
-  <item name="android:textColorHint">#aaaab3</item>
+  <item name="android:colorAccent">#A9C7FF</item>
+  <item name="android:colorControlActivated">#A9C7FF</item>
+  <item name="android:colorControlNormal">#ADBCD0</item>
+  <item name="android:colorButtonNormal">#1A2432</item>
+  <item name="android:colorBackground">#111820</item>
+  <item name="android:windowBackground">#111820</item>
+  <item name="android:textColorPrimary">#EDF2F9</item>
+  <item name="android:textColorSecondary">#ADBCD0</item>
+  <item name="android:textColorHint">#ADBCD0</item>
   <item name="android:windowActionModeOverlay">true</item>
  </style>
  <style name="SheetWindowMotion">

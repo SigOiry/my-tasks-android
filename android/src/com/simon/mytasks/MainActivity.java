@@ -28,6 +28,7 @@ public final class MainActivity extends Activity {
  JSONObject snapshot=new JSONObject();JSONArray tasks=new JSONArray();
  JSONObject draft;String selected="",filter="Active",query="";
  boolean online=false,busy=false,wide=false,restoring=false;
+ boolean railNavigation,shellRebuildQueued;int shellMasterWidth=300,shellRailWidth=184,shellInsetLeft,shellInsetTop,shellInsetRight,shellInsetBottom;ShellLayoutPolicy.Plan shellLayout;
  String banner="Connect your server in Settings";
  WorkspaceUi ui;TasksUi tasksUi;FrameLayout rootFrame,navigationSurface;float navigationOrigin=Float.NaN,discussionScopeOrigin=Float.NaN;String projectFilter="",sortOrder="Smart",colorMode="Project",detailsMode="Details";boolean sortReverse=false,editing=false;
  boolean foreground,quietInFlight;final UiReadGate quietGate=new UiReadGate();
@@ -37,9 +38,12 @@ public final class MainActivity extends Activity {
  final Map<String,Button> viewButtons=new LinkedHashMap<>();TextView listCount,notificationState;
  int bg,card,ink,muted,line,accent;int listY,detailY;
  LinearLayout root,listPane,detailPane,listItems,editor;TextView stateLabel;
+ Runnable taskEditorNoticeUpdate;
  final TaskDescriptionText.State descriptionState=new TaskDescriptionText.State();String descriptionSelection="";
  ScrollView listScroll,detailScroll;EditText title,description,notes,due,project;Spinner priority,status;
  String[] priorities={"high","medium","low"},statuses={"inbox","todo","in_progress","waiting","completed","cancelled"};
+ JSONObject taskPresentation=new JSONObject(),taskPresentationInitial=new JSONObject();String taskEditorEpoch="",taskEditorTask="";int taskPresentationGeneration;boolean taskPresentationPending;
+ ScrollView pendingDetailScroll;Store.Account pendingDetailOwner;String pendingDetailTask="";int pendingDetailInitialY,pendingDetailSavedY,pendingDetailGeneration;
  final Handler main=new Handler(Looper.getMainLooper());
  int dp(float n){return Math.round(n*getResources().getDisplayMetrics().density);}
  String text(JSONObject o,String key){return o==null||o.isNull(key)?"":o.optString(key,"");}
@@ -55,10 +59,11 @@ public final class MainActivity extends Activity {
   authObserver=(a,code)->main.post(()->{if(isDestroyed())return;if(code==0){authBusy=false;checkSession();return;}if(!store.current(a))return;if(code==200){authBusy=false;account=a;checkSession();}else if(authState==AuthPolicy.State.FULL)blockSession(code);});Api.authObserver=authObserver;
   if(draft!=null){JSONObject base=task(selected);if(base!=null){JSONObject merged=copy(base);Iterator<String> keys=draft.keys();while(keys.hasNext()){String k=keys.next();try{merged.put(k,draft.get(k));}catch(Exception ignored){}}draft=merged;}}
   tasksUi=new TasksUi(this);if(saved!=null&&account!=null&&account.epoch.equals(saved.getString("epoch","")))tasksUi.restore(saved);
+  loadTaskPresentation(saved);
   if(saved==null&&account!=null&&account.epoch.equals(store.prefs.getString("ui_epoch",""))){filter=store.prefs.getString("ui_filter","Active");projectFilter=store.prefs.getString("ui_project","");sortOrder=PresentationPolicy.savedSort(store.prefs.getString("ui_sort",null));sortReverse=store.prefs.getBoolean("ui_sort_reverse",false);colorMode=store.prefs.getString("ui_color_mode","Project");}
   if(saved==null)acceptIntent(getIntent());render();PollService.schedule(this);checkSession();
  }
- @Override protected void onResume(){super.onResume();foreground=true;if(composerWindow==null)composerWindow=new ComposerWindowObserver(this,bounds->{composerOcclusions.clear();composerOcclusions.addAll(bounds);if(emailUi!=null)emailUi.fitPane();});composerOcclusions.clear();composerWindow.start();if(emailUi!=null){emailUi.fitPane();emailUi.resume();}if(tasksUi!=null)tasksUi.resume();expireSession.run();UpdateManager.get(this).attach(this);updateNotificationState();if(conversations!=null)conversations.resume();main.removeCallbacks(foregroundRefresh);main.postDelayed(foregroundRefresh,30000);}
+ @Override protected void onResume(){super.onResume();foreground=true;if(composerWindow==null)composerWindow=new ComposerWindowObserver(this,bounds->{composerOcclusions.clear();composerOcclusions.addAll(bounds);if(emailUi!=null)emailUi.fitPane();else if(root!=null)root.requestApplyInsets();});composerOcclusions.clear();composerWindow.start();if(root!=null)root.requestApplyInsets();if(emailUi!=null){emailUi.fitPane();emailUi.resume();}if(tasksUi!=null)tasksUi.resume();expireSession.run();UpdateManager.get(this).attach(this);updateNotificationState();if(conversations!=null)conversations.resume();main.removeCallbacks(foregroundRefresh);main.postDelayed(foregroundRefresh,30000);}
  @Override protected void onPause(){if(composerWindow!=null)composerWindow.stop();if(emailUi!=null){emailUi.capture();email.persist();}foreground=false;if(ui!=null){ui.finishPageMotion(root);ui.finishPageMotion(listPane);ui.finishPageMotion(detailPane);}main.removeCallbacks(foregroundRefresh);invalidateQuietRead();captureDraft();if(tasksUi!=null)tasksUi.pause();if(conversations!=null)conversations.pause();UpdateManager.get(this).detach(this);super.onPause();}
  @Override protected void onDestroy(){if(composerWindow!=null)composerWindow.stop();if(emailUi!=null)emailUi.detach();if(email!=null)email.invalidate();main.removeCallbacks(expireSession);main.removeCallbacks(foregroundRefresh);if(Api.authObserver==authObserver)Api.authObserver=null;dismissPrivateDialogs();if(tasksUi!=null)tasksUi.clear();if(conversations!=null)conversations.close();super.onDestroy();}
  void acceptIntent(Intent i){String id=i.getStringExtra("task_id");String epoch=i.getStringExtra("account_epoch");if(id!=null&&account!=null&&account.epoch.equals(epoch)){dismissPrivateDialogs();destination="Tasks";selected=id;pendingSummary=id;summaryReviewed="";draft=null;detailsMode="Details";editing=false;detailY=0;}}
@@ -71,7 +76,7 @@ public final class MainActivity extends Activity {
   if(Build.VERSION.SDK_INT>=30)getWindow().setDecorFitsSystemWindows(false);getWindow().setStatusBarColor(Color.TRANSPARENT);getWindow().setNavigationBarColor(Color.TRANSPARENT);if(Build.VERSION.SDK_INT>=29){getWindow().setNavigationBarContrastEnforced(false);getWindow().setStatusBarContrastEnforced(false);}getWindow().getDecorView().setSystemUiVisibility(dark?0:View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
  }
  @Override public void onConfigurationChanged(Configuration config){super.onConfigurationChanged(config);if(emailUi!=null&&!emailUi.needsStyleRebuild(config)){emailUi.capture();wide=CompactPolicy.expanded(config.screenWidthDp,config.fontScale);emailUi.fitPane();root.requestApplyInsets();return;}captureDraft();UpdateSheet previous=summaryUi;if(previous!=null)previous.dialog.dismiss();applyAppearance();restoring=true;try{render();}finally{restoring=false;}if(previous!=null&&alive(previous.owner)){UpdateSheet replacement=new UpdateSheet(this,previous.shown);replacement.waiting=previous.waiting;replacement.failed=previous.failed;replacement.show();}}
- @Override protected void onSaveInstanceState(Bundle out){if(emailUi!=null){emailUi.capture();email.persist();}captureDraft();if(tasksUi!=null)tasksUi.save(out);conversations.save();out.putString("destination",destination);out.putString("voiceEpoch",voiceEpoch);out.putString("voiceThread",voiceThread);out.putBoolean("showSearch",showSearch);out.putString("projectFilter",projectFilter);out.putString("sortOrder",sortOrder);out.putBoolean("sortReverse",sortReverse);out.putString("colorMode",colorMode);out.putString("detailsMode",detailsMode);out.putBoolean("editing",editing);out.putString("epoch",account==null?"":account.epoch);out.putString("selected",selected);out.putString("filter",filter);out.putString("query",query);if(draft!=null)out.putString("draft",stateDraft().toString());out.putInt("listY",listScroll==null?listY:listScroll.getScrollY());out.putInt("detailY",detailScroll==null?detailY:detailScroll.getScrollY());super.onSaveInstanceState(out);}
+ @Override protected void onSaveInstanceState(Bundle out){saveTaskPresentation(out);if(emailUi!=null){emailUi.capture();email.persist();}captureDraft();if(tasksUi!=null)tasksUi.save(out);conversations.save();out.putString("destination",destination);out.putString("voiceEpoch",voiceEpoch);out.putString("voiceThread",voiceThread);out.putBoolean("showSearch",showSearch);out.putString("projectFilter",projectFilter);out.putString("sortOrder",sortOrder);out.putBoolean("sortReverse",sortReverse);out.putString("colorMode",colorMode);out.putString("detailsMode",detailsMode);out.putBoolean("editing",editing);out.putString("epoch",account==null?"":account.epoch);out.putString("selected",selected);out.putString("filter",filter);out.putString("query",query);if(draft!=null)out.putString("draft",stateDraft().toString());out.putInt("listY",listScroll==null?listY:listScroll.getScrollY());out.putInt("detailY",capturedDetailY());super.onSaveInstanceState(out);}
  JSONObject stateDraft(){JSONObject state=new JSONObject();for(String k:new String[]{"title","description","notes","project","due_date","status","priority","revision","id","deleted"})try{if(draft.has(k))state.put(k,draft.get(k));}catch(Exception ignored){}return state;}
  boolean alive(Store.Account a){return !isFinishing()&&!isDestroyed()&&authState==AuthPolicy.State.FULL&&store.current(a);}
  LinearLayout vertical(){LinearLayout l=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);return l;}
@@ -86,46 +91,64 @@ public final class MainActivity extends Activity {
  void rule(LinearLayout parent){View v=new View(this);v.setBackgroundColor(line);parent.addView(v,new LinearLayout.LayoutParams(-1,dp(1)));}
  void pair(LinearLayout parent,View a,View b){LinearLayout row=horizontal();row.addView(a,new LinearLayout.LayoutParams(0,-2,1));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMarginStart(dp(8));row.addView(b,p);add(parent,row);}
  void render(){
+  captureTaskPresentation();taskPresentationGeneration++;taskPresentationPending=false;taskEditorTask=taskEditorEpoch="";
+  if((authState!=AuthPolicy.State.FULL&&authState!=AuthPolicy.State.CHECKING)||(!editing&&!selected.equals("NEW"))||(!taskPresentation.optString("task").isEmpty()&&!selected.equals(taskPresentation.optString("task"))))taskPresentation=new JSONObject();
   // A selected task may never render its description (empty, conversation, editor).
   if(!descriptionSelection.equals(selected)||selected.isEmpty()||authState!=AuthPolicy.State.FULL)descriptionState.bind("",null);
   descriptionSelection=selected;
   boolean restoreEmailKeyboard=emailUi!=null&&emailUi.keyboardVisible();
   if(emailUi!=null){emailUi.detach();emailUi=null;}
   if(tasksUi!=null)tasksUi.capture();
-  if(conversationUi!=null){conversationUi.capture();if(conversationUi.input!=null&&conversationUi.input.hasFocus()){restoreComposerThread=conversationUi.thread;restoreComposerPosition=conversationUi.input.getSelectionStart();}}
+  if(conversationUi!=null)conversationUi.capture();
   if(conversations!=null){conversations.hide();conversations.listener=null;}conversationUi=null;
   chatUtilityChrome.clear();appBar=bottomTabs=null;
-  wide=CompactPolicy.expanded(getResources().getConfiguration().screenWidthDp,getResources().getConfiguration().fontScale);
+  applyShellPolicy(readShellPolicy(rootFrame));shellRebuildQueued=false;
+  if(email!=null&&email.host.valid()&&email.state.data.optBoolean("active"))wide=CompactPolicy.expanded(getResources().getConfiguration().screenWidthDp,getResources().getConfiguration().fontScale);
   title=description=notes=due=project=null;priority=status=null;
   listScroll=detailScroll=null;listItems=null;listCount=null;viewButtons.clear();
   navigationSurface=null;root=vertical();root.setBackgroundColor(bg);root.setPadding(dp(16),0,dp(16),0);rootFrame=new FrameLayout(this);rootFrame.setBackgroundColor(bg);rootFrame.addView(root,new FrameLayout.LayoutParams(-1,-1));
-  root.setOnApplyWindowInsetsListener((v,insets)->{int top,bottom,left,right;boolean keyboard;if(Build.VERSION.SDK_INT>=30){android.graphics.Insets i=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.ime()|WindowInsets.Type.displayCutout());top=i.top;bottom=i.bottom;left=i.left;right=i.right;keyboard=insets.isVisible(WindowInsets.Type.ime());}else{top=insets.getSystemWindowInsetTop();bottom=insets.getSystemWindowInsetBottom();left=insets.getSystemWindowInsetLeft();right=insets.getSystemWindowInsetRight();keyboard=bottom>dp(120);}if(emailUi!=null)emailUi.keyboardChanged(keyboard);boolean utilities=CompactPolicy.secondaryChrome(keyboard,getResources().getConfiguration().screenHeightDp);int reserve=0; /* Scroll containers own floating-control clearance; IME is inset once. */v.setPadding(dp(wide?12:16)+left,top,dp(wide?12:16)+right,bottom+reserve);if(appBar!=null)appBar.setVisibility(utilities?View.VISIBLE:View.GONE);if(navigationSurface!=null){navigationSurface.setVisibility(utilities?View.VISIBLE:View.GONE);FrameLayout.LayoutParams p=(FrameLayout.LayoutParams)navigationSurface.getLayoutParams();p.bottomMargin=bottom+dp(12);p.leftMargin=dp(16)+left;p.rightMargin=dp(96)+right;navigationSurface.setLayoutParams(p);}if(conversationUi!=null&&conversationUi.input!=null){int available=root.getHeight()>0?Math.round((root.getHeight()-top-bottom)/getResources().getDisplayMetrics().density):getResources().getConfiguration().screenHeightDp;int maxLines=CompactPolicy.composerLines(available);if(conversationUi.input.getMaxLines()!=maxLines)conversationUi.input.setMaxLines(maxLines);}for(View chrome:chatUtilityChrome)chrome.setVisibility(utilities?View.VISIBLE:View.GONE);if(stateLabel!=null)stateLabel.setVisibility(utilities&&!destination.equals("Discussions")&&(!online||busy||banner.contains("preserved")||banner.contains("failed"))?View.VISIBLE:View.GONE);return insets;});
+  root.setOnApplyWindowInsetsListener((v,insets)->{if(v!=root)return insets;int top,bottom,left,right;boolean keyboard;if(Build.VERSION.SDK_INT>=30){android.graphics.Insets i=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.ime()|WindowInsets.Type.displayCutout());top=i.top;bottom=i.bottom;left=i.left;right=i.right;keyboard=insets.isVisible(WindowInsets.Type.ime());}else{top=insets.getSystemWindowInsetTop();bottom=insets.getSystemWindowInsetBottom();left=insets.getSystemWindowInsetLeft();right=insets.getSystemWindowInsetRight();keyboard=bottom>dp(120);}if(emailUi!=null)emailUi.keyboardChanged(keyboard);boolean utilities=CompactPolicy.secondaryChrome(keyboard,getResources().getConfiguration().screenHeightDp);shellInsetLeft=left;shellInsetTop=top;shellInsetRight=right;shellInsetBottom=bottom;if(emailUi!=null)v.setPadding(dp(wide?12:16)+left,top,dp(wide?12:16)+right,bottom);else updateShellGeometry(rootFrame);if(appBar!=null)appBar.setVisibility(utilities?View.VISIBLE:View.GONE);/* In-flow navigation receives the root insets once; it never covers rows. */if(conversationUi!=null&&conversationUi.input!=null){int available=root.getHeight()>0?Math.round((root.getHeight()-top-bottom)/getResources().getDisplayMetrics().density):getResources().getConfiguration().screenHeightDp;int maxLines=CompactPolicy.composerLines(available);if(conversationUi.input.getMaxLines()!=maxLines)conversationUi.input.setMaxLines(maxLines);}for(View chrome:chatUtilityChrome)chrome.setVisibility(utilities?View.VISIBLE:View.GONE);if(stateLabel!=null)stateLabel.setVisibility(utilities&&!destination.equals("Discussions")&&(!online||busy||banner.contains("preserved")||banner.contains("failed"))?View.VISIBLE:View.GONE);return insets;});
+  rootFrame.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(v==rootFrame&&((r-l)!=(or-ol)||(b-t)!=(ob-ot)))updateShellGeometry(v);});
   setContentView(rootFrame);root.requestApplyInsets();
   if(authState!=AuthPolicy.State.FULL){new AuthUi(this).build(root);return;}
   if(email!=null&&email.host.valid()&&email.state.data.optBoolean("active")){emailUi=new EmailReplyUi(this,email);emailUi.build(root);if(restoreEmailKeyboard)emailUi.restoreKeyboard();return;}
   stateLabel=label(banner,13,muted);stateLabel.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);stateLabel.setVisibility(!online||busy||banner.contains("preserved")?View.VISIBLE:View.GONE);add(root,stateLabel);
-  LinearLayout shell=horizontal();shell.setGravity(Gravity.TOP);root.addView(shell,new LinearLayout.LayoutParams(-1,0,1));if(wide)buildRail(shell);LinearLayout workspace=vertical();shell.addView(workspace,new LinearLayout.LayoutParams(0,-1,1));
+  LinearLayout shell=horizontal();shell.setGravity(Gravity.TOP);root.addView(shell,new LinearLayout.LayoutParams(-1,0,1));if(railNavigation)buildRail(shell);LinearLayout workspace=vertical();shell.addView(workspace,new LinearLayout.LayoutParams(0,-1,1));
   if(destination.equals("Discussions")){conversationUi=new ConversationsUi(this,conversations);conversationUi.buildGlobal(workspace);buildPrimaryTabs();return;}
-  LinearLayout body=horizontal();body.setGravity(Gravity.TOP);workspace.addView(body,new LinearLayout.LayoutParams(-1,0,1));listPane=vertical();detailPane=vertical();
-  if(wide){body.addView(listPane,new LinearLayout.LayoutParams(dp(CompactPolicy.masterWidth(getResources().getConfiguration().screenWidthDp)),-1));View divider=new View(this);divider.setBackgroundColor(line);LinearLayout.LayoutParams dl=new LinearLayout.LayoutParams(dp(1),-1);dl.setMargins(dp(12),0,dp(16),0);body.addView(divider,dl);body.addView(detailPane,new LinearLayout.LayoutParams(0,-1,1));}
+  LinearLayout body=horizontal();body.setGravity(Gravity.TOP);workspace.addView(body,new LinearLayout.LayoutParams(-1,0,1));listPane=vertical();detailPane=taskDetailPane();
+  if(wide){body.addView(listPane,new LinearLayout.LayoutParams(dp(shellMasterWidth),-1));View divider=new View(this);divider.setBackgroundColor(line);LinearLayout.LayoutParams dl=new LinearLayout.LayoutParams(dp(1),-1);dl.setMargins(dp(12),0,dp(16),0);body.addView(divider,dl);body.addView(detailPane,new LinearLayout.LayoutParams(0,-1,1));}
   else body.addView(selected.isEmpty()?listPane:detailPane,new LinearLayout.LayoutParams(-1,-1));
   if(wide||selected.isEmpty())buildList();if(wide||!selected.isEmpty())buildDetails();
   buildPrimaryTabs();maybeSummary();
  }
- int navigationClearance(){return navigationSurface!=null&&navigationSurface.getHeight()>0?navigationSurface.getHeight()+dp(24):dp(104);}
+ void applyShellPolicy(ShellLayoutPolicy.Plan plan){shellLayout=plan;railNavigation=plan.rail;wide=plan.dual;shellMasterWidth=plan.masterWidth;shellRailWidth=plan.railWidth;}
+ ShellLayoutPolicy.Plan readShellPolicy(View host){
+  int width=host==null?0:host.getWidth(),height=host==null?0:host.getHeight();int[] origin=new int[2];if(host!=null)host.getLocationInWindow(origin);
+  if(width<=0||height<=0){if(Build.VERSION.SDK_INT>=30){android.graphics.Rect bounds=getWindowManager().getCurrentWindowMetrics().getBounds();width=bounds.width();height=bounds.height();}else{View decor=getWindow().getDecorView();width=decor.getWidth();height=decor.getHeight();}if(width<=0||height<=0){width=getResources().getDisplayMetrics().widthPixels;height=getResources().getDisplayMetrics().heightPixels;}}
+  ArrayList<int[]> features=new ArrayList<>();for(android.graphics.Rect rect:composerOcclusions)features.add(new int[]{rect.left-origin[0],rect.top-origin[1],rect.right-origin[0],rect.bottom-origin[1]});
+  return ShellLayoutPolicy.measure(width,height,getResources().getDisplayMetrics().density,getResources().getConfiguration().fontScale,shellInsetLeft,shellInsetTop,shellInsetRight,shellInsetBottom,features);
+ }
+ void updateShellGeometry(View host){
+  // Email deliberately keeps the attached input and its own reported-hinge policy.
+  if(host!=rootFrame||emailUi!=null||host.getWidth()<=0||host.getHeight()<=0)return;
+  ShellLayoutPolicy.Plan next=readShellPolicy(host);boolean rebuild=!next.sameStructure(shellLayout);applyShellPolicy(next);
+  root.setPadding(next.left+dp(16),next.top,Math.max(0,host.getWidth()-next.right)+dp(16),Math.max(0,host.getHeight()-next.bottom));
+  if(rebuild&&authState==AuthPolicy.State.FULL&&!shellRebuildQueued){shellRebuildQueued=true;final FrameLayout target=rootFrame;final Store.Account owner=account;main.post(()->{if(rootFrame!=target)return;shellRebuildQueued=false;if(!alive(owner)||emailUi!=null)return;captureDraft();restoring=true;try{render();}finally{restoring=false;}});}
+ }
+ int navigationClearance(){return 0;}
  void buildPrimaryTabs(){
-  if(!wide&&CompactPolicy.globalNavigation(false,destination,selected,conversations.state.selected())){
-  bottomTabs=horizontal();bottomTabs.setPadding(dp(4),dp(4),dp(4),dp(4));navigationSurface=ui.glassSurface();navigationSurface.setElevation(dp(4));View capsule=new View(this);capsule.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);capsule.setBackground(ui.shape((ui.soft&0x00ffffff)|0x99000000,0,24));navigationSurface.addView(capsule,new FrameLayout.LayoutParams(0,0));navigationSurface.addView(bottomTabs,new FrameLayout.LayoutParams(-1,-2));
-  String[] destinations={"Tasks","Discussions"};int[] icons={R.drawable.ic_tasks,R.drawable.ic_chat};for(int i=0;i<destinations.length;i++){final String tab=destinations[i];Button b=button(tab,()->{navigationOrigin=bottomTabs.getWidth()>0?capsule.getTranslationX()/bottomTabs.getWidth():Float.NaN;captureDraft();destination=tab;render();ui.enter(root,NativeMotionPolicy.duration("tab"));});ui.selected(b,destination.equals(tab));ui.tone(b,Color.TRANSPARENT,0,destination.equals(tab)?ui.primary:ui.secondary);android.graphics.drawable.Drawable icon=getDrawable(icons[i]).mutate();icon.setTint(b.getCurrentTextColor());icon.setBounds(0,0,dp(20),dp(20));b.setCompoundDrawables(null,icon,null,null);b.setCompoundDrawablePadding(dp(2));b.setMinHeight(dp(56));bottomTabs.addView(b,new LinearLayout.LayoutParams(0,-2,1));}
-  final float origin=navigationOrigin;navigationOrigin=Float.NaN;final int slot=destination.equals("Tasks")?0:1;final LinearLayout track=bottomTabs;final boolean[] placed={false};track.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(!placed[0]||r-l!=or-ol||b-t!=ob-ot){ui.placeScopeCapsule(capsule,bottomTabs,slot,placed[0]?Float.NaN:origin);placed[0]=true;}});
-  FrameLayout.LayoutParams p=new FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM);p.setMargins(dp(16),0,dp(96),dp(12));rootFrame.addView(navigationSurface,p);navigationSurface.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(b-t!=ob-ot){if(tasksUi!=null)tasksUi.navigationClearance(navigationClearance());root.requestApplyInsets();}});
+  if(!railNavigation&&CompactPolicy.globalNavigation(false,destination,selected,conversations.state.selected())){
+   bottomTabs=horizontal();bottomTabs.setPadding(dp(4),dp(4),dp(4),dp(4));navigationSurface=new FrameLayout(this);navigationSurface.setBackgroundColor(ui.nav);
+   String[] destinations={"Tasks","Discussions"};int[] icons={R.drawable.ic_tasks,R.drawable.ic_chat};
+   for(int i=0;i<destinations.length;i++){final String tab=destinations[i];Button b=button(tab,()->{captureDraft();destination=tab;render();ui.enter(root,NativeMotionPolicy.duration("tab"));});ui.navigation(b,destination.equals(tab));ui.leadingIcon(b,icons[i]);bottomTabs.addView(b,new LinearLayout.LayoutParams(0,-2,1));}
+   navigationSurface.addView(bottomTabs,new FrameLayout.LayoutParams(-1,-2));root.addView(navigationSurface,new LinearLayout.LayoutParams(-1,-2));
   }
-  if(conversationUi!=null&&conversationUi.input!=null&&conversationUi.thread.equals(restoreComposerThread)){EditText composer=conversationUi.input;int position=Math.max(0,Math.min(restoreComposerPosition,composer.length()));composer.post(()->{if(conversationUi!=null&&conversationUi.input==composer&&authState==AuthPolicy.State.FULL){composer.requestFocus();composer.setSelection(position);}});}restoreComposerThread="";root.requestApplyInsets();
+  root.requestApplyInsets();
  }
  void buildRail(LinearLayout shell){
-  FrameLayout material=ui.glassSurface();LinearLayout rail=vertical();rail.setGravity(Gravity.CENTER_HORIZONTAL);rail.setPadding(dp(3),dp(20),dp(3),dp(8));material.addView(rail,new FrameLayout.LayoutParams(-1,-1));LinearLayout.LayoutParams rp=new LinearLayout.LayoutParams(dp(72),-1);rp.setMargins(0,dp(8),dp(16),dp(12));shell.addView(material,rp);
-  String[] names={"Tasks","Discussions"};int[] icons={R.drawable.ic_tasks,R.drawable.ic_chat};for(int i=0;i<names.length;i++){final String name=names[i];Button b=button(name,()->{captureDraft();destination=name;render();ui.enter(root,NativeMotionPolicy.duration("tab"));});ui.selected(b,name.equals(destination));b.setTextSize(10);b.setPadding(0,dp(8),0,dp(8));b.setMinHeight(dp(72));android.graphics.drawable.Drawable icon=getDrawable(icons[i]).mutate();icon.setTint(name.equals(destination)?accent:ink);icon.setBounds(0,0,dp(24),dp(24));b.setCompoundDrawables(null,icon,null,null);b.setCompoundDrawablePadding(dp(6));rail.addView(b,new LinearLayout.LayoutParams(-1,-2));space(rail,8);}
-  View spring=new View(this);rail.addView(spring,new LinearLayout.LayoutParams(1,0,1));ImageButton settings=ui.icon(R.drawable.ic_settings,"Settings",this::settings);rail.addView(settings,new LinearLayout.LayoutParams(dp(48),dp(48)));
+  ScrollView material=new ScrollView(this);material.setFillViewport(true);material.setBackgroundColor(ui.nav);LinearLayout rail=vertical();rail.setPadding(dp(8),dp(8),dp(8),dp(8));material.addView(rail,new FrameLayout.LayoutParams(-1,-2));LinearLayout.LayoutParams rp=new LinearLayout.LayoutParams(dp(shellRailWidth),-1);rp.setMargins(0,0,dp(16),0);shell.addView(material,rp);
+  String[] names={"Tasks","Discussions"};int[] icons={R.drawable.ic_tasks,R.drawable.ic_chat};for(int i=0;i<names.length;i++){final String name=names[i];Button b=button(name,()->{captureDraft();destination=name;render();});ui.navigation(b,name.equals(destination));ui.leadingIcon(b,icons[i]);rail.addView(b,new LinearLayout.LayoutParams(-1,-2));space(rail,8);}
+  Button settings=button("Settings",this::settings);ui.navigation(settings,false);ui.leadingIcon(settings,R.drawable.ic_settings);rail.addView(settings,new LinearLayout.LayoutParams(-1,-2));
  }
  void buildList(){if(tasksUi==null)tasksUi=new TasksUi(this);tasksUi.build(listPane);}
  void saveWorkspacePreferences(){if(store==null||account==null||authState!=AuthPolicy.State.FULL)return;synchronized(Store.class){if(store.current(account))store.prefs.edit().putString("ui_epoch",account.epoch).putString("ui_filter",filter).putString("ui_project",projectFilter).putString("ui_sort",sortOrder).putBoolean("ui_sort_reverse",sortReverse).putString("ui_color_mode",colorMode).apply();}}
@@ -134,11 +157,11 @@ public final class MainActivity extends Activity {
   if(!foreground||busy||quietInFlight||authState!=AuthPolicy.State.FULL||account==null)return;final Store.Account owner=account;final long ticket;synchronized(Store.class){ticket=quietGate.begin(owner.epoch);}quietInFlight=true;
   Api.IO.execute(()->{try{JSONObject fresh=new Api(owner).call("GET","/api/tasks",null);synchronized(Store.class){if(!quietGate.current(ticket,owner.epoch)||!store.current(owner))return;store.cache(owner,fresh);}main.post(()->{
    if(!quietGate.current(ticket,owner.epoch)||!alive(owner)||!foreground)return;quietInFlight=false;if(busy)return;JSONArray incoming=fresh.optJSONArray("tasks");if(incoming==null)return;boolean changed=!tasks.toString().equals(incoming.toString()),wasOffline=!online;if(!changed&&!wasOffline){if(summaryUi!=null)summaryUi.updateState();return;}captureDraft();snapshot=fresh;tasks=incoming;online=true;banner="Connected";
-   if(editing&&draft!=null){JSONObject current=task(selected);if(current!=null){try{draft.put("notification",current.optJSONObject("notification"));}catch(Exception ignored){}if(!text(draft,"revision").equals(text(current,"revision")))banner="Task changed on server · your draft is preserved";}if(tasksUi!=null)tasksUi.refresh();if(stateLabel!=null){stateLabel.setText(banner);stateLabel.setVisibility(banner.contains("preserved")?View.VISIBLE:View.GONE);}}
+   if(editing&&draft!=null){JSONObject current=task(selected);if(current!=null){try{draft.put("notification",current.optJSONObject("notification"));}catch(Exception ignored){}if(!text(draft,"revision").equals(text(current,"revision")))banner="Task changed on server · your draft is preserved";}if(tasksUi!=null)tasksUi.refresh();if(stateLabel!=null){stateLabel.setText(banner);stateLabel.setVisibility(banner.contains("preserved")?View.VISIBLE:View.GONE);}updateTaskEditorNotice();}
    else if(conversationUi!=null){if(draft!=null){JSONObject current=task(selected);if(current!=null)try{draft.put("notification",current.optJSONObject("notification"));}catch(Exception ignored){}}buildListRows();}
    else if(selected.isEmpty()){buildListRows();if(stateLabel!=null)stateLabel.setVisibility(View.GONE);}else{draft=null;if(detailPane!=null){detailPane.removeAllViews();buildDetails();}buildListRows();}
    if(summaryUi!=null)summaryUi.updateState();
-  });}catch(Exception error){main.post(()->{if(!quietGate.current(ticket,owner.epoch)||!alive(owner)||!foreground)return;quietInFlight=false;online=false;banner="Offline · saved content remains readable; refresh before editing";if(stateLabel!=null){stateLabel.setText(banner);stateLabel.setVisibility(View.VISIBLE);}buildListRows();if(summaryUi!=null)summaryUi.updateState();});}});
+  });}catch(Exception error){main.post(()->{if(!quietGate.current(ticket,owner.epoch)||!alive(owner)||!foreground)return;quietInFlight=false;online=false;banner="Offline · saved content remains readable; refresh before editing";if(stateLabel!=null){stateLabel.setText(banner);stateLabel.setVisibility(View.VISIBLE);}updateTaskEditorNotice();buildListRows();if(summaryUi!=null)summaryUi.updateState();});}});
  }
  void showTaskActions(JSONObject clicked){
   if(clicked==null||busy||authState!=AuthPolicy.State.FULL)return;final JSONObject captured=copy(clicked);final String id=text(captured,"id");if(captured.optBoolean("deleted")){NativeSheets.menu(this,text(captured,"title"),new String[]{"Restore task","Open details"},index->{if(index==0)quickMutation("POST","/api/tasks/"+Api.segment(id)+"/restore",captured,revisionOf(captured));else navigate(id);});return;}
@@ -196,9 +219,64 @@ public final class MainActivity extends Activity {
   if(dirty())confirm("Review as new task?","Unsaved task fields will be discarded only if you continue. The assistant text becomes an editable description, not a saved task. Review all fields and enter a title before choosing Create task. Conversation drafts remain saved.",review);else review.run();
  }
  boolean dirty(){if(draft==null)return false;JSONObject old=selected.equals("NEW")?empty():task(selected);if(old==null)return true;for(String f:new String[]{"title","description","notes","project","due_date","priority","status"})if(!text(draft,f).equals(text(old,f)))return true;return false;}
- void captureDraft(){if(tasksUi!=null)tasksUi.capture();saveWorkspacePreferences();if(draft!=null&&title!=null){try{draft.put("title",title.getText().toString()).put("description",description.getText().toString()).put("notes",notes.getText().toString()).put("project",project.getText().toString()).put("due_date",due.getText().toString()).put("priority",priorities[priority.getSelectedItemPosition()]).put("status",statuses[status.getSelectedItemPosition()]);}catch(Exception ignored){}}if(conversationUi!=null)conversationUi.capture();if(conversations!=null)conversations.save();if(listScroll!=null)listY=listScroll.getScrollY();if(detailScroll!=null)detailY=detailScroll.getScrollY();}
+ void captureDraft(){captureTaskPresentation();if(tasksUi!=null)tasksUi.capture();saveWorkspacePreferences();if(draft!=null&&title!=null){try{draft.put("title",title.getText().toString()).put("description",description.getText().toString()).put("notes",notes.getText().toString()).put("project",project.getText().toString()).put("due_date",due.getText().toString()).put("priority",priorities[priority.getSelectedItemPosition()]).put("status",statuses[status.getSelectedItemPosition()]);}catch(Exception ignored){}}if(conversationUi!=null)conversationUi.capture();if(conversations!=null)conversations.save();if(listScroll!=null)listY=listScroll.getScrollY();if(detailScroll!=null)detailY=capturedDetailY();}
+ /** An undrained outer restore is presentation, even when no editable field exists. */
+ int capturedDetailY(){
+  if(detailScroll==null)return detailY;
+  int current=detailScroll.getScrollY();
+  if(pendingDetailScroll==detailScroll&&pendingDetailGeneration==taskPresentationGeneration&&selected.equals(pendingDetailTask)&&destination.equals("Tasks")&&alive(pendingDetailOwner)&&current==pendingDetailInitialY)return pendingDetailSavedY;
+  if(taskPresentationPending&&account!=null&&taskEditorEpoch.equals(account.epoch)&&selected.equals(taskEditorTask)&&destination.equals("Tasks")&&alive(account)&&current==taskPresentationInitial.optInt("outer_y"))return taskPresentation.optInt("outer_y");
+  return current;
+ }
+ void restoreDetailScroll(){
+  final ScrollView scroll=detailScroll;final int savedY=detailY,initialY=scroll.getScrollY(),ticket=taskPresentationGeneration;final String targetTask=selected;final Store.Account owner=account;
+  pendingDetailScroll=scroll;pendingDetailOwner=owner;pendingDetailTask=targetTask;pendingDetailInitialY=initialY;pendingDetailSavedY=savedY;pendingDetailGeneration=ticket;
+  scroll.post(()->{if(pendingDetailScroll!=scroll||detailScroll!=scroll||ticket!=taskPresentationGeneration||!selected.equals(targetTask)||!destination.equals("Tasks")||!alive(owner))return;pendingDetailScroll=null;if(scroll.getScrollY()==initialY)scroll.scrollTo(0,savedY);});
+ }
+ /** Presentation only: never capture/replay task text from a render callback. */
+ static JSONObject editorPresentation(EditText field){
+  JSONObject state=new JSONObject();ConversationState.put(state,"start",field.getSelectionStart());ConversationState.put(state,"end",field.getSelectionEnd());ConversationState.put(state,"x",field.getScrollX());ConversationState.put(state,"y",field.getScrollY());ConversationState.put(state,"focus",field.hasFocus());return state;
+ }
+ static boolean untouchedEditor(EditText field,JSONObject initial){
+  return field!=null&&initial!=null&&field.getText().toString().equals(initial.optString("text"))&&field.getSelectionStart()==initial.optInt("start")&&field.getSelectionEnd()==initial.optInt("end")&&field.getScrollX()==initial.optInt("x")&&field.getScrollY()==initial.optInt("y")&&field.hasFocus()==initial.optBoolean("focus");
+ }
+ void captureTaskPresentation(){
+  if(title==null||account==null||!taskEditorEpoch.equals(account.epoch)||!taskEditorTask.equals(selected)||!destination.equals("Tasks")||authState!=AuthPolicy.State.FULL||!store.current(account))return;
+  JSONObject saved=new JSONObject();try{
+   saved.put("epoch",taskEditorEpoch).put("task",taskEditorTask).put("outer_y",capturedDetailY());
+   EditText[] fields={title,description,notes,project,due};String[] names={"title","description","notes","project","due"};
+   boolean focusChanged=false;for(int i=0;i<fields.length;i++){JSONObject initial=taskPresentationInitial.optJSONObject(names[i]);if(taskPresentationPending&&fields[i]!=null&&initial!=null&&fields[i].hasFocus()!=initial.optBoolean("focus"))focusChanged=true;}
+   for(int i=0;i<fields.length;i++){EditText field=fields[i];if(field==null)continue;JSONObject state=editorPresentation(field),previous=taskPresentation.optJSONObject(names[i]);
+    // Disabled fields are not new input; their independently usable outer viewport is.
+    if(!field.isEnabled()){if(previous!=null)saved.put(names[i],previous);continue;}
+    // Keep retained state for untouched initialization, but capture newer local interaction.
+    if(taskPresentationPending&&previous!=null&&untouchedEditor(field,taskPresentationInitial.optJSONObject(names[i])))state=new JSONObject(previous.toString());
+    if(focusChanged)state.put("focus",field.hasFocus());saved.put(names[i],state);
+   }
+   taskPresentation=saved;
+  }catch(JSONException ignored){}
+ }
+ void restoreTaskPresentation(){
+  taskEditorEpoch=account==null?"":account.epoch;taskEditorTask=selected;final int ticket=++taskPresentationGeneration;taskPresentationPending=false;taskPresentationInitial=new JSONObject();
+  if(!taskEditorEpoch.equals(taskPresentation.optString("epoch"))||!selected.equals(taskPresentation.optString("task"))){taskPresentation=new JSONObject();return;}
+  final JSONObject saved=taskPresentation,initial=taskPresentationInitial;final Store.Account owner=account;final String targetTask=selected;final EditText target=title;final ScrollView outer=detailScroll;final EditText[] fields={title,description,notes,project,due};final String[] names={"title","description","notes","project","due"};taskPresentationPending=true;
+  ConversationState.put(initial,"outer_y",outer==null?detailY:outer.getScrollY());for(int i=0;i<fields.length;i++){if(fields[i]==null)continue;JSONObject state=editorPresentation(fields[i]);ConversationState.put(state,"text",fields[i].getText().toString());ConversationState.put(initial,names[i],state);}
+  target.post(()->{
+   if(ticket!=taskPresentationGeneration||title!=target||detailScroll!=outer||!selected.equals(targetTask)||!destination.equals("Tasks")||!alive(owner))return;
+   taskPresentationPending=false;
+   boolean focusChanged=false;boolean[] untouched=new boolean[fields.length];for(int i=0;i<fields.length;i++){JSONObject state=initial.optJSONObject(names[i]);untouched[i]=untouchedEditor(fields[i],state);if(fields[i]!=null&&state!=null&&fields[i].hasFocus()!=state.optBoolean("focus"))focusChanged=true;}
+   boolean outerUntouched=outer!=null&&outer.getScrollY()==initial.optInt("outer_y");
+   for(int i=0;i<fields.length;i++){EditText field=fields[i];JSONObject state=saved.optJSONObject(names[i]);if(!untouched[i]||state==null)continue;if(!focusChanged&&outerUntouched&&state.optBoolean("focus")&&field.isEnabled())field.requestFocus();int start=Math.max(0,Math.min(field.length(),state.optInt("start"))),end=Math.max(0,Math.min(field.length(),state.optInt("end")));field.setSelection(start,end);field.scrollTo(Math.max(0,state.optInt("x")),Math.max(0,state.optInt("y")));}
+   if(outerUntouched&&!focusChanged)outer.scrollTo(0,Math.max(0,saved.optInt("outer_y")));
+  });
+ }
+ void saveTaskPresentation(Bundle out){captureTaskPresentation();out.putString("task_presentation",taskPresentation.toString());}
+ void loadTaskPresentation(Bundle saved){
+  if(saved==null||account==null||!account.epoch.equals(saved.getString("epoch","")))return;
+  try{JSONObject value=new JSONObject(saved.getString("task_presentation","{}"));if(account.epoch.equals(value.optString("epoch"))&&selected.equals(value.optString("task")))taskPresentation=value;}catch(JSONException ignored){}
+ }
  EditText field(LinearLayout parent,String name,String value,boolean multi){
-  TextView caption=label(name,13,muted);add(parent,caption);space(parent,4);EditText e=new EditText(this);e.setId(View.generateViewId());caption.setLabelFor(e.getId());e.setText(value);ui.input(e);e.setBackground(ui.shape(card,0,16));e.setSingleLine(!multi);e.setMinLines(multi?2:1);e.setMaxLines(multi?6:1);e.setGravity(Gravity.TOP|Gravity.START);e.setContentDescription(name);e.setSelectAllOnFocus(false);e.setEnabled(online&&!busy);e.setSaveEnabled(false);e.setImeOptions(multi?android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI:android.view.inputmethod.EditorInfo.IME_ACTION_NEXT|android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI);add(parent,e);space(parent,12);return e;
+  TextView caption=label(name,13,muted);add(parent,caption);space(parent,4);EditText e=new EditText(this);e.setId(View.generateViewId());caption.setLabelFor(e.getId());e.setText(value);ui.input(e);e.setBackground(ui.shape(card,0,12));e.setSingleLine(!multi);e.setMinLines(multi?2:1);e.setMaxLines(multi?6:1);e.setGravity(Gravity.TOP|Gravity.START);e.setContentDescription(name);e.setSelectAllOnFocus(false);e.setEnabled(online&&!busy);e.setSaveEnabled(false);e.setImeOptions(multi?android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI:android.view.inputmethod.EditorInfo.IME_ACTION_NEXT|android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI);add(parent,e);space(parent,12);return e;
  }
  EditText valueField(LinearLayout parent,String name,String value){
   if(getResources().getConfiguration().fontScale>=1.5f)return field(parent,name,value,false);
@@ -225,22 +303,98 @@ public final class MainActivity extends Activity {
   if(draft==null){add(detailPane,label("This task is not in your cache. Reload latest task to load it.",16,muted));return;}
   detailScroll=new ScrollView(this){@Override protected void onSizeChanged(int w,int h,int oldw,int oldh){super.onSizeChanged(w,h,oldw,oldh);if(editing&&oldh>0&&h<oldh)post(()->{View focus=findFocus();if(!(focus instanceof EditText)||focus.getHeight()==0)return;EditText input=(EditText)focus;int budget=Math.max(dp(48),getHeight()-dp(8));android.graphics.Rect rect=new android.graphics.Rect(0,0,input.getWidth(),input.getHeight());if(rect.height()>budget&&input.getLayout()!=null){int offset=Math.max(0,Math.min(input.length(),input.getSelectionEnd()));rect.top=Math.max(0,input.getLayout().getLineTop(input.getLayout().getLineForOffset(offset))-dp(8));rect.bottom=Math.min(input.getHeight(),rect.top+budget);}input.requestRectangleOnScreen(rect,true);});}};detailScroll.setFillViewport(false);editor=vertical();editor.setPadding(dp(4),0,dp(4),dp(16));detailScroll.addView(editor);detailPane.addView(detailScroll,new LinearLayout.LayoutParams(-1,0,1));
   JSONObject n=draft.optJSONObject("notification");if(!editing&&n!=null&&n.optBoolean("unread")){
-    LinearLayout update=horizontal();update.setPadding(dp(12),0,dp(4),0);update.setBackground(ui.shape(ui.soft,0,16));TextView updateLabel=heading("New update",14);updateLabel.setTextColor(accent);update.addView(updateLabel,new LinearLayout.LayoutParams(0,-2,1));Button review=button("Review",()->{pendingSummary=selected;maybeSummary();});ui.quiet(review);update.addView(review);add(editor,update);space(editor,12);
+    LinearLayout update=horizontal();update.setPadding(dp(12),0,dp(4),0);update.setBackground(ui.shape(ui.soft,0,12));TextView updateLabel=heading("New update",14);updateLabel.setTextColor(accent);update.addView(updateLabel,new LinearLayout.LayoutParams(0,-2,1));Button review=button("Review",()->{pendingSummary=selected;maybeSummary();});ui.quiet(review);update.addView(review);add(editor,update);space(editor,12);
   }
   if(draft.optBoolean("deleted")){add(editor,heading("In trash",14));add(editor,heading(text(draft,"title"),24));readingDescription(text(draft,"description"),draft.opt("description_summary") instanceof String?text(draft,"description_summary"):"");space(editor,16);Button restore=primary("Restore task",()->mutation("POST","/api/tasks/"+Api.segment(selected)+"/restore",revision(),false));restore.setEnabled(online&&!busy);add(editor,restore);return;}
-  if(editing||selected.equals("NEW"))buildTaskEditor();else buildTaskReading();
-  final ScrollView scroll=detailScroll;final int savedY=detailY;scroll.post(()->scroll.scrollTo(0,savedY));
+  if(editing||selected.equals("NEW")){buildTaskEditor();bindTaskEditorLayout(top,detailPane.getChildAt(1),detailPane.getChildAt(detailPane.getChildCount()-1));}else buildTaskReading();
+  if(!taskPresentationPending)restoreDetailScroll();
+ }
+ // Keep fixed task chrome only when it leaves a usable editor viewport. Moving
+ // chrome, never the inputs or their containing editor, keeps the active inputs attached.
+ TaskDetailPane taskDetailPane(){return new TaskDetailPane();}
+ class TaskDetailPane extends LinearLayout {
+  java.util.function.BiPredicate<Integer,Integer> adapt;
+  TaskDetailPane(){super(MainActivity.this);setOrientation(LinearLayout.VERTICAL);}
+  @Override protected void onMeasure(int widthSpec,int heightSpec){
+   super.onMeasure(widthSpec,heightSpec);
+   // Resolve THIS traversal before assigning any descendant frame. The previous
+   // laid-out bounds can still describe the pre-IME window (or no layout at all).
+   // Reparenting/line-cap changes require one bounded superclass remeasurement.
+   if(adapt!=null&&adapt.test(getMeasuredWidth(),getMeasuredHeight()))super.onMeasure(widthSpec,heightSpec);
+  }
+ }
+ void bindTaskEditorLayout(View header,View gap,View actions){
+  final LinearLayout pane=detailPane,content=editor,boundRoot=root;final ScrollView scroll=detailScroll;final EditText input=title,body=description,memo=notes;
+  final Store.Account owner=account;final String epoch=owner==null?"":owner.epoch,taskId=selected;final long generation=surfaces.generation();
+  final LinearLayout.LayoutParams headerParams=(LinearLayout.LayoutParams)header.getLayoutParams(),gapParams=(LinearLayout.LayoutParams)gap.getLayoutParams(),actionParams=(LinearLayout.LayoutParams)actions.getLayoutParams();
+  // Editable spans can change native line metrics without changing characters.
+  // Memoize measured capacity inputs, not span identity or configured View style.
+  final int[] measuredSize={-1,-1};final String[] measuredText={null,null},measuredMetrics={null,null};
+  java.util.function.BiPredicate<Integer,Integer> adapt=(resolvedWidth,resolvedHeight)->{
+   if(account!=owner||(owner!=null&&(!epoch.equals(owner.epoch)||!alive(owner)))||authState!=AuthPolicy.State.FULL||!surfaces.current(generation)||root!=boundRoot||detailPane!=pane||editor!=content||detailScroll!=scroll||title!=input||description!=body||notes!=memo||!taskId.equals(selected)||(!editing&&!selected.equals("NEW"))||!destination.equals("Tasks"))return false;
+   if(boundRoot==null||!boundRoot.isAttachedToWindow()||content.getParent()!=scroll||scroll.getParent()!=pane||input.getParent()!=content||body.getParent()!=content||memo.getParent()!=content)return false;
+   View attached=pane;while(attached!=null&&attached!=boundRoot)attached=attached.getParent() instanceof View?(View)attached.getParent():null;if(attached==null)return false;
+   if((header.getParent()!=pane&&header.getParent()!=content)||gap.getParent()!=header.getParent()||actions.getParent()!=header.getParent())return false;
+   int width=resolvedWidth-pane.getPaddingLeft()-pane.getPaddingRight(),height=resolvedHeight-pane.getPaddingTop()-pane.getPaddingBottom();if(width<=0||height<=0)return false;
+   int fixed=taskEditorChromeHeight(header,width)+taskEditorChromeHeight(gap,width)+taskEditorChromeHeight(actions,width);
+   boolean flowing=height-fixed<Math.max(dp(160),taskEditorChromeHeight(input,width)+dp(16));
+   boolean changed=flowing!=(header.getParent()==content);
+   if(flowing&&header.getParent()==pane){pane.removeView(header);pane.removeView(gap);pane.removeView(actions);content.addView(header,0,headerParams);content.addView(gap,1,gapParams);content.addView(actions,actionParams);}
+   else if(!flowing&&header.getParent()==content){content.removeView(header);content.removeView(gap);content.removeView(actions);pane.addView(header,0,headerParams);pane.addView(gap,1,gapParams);pane.addView(actions,actionParams);}
+   int budget=Math.max(1,height-(flowing?0:fixed)-dp(16)),fieldWidth=Math.max(1,width-content.getPaddingLeft()-content.getPaddingRight());
+   String bodyText=body.getText().toString(),memoText=memo.getText().toString();
+   String bodyMetrics=taskEditorMetricState(body,fieldWidth),memoMetrics=taskEditorMetricState(memo,fieldWidth);
+   if(measuredSize[0]!=fieldWidth||measuredSize[1]!=budget||!bodyText.equals(measuredText[0])||!memoText.equals(measuredText[1])||!bodyMetrics.equals(measuredMetrics[0])||!memoMetrics.equals(measuredMetrics[1])){
+    changed=true;
+    sizeTaskEditorMultiline(body,fieldWidth,budget);sizeTaskEditorMultiline(memo,fieldWidth,budget);
+    measuredSize[0]=fieldWidth;measuredSize[1]=budget;measuredText[0]=bodyText;measuredText[1]=memoText;
+    measuredMetrics[0]=taskEditorMetricState(body,fieldWidth);measuredMetrics[1]=taskEditorMetricState(memo,fieldWidth);
+   }
+   return changed;
+  };
+  ((TaskDetailPane)pane).adapt=adapt;
+  // Retain the owned post-layout metric observation; prevention runs in measure.
+  pane.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->adapt.test(r-l,b-t));
+ }
+ String taskEditorMetricState(EditText field,int width){
+  // Local measurement does not request a parent pass or change native line limits.
+  // Include the first six line boundaries even when the current cap hides them:
+  // a span removal below that cap may make a larger preferred capacity fit again.
+  field.forceLayout();
+  field.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+  StringBuilder state=new StringBuilder().append(field.getMeasuredHeight()).append(':').append(field.getLineHeight());
+  Layout layout=field.getLayout();if(layout!=null)for(int line=0;line<=Math.min(6,layout.getLineCount());line++)state.append(':').append(layout.getLineTop(line));
+  return state.toString();
+ }
+ int taskEditorChromeHeight(View view,int width){
+  LinearLayout.LayoutParams p=(LinearLayout.LayoutParams)view.getLayoutParams();
+  view.measure(View.MeasureSpec.makeMeasureSpec(Math.max(1,width-p.leftMargin-p.rightMargin),View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+  return (p.height>=0?p.height:view.getMeasuredHeight())+p.topMargin+p.bottomMargin;
+ }
+ void sizeTaskEditorMultiline(EditText field,int width,int budget){
+  // Measure the preferred visible line capacity with native font metrics/padding;
+  // nominal line-height arithmetic can miss fallback glyphs or line spacing.
+  // Text, selection, input type, font and the native movement method stay untouched.
+  for(int lines=6;lines>=1;lines--){
+   field.setMinLines(lines);field.setMaxLines(lines);
+   // A second layout pass can defer requestLayout before it marks this field
+   // dirty. Invalidate its measurement cache explicitly for each trial capacity;
+   // this is local measurement, not a parent request or a rebuilt editor.
+   field.forceLayout();
+   field.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED));
+   if(field.getMeasuredHeight()<=budget||lines==1){field.setMinLines(Math.min(2,lines));return;}
+  }
  }
  void buildTaskReading(){
   TextView taskTitle=heading(text(draft,"title"),25);if(Build.VERSION.SDK_INT>=28)taskTitle.setTypeface(android.graphics.Typeface.create(ui.font,600,false));taskTitle.setTextIsSelectable(true);add(editor,taskTitle);space(editor,12);
-  if(!text(draft,"description").isEmpty())readingDescription(text(draft,"description"),draft.opt("description_summary") instanceof String?text(draft,"description_summary"):"");
-  LinearLayout facts=vertical();facts.setPadding(dp(14),0,dp(14),0);facts.setBackground(ui.shape(card,0,20));
+  LinearLayout facts=vertical();facts.setPadding(dp(14),0,dp(14),0);facts.setBackground(ui.shape(card,0,12));
   readingFact(facts,"Project",PresentationPolicy.project(draft));rule(facts);readingFact(facts,"Priority",human(text(draft,"priority")));rule(facts);readingFact(facts,"Status",human(text(draft,"status")));rule(facts);readingFact(facts,"Due date",dueLabel(draft));add(editor,facts);space(editor,16);
+  if(!text(draft,"description").isEmpty())readingDescription(text(draft,"description"),draft.opt("description_summary") instanceof String?text(draft,"description_summary"):"");
   if(!text(draft,"notes").isEmpty())readingSection("Notes",text(draft,"notes"));sourceContext();
   StringBuilder activity=new StringBuilder();for(String[] field:new String[][]{{"created_at","Created"},{"updated_at","Last changed"}}){String raw=text(draft,field[0]);if(raw.isEmpty())continue;try{String formatted=java.time.OffsetDateTime.parse(raw).atZoneSameInstant(java.time.ZoneId.systemDefault()).format(java.time.format.DateTimeFormatter.ofLocalizedDateTime(java.time.format.FormatStyle.MEDIUM,java.time.format.FormatStyle.SHORT).withLocale(Locale.getDefault()));if(activity.length()>0)activity.append("\n");activity.append(field[1]).append(" · ").append(formatted);}catch(java.time.format.DateTimeParseException ignored){}}
   if(activity.length()>0)readingSection("Activity",activity.toString());
   if(!online)add(editor,label("Cached task · read only. Refresh to make changes.",13,muted));
-  FrameLayout material=ui.glassSurface();LinearLayout action=vertical();action.setPadding(dp(6),dp(4),dp(6),dp(4));Button chat=button("Discuss with Hermes",()->openTaskConversation(selected));ui.quiet(chat);chat.setTextColor(accent);ui.leadingIcon(chat,R.drawable.ic_chat);add(action,chat);material.addView(action,new FrameLayout.LayoutParams(-1,-2));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(dp(4),dp(4),dp(4),dp(8));detailPane.addView(material,p);
+  FrameLayout material=new FrameLayout(this);material.setBackground(ui.shape(card,0,12));LinearLayout action=vertical();action.setPadding(dp(6),dp(4),dp(6),dp(4));Button chat=button("Discuss with Hermes",()->openTaskConversation(selected));ui.quiet(chat);chat.setTextColor(accent);ui.leadingIcon(chat,R.drawable.ic_chat);add(action,chat);material.addView(action,new FrameLayout.LayoutParams(-1,-2));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(dp(4),dp(4),dp(4),dp(8));detailPane.addView(material,p);
  }
  void readingFact(LinearLayout parent,String name,String value){
   boolean large=getResources().getConfiguration().fontScale>=1.5f;LinearLayout row=large?vertical():horizontal();row.setMinimumHeight(dp(52));row.setPadding(0,dp(8),0,dp(8));TextView caption=label(name,15,muted);TextView content=label(value,16,name.equals("Status")?accent:ink);content.setTextIsSelectable(true);
@@ -248,7 +402,7 @@ public final class MainActivity extends Activity {
  }
  void readingDescription(String value,String summary){
   descriptionState.bind(selected,value,summary);
-  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,20));
+  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,12));
   TextView caption=heading("Description",13);caption.setTextColor(muted);add(group,caption);space(group,4);
   TextView body=label("",16,ink);body.setTextIsSelectable(true);body.setAutoLinkMask(0);body.setLinksClickable(false);add(group,body);
   Button more=button("See more",()->{});ui.quiet(more);more.setMinHeight(dp(48));add(group,more);
@@ -264,27 +418,41 @@ public final class MainActivity extends Activity {
   update.run();add(editor,group);space(editor,12);
  }
  void readingSection(String name,String value){
-  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,20));TextView caption=heading(name,13);caption.setTextColor(muted);add(group,caption);space(group,4);TextView t=label("",16,ink);t.setText(MarkdownText.render(value));t.setTextIsSelectable(true);t.setAutoLinkMask(0);add(group,t);add(editor,group);space(editor,12);
+  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,12));TextView caption=heading(name,13);caption.setTextColor(muted);add(group,caption);space(group,4);TextView t=label("",16,ink);t.setText(MarkdownText.render(value));t.setTextIsSelectable(true);t.setAutoLinkMask(0);add(group,t);add(editor,group);space(editor,12);
  }
  void sourceContext(){
-  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,20));TextView caption=heading("Source",13);caption.setTextColor(muted);add(group,caption);space(group,4);add(group,label(PresentationPolicy.sourceSummary(draft),15,ink));
+  LinearLayout group=vertical();group.setPadding(dp(14),dp(12),dp(14),dp(12));group.setBackground(ui.shape(card,0,12));TextView caption=heading("Source",13);caption.setTextColor(muted);add(group,caption);space(group,4);add(group,label(PresentationPolicy.sourceSummary(draft),15,ink));
   java.util.List<String> links=PresentationPolicy.sourceLinks(draft);
   for(String link:links){String host=android.net.Uri.parse(link).getHost();Button open=button("Open source · "+host,()->confirm("Open source?","This supplied link opens in your browser:\n"+host+"\nYour task-server token is never included.",()->{try{startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(link)).addCategory(Intent.CATEGORY_BROWSABLE));}catch(ActivityNotFoundException|SecurityException e){notice("No browser available","Install or enable a browser to open this source.");}}));ui.quiet(open);add(group,open);}
   add(group,button("Reply to email…",()->openEmailReply(selected,null)));
   add(editor,group);space(editor,12);
  }
  void buildTaskEditor(){
-  if(selected.equals("NEW"))add(editor,label("DRAFT · Not saved. Review all fields and enter a title before choosing Create task.",13,muted));
+  LinearLayout notice=vertical();notice.setPadding(dp(14),dp(12),dp(14),dp(12));notice.setBackground(ui.shape(card,0,12));
+  if(selected.equals("NEW"))add(notice,label("DRAFT · Not saved. Review all fields and enter a title before choosing Create task.",14,muted));
+  else add(notice,label("Choose Save to save your changes. Changes are not saved automatically.",14,muted));
+  TextView offline=label("Offline · saving is unavailable. Copy any changes you need before reloading the latest task.",14,muted);offline.setVisibility(!online?View.VISIBLE:View.GONE);add(notice,offline);
+  TextView feedback=label(banner,14,ink);feedback.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);feedback.setVisibility(!online||busy||banner.contains("preserved")?View.VISIBLE:View.GONE);add(notice,feedback);add(editor,notice);space(editor,12);bindTaskEditorNotice(feedback,offline);
   title=field(editor,"Title",text(draft,"title"),false);description=field(editor,"Description",text(draft,"description"),true);
-  LinearLayout selections=vertical();selections.setPadding(dp(12),dp(8),dp(12),0);selections.setBackground(ui.shape(card,0,20));
+  LinearLayout selections=vertical();selections.setPadding(dp(12),dp(8),dp(12),0);selections.setBackground(ui.shape(card,0,12));
   project=valueField(selections,"Project",text(draft,"project"));priority=choice(selections,"Priority",priorities,text(draft,"priority"));status=choice(selections,"Status",statuses,text(draft,"status"));
   due=valueField(selections,"Due date · YYYY-MM-DD",text(draft,"due_date"));due.setInputType(android.text.InputType.TYPE_CLASS_DATETIME|android.text.InputType.TYPE_DATETIME_VARIATION_DATE);
   Button pick=button("Choose date",this::pickDate);pick.setEnabled(online&&!busy);ui.quiet(pick);ui.leadingIcon(pick,R.drawable.ic_calendar);Button clear=button("Clear date",()->due.setText(""));clear.setEnabled(online&&!busy);ui.quiet(clear);pair(selections,pick,clear);add(editor,selections);space(editor,12);
   notes=field(editor,"Notes",text(draft,"notes"),true);
-  FrameLayout material=ui.glassSurface();LinearLayout actions=horizontal();actions.setPadding(dp(6),dp(4),dp(6),dp(4));
+  restoreTaskPresentation();
+  FrameLayout material=new FrameLayout(this);material.setBackground(ui.shape(card,0,12));LinearLayout actions=horizontal();actions.setPadding(dp(6),dp(4),dp(6),dp(4));
   Button cancel=button("Cancel",()->{captureDraft();Runnable discard=()->{draft=null;editing=false;detailY=0;if(selected.equals("NEW"))selected="";render();};if(dirty())confirm("Discard unsaved changes?","Your saved task is unchanged.",discard);else discard.run();});cancel.setEnabled(!busy);ui.quiet(cancel);actions.addView(cancel,new LinearLayout.LayoutParams(0,-2,1));
   Button save=primary(selected.equals("NEW")?"Create task":"Save",()->save(false));save.setEnabled(online&&!busy);save.setContentDescription(selected.equals("NEW")?"Create task":"Save task changes");actions.addView(save,new LinearLayout.LayoutParams(0,-2,1));material.addView(actions,new FrameLayout.LayoutParams(-1,-2));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.setMargins(dp(4),dp(4),dp(4),dp(8));detailPane.addView(material,p);
  }
+ void bindTaskEditorNotice(TextView feedback,TextView offline){
+  final Store.Account owner=account;final String epoch=owner==null?"":owner.epoch,taskId=selected;final LinearLayout boundRoot=root,boundEditor=editor;final long generation=surfaces.generation();
+  taskEditorNoticeUpdate=()->{
+   if(owner==null||account!=owner||!epoch.equals(owner.epoch)||!alive(owner)||!surfaces.current(generation)||root!=boundRoot||editor!=boundEditor||!taskId.equals(selected)||(!editing&&!selected.equals("NEW"))||!destination.equals("Tasks"))return;
+   View attached=feedback;while(attached!=null&&attached!=boundRoot)attached=attached.getParent() instanceof View?(View)attached.getParent():null;if(attached==null||offline.getParent()!=feedback.getParent())return;
+   feedback.setText(banner);feedback.setVisibility(!online||busy||banner.contains("preserved")?View.VISIBLE:View.GONE);offline.setVisibility(!online?View.VISIBLE:View.GONE);
+  };
+ }
+ void updateTaskEditorNotice(){if(taskEditorNoticeUpdate!=null)taskEditorNoticeUpdate.run();}
  void pickDate(){LocalDate date=PresentationPolicy.parseDate(due.getText().toString());if(date==null)date=LocalDate.now();long generation=surfaces.generation();Dialog picker=new DatePickerDialog(this,(view,y,m,d)->{if(surfaces.current(generation)&&authState==AuthPolicy.State.FULL&&due!=null)due.setText(LocalDate.of(y,m+1,d).toString());},date.getYear(),date.getMonthValue()-1,date.getDayOfMonth());trackDialog(picker).show();}
  JSONObject revision(){JSONObject o=new JSONObject();try{o.put("revision",text(draft,"revision"));}catch(Exception ignored){}return o;}
  void save(boolean complete){captureDraft();try{

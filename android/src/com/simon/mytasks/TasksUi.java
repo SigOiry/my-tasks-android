@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 /** Retained Tasks presenter. ListView owns recycling; Activity owns canonical state. */
 final class TasksUi {
- static final int NAVIGATION_CLEARANCE=104;
+ static final int NAVIGATION_CLEARANCE=0;
  private final MainActivity a;
  private final UpdateEmphasis emphasis=new UpdateEmphasis();
  private final ArrayList<Entry> entries=new ArrayList<>();
@@ -59,24 +59,23 @@ final class TasksUi {
   final int slot=selectedScope;final float origin=scopeOrigin;scopeOrigin=Float.NaN;final boolean[] placed={false};
   scopes.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(!placed[0]||r-l!=or-ol||b-t!=ob-ot){ui.placeScopeCapsule(capsule,scopes,slot,placed[0]?Float.NaN:origin);placed[0]=true;}});
   segment.addView(scopes,new FrameLayout.LayoutParams(-1,-2));a.add(controls,segment);
-  if(!"Project".equals(a.sortOrder)){TextView order=ui.text("Sorted by "+a.sortOrder.toLowerCase(java.util.Locale.getDefault()),12,ui.secondary,false);order.setPadding(ui.dp(8),ui.dp(4),ui.dp(8),ui.dp(4));a.add(controls,order);}
+
   page.setContentDescription((a.projectFilter.isEmpty()?"Tasks":a.projectFilter)+", "+a.filter+", sorted by "+a.sortOrder);
   if(a.showSearch||!a.query.isEmpty()){
    EditText search=new EditText(a);ui.input(search);search.setSingleLine(true);search.setHint("Search tasks or projects");search.setContentDescription("Search tasks or projects");search.setSaveEnabled(false);search.setText(a.query);
    controls.addView(search,new LinearLayout.LayoutParams(-1,-2));
    search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int start,int length,int after){}public void afterTextChanged(Editable e){}public void onTextChanged(CharSequence s,int start,int before,int length){a.query=s.toString();resetAnchor();refresh();}});
   }
-  count=ui.text("",12,ui.secondary,false);count.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
-  count.setVisibility(View.GONE);
+  count=ui.text("",14,ui.secondary,false);count.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
+  count.setPadding(ui.dp(8),ui.dp(8),ui.dp(8),ui.dp(8));a.add(controls,count);
   list.addHeaderView(controls,null,false);
-  // Real footer leaves the final task/overflow reachable above the floating Add.
-  View footer=new View(a);footer.setMinimumHeight(ui.dp(88));list.addFooterView(footer,null,false);
+  // Navigation and creation are in flow; no duplicate overlay reserve.
   adapter=new Rows();list.setAdapter(adapter);
   list.setRecyclerListener(v->{if(v instanceof TaskRowView)((TaskRowView)v).stopEmphasis();});
   list.setOnTouchListener((v,event)->{int action=event.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){touching=true;stopRowMotion();pauseRowEmphasis();}else if(action==android.view.MotionEvent.ACTION_UP||action==android.view.MotionEvent.ACTION_CANCEL){touching=false;if(pendingRefresh)list.postDelayed(deferredRefresh,200);list.postDelayed(this::resume,200);}return false;});
   list.setOnScrollListener(new AbsListView.OnScrollListener(){public void onScrollStateChanged(AbsListView v,int state){scrolling=state!=AbsListView.OnScrollListener.SCROLL_STATE_IDLE;if(scrolling){stopRowMotion();pauseRowEmphasis();}else{if(pendingRefresh)list.postDelayed(deferredRefresh,200);list.postDelayed(TasksUi.this::resume,200);}}public void onScroll(AbsListView v,int first,int visible,int total){if(effectsAtRest())for(int i=0;i<v.getChildCount();i++)if(v.getChildAt(i) instanceof TaskRowView)((TaskRowView)v.getChildAt(i)).resume();}});
-  create=ui.button("+",()->a.navigate("NEW"));create.setEnabled(a.online&&!a.busy);ui.primary(create);create.setTextSize(28);create.setContentDescription("Create a new task");create.setTooltipText("New task");create.setPadding(0,0,0,0);create.setElevation(ui.dp(WorkspaceUi.ELEVATION_FLOATING));
-  FrameLayout.LayoutParams add=new FrameLayout.LayoutParams(ui.dp(56),ui.dp(56),Gravity.BOTTOM|Gravity.END);add.setMargins(ui.dp(12),ui.dp(12),ui.dp(12),ui.dp(12));dock.addView(create,add);
+  create=ui.button("Add task",()->a.navigate("NEW"));create.setEnabled(a.online&&!a.busy);ui.primary(create);ui.leadingIcon(create,R.drawable.ic_add);create.setContentDescription("Create a new task");
+  parent.addView(create,new LinearLayout.LayoutParams(-1,-2));
   refresh();
  }
  void selectScope(String scope){
@@ -94,7 +93,15 @@ final class TasksUi {
  void refresh(){
   if(list==null)return;
   boolean changed=!sameFilters();
-  if(!changed&&deferRefresh()){pendingRefresh=true;list.removeCallbacks(deferredRefresh);if(!paused)list.postDelayed(deferredRefresh,200);return;}
+  if(!changed&&deferRefresh()){
+   // A replacement header describes retained rows, not the pending task snapshot.
+   int shown=0,unread=0;for(Entry entry:entries)if(entry.task!=null){shown++;JSONObject n=entry.task.optJSONObject("notification");if(n!=null&&n.optBoolean("unread"))unread++;}
+   count.setText(shown+(shown==1?" task":" tasks")+" · "+unread+" unread"
+    +"\n"+viewFilter+" · "+(projectFilter.isEmpty()?"All projects":projectFilter)+(query.trim().isEmpty()?"":" · Search applied")
+    +"\nSorted by "+sortOrder+" · "+PresentationPolicy.directionLabel(sortOrder,reverse)+(a.online?"":"\nRead only"));
+   create.setEnabled(a.online&&!a.busy);
+   pendingRefresh=true;list.removeCallbacks(deferredRefresh);if(!paused)list.postDelayed(deferredRefresh,200);return;
+  }
   final java.util.Map<String,Float> oldPositions=changed?java.util.Collections.emptyMap():snapshotRowPositions();
   pendingRefresh=false;list.removeCallbacks(deferredRefresh);
   if(changed&&(!a.filter.equals(viewFilter)||!a.projectFilter.equals(projectFilter)||!a.query.equals(query)))resetAnchor();else capture();
@@ -120,7 +127,9 @@ final class TasksUi {
    entries.add(new Entry(null,task));
   }
   if(shown.isEmpty())entries.add(new Entry(null,null));
-  count.setText(shown.size()+" tasks"+(unread>0?" · "+unread+" unread":"")+(a.projectFilter.isEmpty()?"":" · "+a.projectFilter)+(a.online?"":" · Read only"));
+  count.setText(shown.size()+(shown.size()==1?" task":" tasks")+" · "+unread+" unread"
+   +"\n"+a.filter+" · "+(a.projectFilter.isEmpty()?"All projects":a.projectFilter)+(a.query.trim().isEmpty()?"":" · Search applied")
+   +"\nSorted by "+a.sortOrder+" · "+PresentationPolicy.directionLabel(a.sortOrder,a.sortReverse)+(a.online?"":"\nRead only"));
   create.setEnabled(a.online&&!a.busy);
   adapter.notifyDataSetChanged();restoreAnchor();
   if(!oldPositions.isEmpty()){
@@ -149,12 +158,8 @@ final class TasksUi {
  }
  private void resetRowMotion(View row){row.animate().cancel();row.setTranslationY(0);}
  private void stopRowMotion(){if(list!=null)for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)resetRowMotion(list.getChildAt(i));}
- /** Measured floating navigation can grow when system text is enlarged. */
- void navigationClearance(int pixels){
-  if(list==null)return;int clearance=Math.max(a.ui.dp(88),pixels);
-  if(list.getPaddingBottom()!=clearance)list.setPadding(0,0,0,clearance);
-  // The Add action shares the floating navigation baseline, not a second action tier.
- }
+ /** In-flow navigation owns its measured space; retain the presenter API without an overlay reserve. */
+ void navigationClearance(int pixels){if(list!=null)list.setPadding(0,0,0,0);}
  private boolean deferRefresh(){return paused||touching||scrolling||a.editing||a.busy||!a.dialogClosers.isEmpty();}
  boolean effectsAtRest(){return !paused&&!touching&&!scrolling&&!a.busy&&!a.editing&&a.dialogClosers.isEmpty();}
  private void pauseRowEmphasis(){if(list!=null)for(int i=0;i<list.getChildCount();i++)if(list.getChildAt(i) instanceof TaskRowView)((TaskRowView)list.getChildAt(i)).pause();}
@@ -226,7 +231,14 @@ final class TasksUi {
    if(e.task!=null){TaskRowView row=recycled instanceof TaskRowView?(TaskRowView)recycled:new TaskRowView(a,emphasis);resetRowMotion(row);row.bind(e.task,"Project".equals(a.sortOrder));row.groupCorners(position==0||entries.get(position-1).task==null,position==entries.size()-1||entries.get(position+1).task==null);if(!effectsAtRest())row.pause();return row;}
    if(e.group!=null){TextView heading=recycled instanceof TextView?(TextView)recycled:ui.text("",13,ui.secondary,true);heading.setText(e.group.toUpperCase(java.util.Locale.getDefault()));heading.setPadding(ui.dp(4),ui.dp(16),ui.dp(4),ui.dp(8));if(android.os.Build.VERSION.SDK_INT>=28)heading.setAccessibilityHeading(true);return heading;}
    LinearLayout empty=new LinearLayout(a);empty.setOrientation(LinearLayout.VERTICAL);empty.setPadding(ui.dp(20),ui.dp(24),ui.dp(20),ui.dp(24));
-   empty.addView(ui.text("No tasks in this view",20,ui.ink,true));empty.addView(ui.text("Try another view, clear filters, or add a task when connected.",15,ui.secondary,false));
+   boolean hasTasks=false;for(int i=0;i<a.tasks.length();i++)if(a.tasks.optJSONObject(i)!=null){hasTasks=true;break;}
+   boolean narrowed=hasTasks||!a.query.trim().isEmpty()||!a.projectFilter.isEmpty()||!"Active".equals(a.filter);
+   String title,body;
+   if(a.online){title=narrowed?"No tasks in this view":"No tasks yet";body=narrowed?"Try another view or clear filters.":"Add a task to get started.";}
+   else if(a.snapshot.optJSONArray("tasks")==null){title="Task list unavailable";body="No saved task list is available. Check Connection settings to reconnect.";}
+   else if(!hasTasks){title="No saved tasks";body="The saved task list is empty. Reconnect to check for current tasks.";}
+   else{title="No saved tasks in this view";body="Try another view or clear filters. Reconnect to check for current tasks.";}
+   empty.addView(ui.text(title,20,ui.ink,true));empty.addView(ui.text(body,15,ui.secondary,false));
    if(!a.query.isEmpty()||!a.projectFilter.isEmpty()||!"Active".equals(a.filter))empty.addView(ui.button("Clear filters",()->{a.captureDraft();a.query="";a.projectFilter="";a.filter="Active";resetAnchor();a.saveWorkspacePreferences();a.render();}));
    if(!a.online)empty.addView(ui.button("Connection settings",a::settings));return empty;
   }

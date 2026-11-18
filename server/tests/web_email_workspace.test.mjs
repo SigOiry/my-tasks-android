@@ -36,6 +36,120 @@ test('closing workspace while preview awaits cannot open a late send review or r
  const {document}=dom(),pending=deferred(),started=deferred(),calls=[];const ui=mountEmailWorkspace({document,storage:null,uuid:()=> 'preview',request:async(path,o)=>{calls.push([path,o]);if(path.includes('/email-sources'))return {sources:[{id:'source',origin:'trigger',available:true,replyable:true}]};if(path==='/api/email/drafts')return draft(1,'Exact reply');if(path.endsWith('/preview')){started.resolve();return pending.promise;}throw new Error(path);}});
  await ui.open('task');const reviewing=ui.elements.reviewButton.listeners.click();await started.promise;ui.close();pending.resolve({...draft(1,'Exact reply'),draft_revision:1,confirmation_id:'late'});await reviewing;assert.equal(ui.elements.dialog.open,false);assert.equal(ui.elements.reviewDialog.open,false);assert.equal(ui.elements.sendButton.disabled,true);assert.equal(ui.store.preview,null);assert.equal(ui.store.body,'Exact reply');assert.ok(!calls.some(([p])=>p.endsWith('/send')));ui.clear();
 });
+for(const revert of [false,true])test('delayed preview is invalidated by '+(revert?'edit and revert':'typing')+' in the mounted editor',async()=>{
+ const {document}=dom(),pending=deferred(),started=deferred(),calls=[];
+ const ui=mountEmailWorkspace({document,storage:null,request:async(path,o)=>{calls.push([path,o]);if(path.endsWith('/preview')){started.resolve();return pending.promise;}throw new Error(path);}});
+ ui.store.adopt(draft(1,'Exact reply'));const reviewing=ui.elements.reviewButton.listeners.click();await started.promise;
+ const editor=ui.elements.editor;editor.value='New writing';editor.listeners.input();if(revert){editor.value='Exact reply';editor.listeners.input();}
+ pending.resolve({...draft(1,'Exact reply'),draft_revision:1,confirmation_id:'obsolete'});await reviewing;
+ assert.equal(ui.store.preview,null,'typing invalidates the in-flight confirmation even when text returns to its original value');assert.equal(ui.elements.reviewDialog.open,false);assert.equal(ui.elements.sendButton.disabled,true);assert.equal(editor.value,revert?'Exact reply':'New writing');assert.equal(calls.length,1);ui.clear();
+});
+test('review stops before requesting a preview for a replacement draft during flush',async()=>{
+ const calls=[],s=new EmailDraftStore(async(path,o)=>{calls.push([path,o]);return {confirmation_id:'wrong',draft_revision:1};});s.adopt(draft(1,'saved'));const reviewing=s.review();s.adopt({...draft(),id:'replacement'});await reviewing;assert.equal(calls.length,0);
+});
+test('selected original identity and outgoing writing have distinct named regions',()=>{
+ const {document,all}=dom(),ui=mountEmailWorkspace({document,storage:null,request:async()=>{throw new Error('No retrieval expected');}});
+ ui.store.adopt({...draft(),source:{sender:'Original author',subject:'Original subject',date:'2026-11-10',account_label:'Work account'}});
+ const source=all.find(n=>n.className==='email-source-identity');assert.ok(source,'selected original visible without opening thread');assert.match(source.textContent,/Original author.*Original subject.*2026-11-10.*Work account/);
+ assert.equal(all.find(n=>n.className==='email-editor-pane').attributes['aria-label'],'Your reply');assert.ok(all.some(n=>n.textContent==='Outgoing reply'));assert.ok(all.some(n=>n.textContent==='Your writing'));assert.equal(ui.elements.assistant.attributes['aria-label'],'Draft assistant');ui.clear();
+});
+test('unchanged original thread nodes survive typing, save and assistant status renders',async()=>{
+ const {document,all}=dom(),original={sender:'Author',subject:'Topic',date:'Date',body:'Selected original words'},d={...draft(1,'saved'),thread:[original]},ui=mountEmailWorkspace({document,storage:null,request:async()=>({...d,revision:2,body:'typed'})});ui.store.adopt(d);
+ const context=all.find(n=>n.className==='email-context'),thread=context.children[1],article=thread.children[0],editor=ui.elements.editor;context.open=true;thread.scrollTop=17;editor.focus();editor.selectionStart=1;editor.selectionEnd=3;
+ ui.store.edit('typed');await ui.store.save();ui.store.job={id:'j',status:'queued'};ui.store.changed();assert.equal(thread.children[0],article);assert.equal(thread.scrollTop,17);assert.equal(context.open,true);assert.equal(ui.elements.editor,editor);
+ ui.store.adopt({...ui.store.draft,thread:[{...original,body:'Refreshed context'}]});assert.notEqual(thread.children[0],article);ui.clear();ui.store.adopt(d);assert.equal(thread.children.length,1,'clearing invalidates render cache');ui.clear();
+});
+test('busy proposal explains waiting rather than claiming newer writing; stale proposal stays blocked',()=>{
+ const {document,all}=dom(),ui=mountEmailWorkspace({document,storage:null,request:async()=>{}}),proposal={id:'p',base_revision:1,body:'Suggested'};ui.store.adopt({...draft(1,'saved'),ai_messages:[{role:'assistant',proposal}]});ui.store.busy=true;ui.store.changed();
+ const box=all.find(n=>n.className==='email-proposals');const text=()=>box.children[0].children.map(n=>n.textContent).join(' ');assert.match(text(),/Wait for the current operation/);assert.doesNotMatch(text(),/Newer writing wins/);assert.equal(box.children[0].children.find(n=>n.textContent==='Apply').disabled,true);
+ ui.store.busy=false;ui.store.edit('new words');assert.match(text(),/Newer writing wins/);assert.equal(box.children[0].children.find(n=>n.textContent==='Apply').disabled,true);ui.clear();
+});
+test('review guidance names empty, unsaved, conflict, busy and receipt states without automatic work',async()=>{
+ const {document,all}=dom(),calls=[],ui=mountEmailWorkspace({document,storage:null,request:async(path,o)=>{calls.push([path,o]);return draft(2,o.body.body);}});ui.store.adopt({...draft(),can_send:false});
+ const hint=all.find(n=>n.className==='email-review-hint');assert.ok(hint);assert.match(hint.textContent,/Write a reply/);assert.equal(ui.elements.reviewButton.attributes['aria-describedby'],hint.id);
+ ui.store.edit('Local writing');ui.store.error='Offline';ui.store.state='Offline';ui.store.changed();assert.match(hint.textContent,/not yet saved/);const retry=all.find(n=>n.textContent==='Retry save');assert.equal(retry.hidden,false);assert.equal(calls.length,0);await retry.listeners.click();assert.equal(ui.store.body,'Local writing');assert.equal(calls.length,1);assert.equal(calls[0][1].method,'PATCH');
+ ui.store.conflict=true;ui.store.changed();assert.match(hint.textContent,/Copy your writing/);assert.equal(ui.elements.reviewButton.disabled,true);assert.equal(retry.hidden,true);ui.store.conflict=false;ui.store.busy=true;ui.store.changed();assert.match(hint.textContent,/Wait for/);
+ ui.store.busy=false;ui.store.adopt({...draft(),status:'uncertain',can_send:false});assert.match(hint.textContent,/Reconcile/);assert.equal(ui.elements.reviewButton.disabled,true);assert.equal(calls.length,1);ui.clear();
+});
+test('source resolution retry is explicit, read-only and retains the original focus return',async()=>{
+ const {document,all}=dom(),calls=[],entry=document.createElement('button');entry.focus();const ui=mountEmailWorkspace({document,storage:null,request:async(path,o)=>{calls.push([path,o]);if(calls.length===1)throw Object.assign(new Error('Source service unavailable'),{status:503});return {sources:[],ambiguous:true};}});entry.focus();await ui.open('task','exact/token');const retry=ui.elements.chooser.children.find(n=>n.textContent==='Retry sources');assert.ok(retry);assert.equal(calls.length,1);retry.focus();await retry.listeners.click();assert.equal(calls.length,2);assert.ok(calls.every(([p,o])=>p==='/api/tasks/task/email-sources?update_token=exact%2Ftoken'&&!o));ui.close();assert.equal(document.activeElement,entry);ui.clear();
+});
+test('clearing email workspace scrubs selected source identity and resets reading signatures',()=>{const {document,all}=dom(),ui=mountEmailWorkspace({document,storage:null,request:async()=>{}});ui.store.adopt({...draft(),source:{sender:'Private sender',subject:'Private subject'}});const identity=all.find(n=>n.className==='email-source-identity');assert.match(identity.textContent,/Private sender/);ui.clear();assert.equal(identity.textContent,'');});
+test('editing back to the saved body reports Saved but still invalidates review generation',()=>{const s=new EmailDraftStore(async()=>{});s.adopt(draft(1,'Saved words'));s.edit('Temporary');s.edit('Saved words');assert.equal(s.dirty,false);assert.equal(s.state,'Saved');assert.equal(s.editGeneration,2);});
+test('source resolution owns the mounted header instead of a previous sent receipt',async()=>{
+ const {document,all}=dom(),pending=deferred(),calls=[];
+ const ui=mountEmailWorkspace({document,storage:null,request:async(path,o)=>{calls.push([path,o]);await pending.promise;throw Object.assign(new Error('Source service unavailable'),{status:503});}});
+ try {
+  const sent={...draft(2,'Sent words'),task_id:'previous',source_id:'old',status:'sent',receipt:{message_id:'retained'}};
+  ui.store.adopt(sent);const hint=all.find(n=>n.className==='email-review-hint');
+  assert.match(ui.elements.status.textContent,/Sent/);assert.match(hint.textContent,/receipt saved/);
+  const opening=ui.open('different','new-token');
+  assert.equal(ui.elements.status.textContent,'','unresolved source must not inherit an unqualified receipt');
+  assert.equal(hint.hidden,true);assert.equal(hint.textContent,'');assert.equal(ui.elements.reviewButton.disabled,true);
+  assert.ok(ui.elements.chooser.children.some(n=>/Resolving/.test(n.textContent)));
+  pending.resolve();await opening;
+  assert.equal(ui.elements.status.textContent,'');assert.equal(hint.textContent,'');assert.equal(hint.hidden,true);
+  assert.ok(ui.elements.chooser.children.some(n=>n.textContent==='Retry sources'));
+  assert.equal(ui.store.draft,sent);assert.equal(ui.store.body,'Sent words');assert.deepEqual(calls,[['/api/tasks/different/email-sources?update_token=new-token',undefined]]);
+ } finally {pending.resolve();ui.clear();}
+});
+// M4-UX-01: source-resolution ownership; exercise the real mount/store, not a replica.
+for(const previousStatus of ['draft','sent','uncertain','sending'])test(`unresolved source states suppress retained ${previousStatus} status even on store renders`,async()=>{
+ for(const outcome of ['503','409','offline','empty','chooser','unavailable']){
+  const {document,all}=dom(),pending=deferred(),calls=[],cache=new Map();
+  const storage={getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v),removeItem:k=>cache.delete(k)};
+  const ui=mountEmailWorkspace({document,storage,request:async(path,o)=>{calls.push([path,o]);await pending.promise;if(['503','409','offline'].includes(outcome))throw Object.assign(new Error('Source lookup failed'),outcome==='offline'?{}:{status:Number(outcome)});return {ambiguous:true,sources:outcome==='empty'?[]:[{id:'new-source',origin:'historical',available:outcome!=='unavailable',replyable:true,reason:'Account disconnected'}]};}});
+  try {
+   const previous={...draft(3,'Preserved body'),task_id:'old-task',source_id:'old-source',status:previousStatus,receipt:{message_id:'old-receipt'}};
+   ui.store.adopt(previous);ui.elements.instructions.value='Parked instructions';
+   if(previousStatus==='draft'){ui.store.edit('Unsent conflict writing');ui.store.conflict=true;ui.store.changed();}
+   const snapshot=JSON.stringify([...cache]),body=ui.store.body,editor=ui.elements.editor,hint=all.find(n=>n.className==='email-review-hint');
+   const unresolved=()=>{assert.equal(ui.elements.status.textContent,'',outcome);assert.equal(hint.textContent,'');assert.equal(hint.hidden,true);assert.equal(ui.elements.reviewButton.disabled,true);assert.equal(all.find(n=>n.className==='email-layout').hidden,true);assert.equal(all.find(n=>n.className==='email-footer').hidden,true);};
+   const opening=ui.open('new-task','new-token');unresolved();ui.store.changed();unresolved();pending.resolve();await opening;unresolved();ui.store.changed();unresolved();
+   const text=ui.elements.chooser.children.map(n=>n.textContent).join(' ');
+   if(outcome==='empty')assert.match(text,/No replyable email/);else if(['chooser','unavailable'].includes(outcome)){assert.match(text,/Choose the email/);assert.equal(ui.elements.chooser.children.find(n=>n.dataset.sourceId).disabled,outcome==='unavailable');}else if(outcome==='409'){assert.match(text,/newer task update/);assert.ok(!ui.elements.chooser.children.some(n=>n.textContent==='Retry sources'));}else assert.ok(ui.elements.chooser.children.some(n=>n.textContent==='Retry sources'));
+   assert.equal(ui.store.draft,previous);assert.equal(ui.store.body,body);assert.equal(ui.elements.editor,editor);assert.equal(ui.elements.instructions.value,'Parked instructions');assert.equal(JSON.stringify([...cache]),snapshot);assert.deepEqual(calls,[['/api/tasks/new-task/email-sources?update_token=new-token',undefined]]);
+  } finally {pending.resolve();ui.clear();}
+ }
+});
+for(const selectedStatus of ['draft','sent','uncertain'])test(`explicit source selection restores only the identified ${selectedStatus} header`,async()=>{
+ const {document,all}=dom(),pending=deferred(),calls=[],cache=new Map([['mytasks.web.email.entry.new-task.new-source','selected']]);
+ const selected={...draft(4,'Selected body'),id:'selected',task_id:'new-task',source_id:'new-source',status:selectedStatus,source:{sender:'Selected sender',subject:'Selected original'},receipt:{message_id:'selected-receipt'}};
+ const ui=mountEmailWorkspace({document,storage:{getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v),removeItem:k=>cache.delete(k)},request:async(path,o)=>{calls.push([path,o]);if(path.includes('/email-sources'))return {ambiguous:true,sources:[{id:'new-source',origin:'historical',available:true,replyable:true}]};assert.equal(path,'/api/email/drafts/selected');return pending.promise;}});
+ try {
+  const old={...draft(2,'Old receipt body'),id:'old',task_id:'old-task',source_id:'old-source',status:'sent',receipt:{message_id:'old-receipt'}};ui.store.adopt(old);
+  const hint=all.find(n=>n.className==='email-review-hint');await ui.open('new-task');assert.equal(ui.elements.status.textContent,'');
+  const picking=ui.elements.chooser.children.find(n=>n.dataset.sourceId==='new-source').listeners.click();assert.equal(ui.elements.status.textContent,'');assert.equal(hint.hidden,true);assert.equal(ui.store.draft,old);
+  pending.resolve(selected);await picking;
+  assert.equal(ui.store.draft,selected);assert.equal(ui.store.body,'Selected body');assert.equal(all.find(n=>n.className==='email-layout').hidden,false);assert.equal(all.find(n=>n.className==='email-source-identity').textContent,'Selected sender · Selected original');assert.equal(hint.hidden,false);
+  assert.equal(ui.elements.status.textContent,{draft:'Saved',sent:'Sent · receipt saved',uncertain:'Send outcome unknown'}[selectedStatus]);assert.match(hint.textContent,{draft:/Review the saved reply/,sent:/Sent receipt saved/,uncertain:/Reconcile/}[selectedStatus]);assert.equal(ui.elements.reviewButton.disabled,selectedStatus!=='draft');assert.deepEqual(old.receipt,{message_id:'old-receipt'});assert.ok(calls.every(([,o])=>o===undefined));
+ } finally {pending.resolve(selected);ui.clear();}
+});
+test('source retry replaces unresolved guidance without resurrecting the retained receipt',async()=>{
+ const {document,all}=dom(),pending=deferred(),calls=[];
+ const ui=mountEmailWorkspace({document,storage:null,request:async(path,o)=>{calls.push([path,o]);if(calls.length===1)throw Object.assign(new Error('Unavailable'),{status:503});return pending.promise;}});
+ try {ui.store.adopt({...draft(),status:'uncertain'});await ui.open('new-task');const retry=ui.elements.chooser.children.find(n=>n.textContent==='Retry sources');const opening=retry.listeners.click();assert.equal(ui.elements.status.textContent,'');assert.match(ui.elements.chooser.children[0].textContent,/Resolving/);pending.resolve({sources:[]});await opening;assert.equal(ui.elements.status.textContent,'');assert.equal(all.find(n=>n.className==='email-review-hint').textContent,'');assert.equal(calls.length,2);assert.ok(calls.every(([,o])=>!o));}finally{pending.resolve({sources:[]});ui.clear();}
+});
+for(const lateFailure of [false,true])test(`late source ${lateFailure?'failure':'success'} cannot reclaim a replacement header`,async()=>{
+ const {document,all}=dom(),pending=deferred(),calls=[],selected={...draft(1,'Current body'),id:'current',task_id:'current',source_id:'current-source',source:{sender:'Current sender'}};
+ const ui=mountEmailWorkspace({document,storage:null,uuid:()=> 'test-request',request:async(path,o)=>{calls.push([path,o]);if(path==='/api/tasks/late/email-sources'){await pending.promise;if(lateFailure)throw Object.assign(new Error('Late error'),{status:503});return {sources:[{id:'late-source',origin:'trigger',available:true,replyable:true}]};}if(path==='/api/tasks/current/email-sources')return {sources:[{id:'current-source',origin:'trigger',available:true,replyable:true}]};assert.equal(path,'/api/email/drafts');assert.equal(o.body.task_id,'current');return selected;}});
+ try {ui.store.adopt({...draft(),status:'sent'});const late=ui.open('late');await ui.open('current');pending.resolve();await late;assert.equal(ui.store.draft,selected);assert.equal(ui.elements.status.textContent,'Saved');assert.equal(all.find(n=>n.className==='email-review-hint').hidden,false);assert.equal(ui.elements.chooser.children.length,0);assert.equal(calls.length,3);}finally{pending.resolve();ui.clear();}
+});
+for(const invalidate of ['replacement','close','logout'])test(`late selected draft cannot restore status after ${invalidate}`,async()=>{
+ const {document,all}=dom(),pending=deferred(),started=deferred(),calls=[];
+ const old={...draft(1,'Old receipt'),id:'old',status:'sent'},late={...draft(2,'Late receipt'),id:'late',status:'sent'};
+ const ui=mountEmailWorkspace({document,storage:null,uuid:()=> 'test-request',request:async(path,o)=>{calls.push([path,o]);if(path.includes('/email-sources'))return path.includes('/replacement/')?{sources:[]}:{sources:[{id:'late-source',origin:'trigger',available:true,replyable:true}]};started.resolve();return pending.promise;}});
+ try {ui.store.adopt(old);const opening=ui.open('late');await started.promise;if(invalidate==='replacement')await ui.open('replacement');else if(invalidate==='close')ui.close();else ui.clear();pending.resolve(late);await opening;assert.equal(ui.elements.status.textContent,'');assert.equal(all.find(n=>n.className==='email-review-hint').textContent,'');assert.equal(ui.store.draft,invalidate==='logout'?null:old);assert.equal(ui.elements.dialog.open,invalidate==='replacement');assert.equal(calls.length,invalidate==='replacement'?3:2);}finally{pending.resolve(late);ui.clear();}
+});
+for(const previousStatus of ['draft','sent','uncertain'])test(`same-target offline cache retains identified ${previousStatus} status and writing`,async()=>{
+ const {document,all}=dom(),cache=new Map(),calls=[],ui=mountEmailWorkspace({document,storage:{getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v),removeItem:k=>cache.delete(k)},request:async(path,o)=>{calls.push([path,o]);throw new Error('Offline');}});
+ try {const previous={...draft(3,'Cached body'),task_id:'task',source_id:'source',update_token:'exact',status:previousStatus,source:{sender:'Cached sender',subject:'Cached original'},receipt:{message_id:'cached-receipt'}};ui.store.adopt(previous);if(previousStatus==='draft'){ui.store.edit('Local recovery writing');ui.store.conflict=true;ui.store.changed();}const body=ui.store.body,snapshot=JSON.stringify([...cache]);await ui.open('task','exact');assert.equal(ui.store.draft,previous);assert.equal(ui.store.body,body);assert.equal(ui.elements.editor.value,body);assert.equal(JSON.stringify([...cache]),snapshot);assert.equal(all.find(n=>n.className==='email-layout').hidden,false);assert.equal(all.find(n=>n.className==='email-source-identity').textContent,'Cached sender · Cached original');assert.equal(ui.elements.status.textContent,{draft:'Offline',sent:'Sent · receipt saved',uncertain:'Send outcome unknown'}[previousStatus]);assert.equal(all.find(n=>n.className==='email-review-hint').hidden,false);assert.equal(ui.elements.reviewButton.disabled,true);assert.deepEqual(calls,[['/api/tasks/task/email-sources?update_token=exact',undefined]]);}finally{ui.clear();}
+});
+test('offline cache does not qualify a retained receipt for a different update of the same task',async()=>{
+ const {document,all}=dom(),ui=mountEmailWorkspace({document,storage:null,request:async()=>{throw new Error('Offline');}});
+ try {const previous={...draft(),status:'sent',task_id:'task',source_id:'source',update_token:'old'};ui.store.adopt(previous);await ui.open('task','new');assert.equal(ui.store.draft,previous);assert.equal(ui.elements.status.textContent,'');assert.equal(all.find(n=>n.className==='email-layout').hidden,true);assert.equal(all.find(n=>n.className==='email-review-hint').textContent,'');assert.ok(ui.elements.chooser.children.some(n=>n.textContent==='Retry sources'));}finally{ui.clear();}
+});
+// End M4-UX-01 coverage.
 function dom(){const all=[];const createElement=tag=>{const e={tagName:tag.toUpperCase(),children:[],dataset:{},style:{setProperty(){}},attributes:{},listeners:{},value:'',textContent:'',hidden:false,open:false,disabled:false,append(...n){this.children.push(...n);},replaceChildren(...n){this.children=n;},setAttribute(k,v){this.attributes[k]=v;},addEventListener(k,f){this.listeners[k]=f;},showModal(){this.open=true;},close(){this.open=false;this.listeners.close?.();},focus(){document.activeElement=this;},setSelectionRange(a,b){this.selectionStart=a;this.selectionEnd=b;}};all.push(e);return e;};const document={createElement,body:{append(){}},activeElement:null};return {document,all};}
 test('poll conflicts survive browser recovery without becoming permission to overwrite',async()=>{const cache=new Map(),storage={getItem:k=>cache.get(k),setItem:(k,v)=>cache.set(k,v),removeItem:k=>cache.delete(k)};const s=new EmailDraftStore(async()=>draft(2,'remote'),{storage});s.adopt(draft(1,'old'));s.edit('local');await s.poll();const reopened=new EmailDraftStore(async()=>draft(2,'remote'),{storage});reopened.adopt(draft(2,'remote'),{recover:true});assert.equal(reopened.conflict,true);assert.equal(reopened.state,'Conflict');await assert.rejects(reopened.save(),/conflict/);});
 test('an older draft poll cannot replace a newly opened source',async()=>{const p=deferred(),s=new EmailDraftStore(()=>p.promise);s.adopt(draft());const polling=s.poll();s.adopt({...draft(),id:'other',body:'other source'});p.resolve(draft(2,'old source'));await polling;assert.equal(s.draft.id,'other');assert.equal(s.body,'other source');});

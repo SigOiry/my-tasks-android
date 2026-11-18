@@ -2,6 +2,10 @@
 
 A private task workspace for native Android and the web, sharing one canonical task store. Compact task lists, durable conversations with Hermès, and a Liquid Glass-inspired interface with blue accents, licensed Inter typography and restrained motion.
 
+## Task workspace — 1.7.0
+
+Android **1.7.0 (versionCode 16)** and the companion web interface separate reading a task from editing it. Use the task list to see which filters are active, then open a task to read its details or choose a linked discussion. On the web, the command menu provides keyboard access to navigation and task actions. On Android, navigation adapts to the available window and the editor makes room for writing in short windows.
+
 ## Compact task descriptions — 1.6.5
 
 Version **1.6.5 / code 15** opens Android and web task details with a concise Markdown overview, including **bold** labels. **See more** reveals the complete original; **See less** restores the overview. Editing still uses the full saved description. The API derives the overview from the entire description without rewriting canonical task data or acknowledging updates.

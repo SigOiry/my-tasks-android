@@ -13,6 +13,8 @@ class DescriptionLifecycleHarness extends DescriptionLifecycleBase {
  LinearLayout root,listPane,detailPane,listItems,editor,appBar,bottomTabs;FrameLayout rootFrame,navigationSurface;
  TextView stateLabel,listCount;View title,description,notes,due,project,priority,status;ScrollView listScroll,detailScroll;
  List<View> chatUtilityChrome=new ArrayList<>();Map<String,Button> viewButtons=new HashMap<>();
+ JSONObject taskPresentation=new JSONObject();int taskPresentationGeneration;boolean taskPresentationPending,shellRebuildQueued,railNavigation;String taskEditorTask="",taskEditorEpoch="";int shellMasterWidth=300,shellInsetLeft,shellInsetTop,shellInsetRight,shellInsetBottom;
+ void captureTaskPresentation(){}Object readShellPolicy(View v){return null;}void applyShellPolicy(Object p){wide=false;}void updateShellGeometry(View v){}
  // METHODS
  // DETAIL_ENTRY
  void buildTaskReading(){
@@ -24,6 +26,8 @@ class DescriptionLifecycleHarness extends DescriptionLifecycleBase {
  void applyAppearance(){ui=new Ui();}void buildList(){}void buildRail(LinearLayout p){}void buildPrimaryTabs(){}void setContentView(View v){}
  Resources resources=new Resources();Resources getResources(){return resources;}
  int dp(int n){return n;}LinearLayout vertical(){return new LinearLayout();}LinearLayout horizontal(){return vertical();}
+ // Whole render is extracted here; task editor layout is deliberately excluded.
+ LinearLayout taskDetailPane(){return vertical();}
  TextView heading(String s,int n){return new TextView(s);}TextView label(String s,int n,int c){return new TextView(s);}Button button(String s,Runnable r){return new Button(s,r);}
  void add(LinearLayout p,View v){p.addView(v);}void space(LinearLayout p,int n){}
  static void check(boolean b,String m){if(!b)throw new AssertionError(m);}
@@ -54,6 +58,7 @@ class DescriptionLifecycleHarness extends DescriptionLifecycleBase {
   static final int VISIBLE=0,GONE=8,ACCESSIBILITY_LIVE_REGION_POLITE=1;int visibility;Object params;View(){}View(Object o){}
   interface InsetsListener{WindowInsets apply(View v,WindowInsets i);}void setOnApplyWindowInsetsListener(InsetsListener l){}
   void setVisibility(int n){visibility=n;}void setPadding(int a,int b,int c,int d){}void setBackgroundColor(int n){}void setBackground(Object o){}void requestApplyInsets(){}
+  interface Layout{void change(View v,int l,int t,int r,int b,int ol,int ot,int or,int ob);}void addOnLayoutChangeListener(Layout l){}
   int getHeight(){return 100;}Object getLayoutParams(){return params;}void setLayoutParams(Object p){params=p;}
  }
  static class TextView extends View {CharSequence text;TextView(){this("");}TextView(String s){text=s;}void setText(CharSequence s){text=s;}void setTextColor(int c){}void setTextIsSelectable(boolean b){}void setAutoLinkMask(int n){}void setLinksClickable(boolean b){}void setContentDescription(String s){}void setAccessibilityLiveRegion(int n){}boolean hasFocus(){return false;}int getSelectionStart(){return 0;}int getMaxLines(){return 1;}void setMaxLines(int n){} }

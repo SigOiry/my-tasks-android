@@ -37,3 +37,7 @@ JAVA_HOME="$JAVA_HOME" python3 tests/run_redesign_regressions.py
 JAVA_HOME="$JAVA_HOME" python3 tests/run_task_description_tests.py
 # Actual reply draft/client/controller, citation/title and reported-hinge regressions.
 JAVA_HOME="$JAVA_HOME" python3 tests/run_email_reply_tests.py
+# M5 real navigation/lifecycle/geometry methods; host Views, not native pixel/IME proof.
+JAVA_HOME="$JAVA_HOME" python3 tests/run_m5_native.py all
+# Body-text reading continuity through reflow; synthetic Layout/View, not native proof.
+JAVA_HOME="$JAVA_HOME" python3 tests/run_reading_continuity.py

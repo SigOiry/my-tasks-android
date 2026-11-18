@@ -25,7 +25,7 @@ test('desktop inspector and responsive transitions do not refill the task form',
 });
 test('compact editor reserves its sticky footer for Cancel and Save, retaining trash in the body',()=>{
  const editor=html.slice(html.indexOf('id="task-dialog"'),html.indexOf('id="hermes-panel"'));
- const footer=editor.match(/<footer class="dialog-footer">([\s\S]*?)<\/footer>/)[1];
+ const footer=editor.match(/<footer\b[^>]*class="dialog-footer"[^>]*>([\s\S]*?)<\/footer>/)[1];
  assert.ok(footer.includes('id="save-task"'));assert.ok(footer.includes('Cancel'));
  assert.ok(!footer.includes('id="delete-task"'));assert.ok(editor.includes('id="delete-task"'));
 });

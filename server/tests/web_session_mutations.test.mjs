@@ -9,7 +9,7 @@ const task={id:'private',title:'Private title',description:'Private description'
 const response=(data,status=200)=>({ok:status===200,status,json:async()=>data});
 async function harness(){
  const elements=new Map(),calls=[];
- const element=()=>({options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(){},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
+ const element=()=>({options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(){},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},removeChild(child){this.children.splice(this.children.indexOf(child),1);},insertBefore(child,before){const old=this.children.indexOf(child);if(old>=0)this.children.splice(old,1);this.children.splice(before?this.children.indexOf(before):this.children.length,0,child);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
  const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
  const keys=['title','description','notes','project','due_date','status','priority'];
  get('task-form').elements={namedItem:get};get('task-form').reset=()=>keys.forEach(k=>{get(k).value='';});
@@ -21,7 +21,7 @@ async function harness(){
  vm.runInContext(readFileSync(new URL('../web/app.js',import.meta.url),'utf8').replace(/^import .*?;\n/gm,'')+'\nglobalThis.app={state,chats,clearPrivate,showTask,saveTask,quickComplete,deleteTask,restoreTask,showUpdates,acknowledge,backgroundRefresh,refreshTasks,mutate};',context);
  await tick();const app=context.app;
  Object.assign(app.state,{authenticated:true,online:true,cursor:0,data:{tasks:[task],today:'2026-11-09',week_end:'2026-11-15'}});
- get('sort').value='due';app.showTask(task);get('app').hidden=false;get('login').hidden=true;
+ get('sort').value='due';app.showTask(task);get('task-edit').listeners.click();get('app').hidden=false;get('login').hidden=true;
  context.fetch=async(path,options)=>{calls.push({path,options});return response(path.startsWith('/api/events')?{events:[],cursor:0,has_more:false}:task);};
  return {...app,context,get,calls};
 }
@@ -148,7 +148,7 @@ async function delayedSave(h,status=200){
 test('production delayed save success updates cache without replacing B unsaved editor',async()=>{
  const h=await harness(),pending=await delayedSave(h);
  const replacement={...task,id:'B',title:'Task B',notes:'Original B notes'};
- h.showTask(replacement);h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
+ h.showTask(replacement);h.get('task-edit').listeners.click();h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
  const snapshot=h.state.snapshot;
  await pending.finish();
  assert.equal(h.state.data.tasks.find(item=>item.id===task.id).notes,'Canonical saved A notes');
@@ -158,7 +158,7 @@ test('production delayed save success updates cache without replacing B unsaved 
 for(const status of [200,409,500])test(`production delayed save ${status} preserves replacement editor errors and disabled state`,async()=>{
  const h=await harness(),pending=await delayedSave(h,status);
  // Reopening even the same task creates a new editor owner, not an ID match.
- h.showTask({...task});h.get('notes').value='Replacement unsaved notes';h.get('task-form').listeners.input();
+ h.showTask({...task});h.get('task-edit').listeners.click();h.get('notes').value='Replacement unsaved notes';h.get('task-form').listeners.input();
  h.get('detail-error').textContent='Replacement editor message';h.get('save-task').disabled=true;
  await pending.finish();
  assert.equal(h.get('notes').value,'Replacement unsaved notes');assert.equal(h.state.dirty,true);
@@ -178,7 +178,7 @@ for(const action of ['close','discussions'])test(`production delayed save succes
 });
 test('production delayed save 409 cannot conflict or disable B unsaved editor',async()=>{
  const h=await harness(),pending=await delayedSave(h,409),replacement={...task,id:'B',title:'Task B'};
- h.showTask(replacement);h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
+ h.showTask(replacement);h.get('task-edit').listeners.click();h.get('notes').value='Unsaved B notes';h.get('task-form').listeners.input();
  await pending.finish();
  assert.equal(h.state.selected,replacement);assert.equal(h.get('notes').value,'Unsaved B notes');assert.equal(h.state.dirty,true);
  assert.equal(h.get('detail-error').textContent,'');assert.equal(h.get('conflict').hidden,true);assert.equal(h.get('save-task').disabled,false);assert.equal(h.state.data.tasks[0].revision,1);

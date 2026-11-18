@@ -18,10 +18,16 @@
  const session=await(await fetch('/auth/session')).json();
  if(session.authenticated)throw new Error('Session not revoked.');
  if((await fetch('/api/conversations')).status!==401)throw new Error('Durable history must require a new authenticated session.');
- for(const id of ['discussion-list','task-thread','chat-title','chat-context','chat-status','project-filter','project-options','projects','detail-context','detail-heading','chat-log','task-list','updates-heading','updates-summary','updates-title','rename-error','source-links','source-accounts']){
+ for(const id of ['discussion-list','task-thread','chat-title','chat-context','chat-status','project-filter','project-options','projects','detail-context','detail-heading','chat-log','task-list','updates-heading','updates-summary','updates-title','rename-error','source-links','source-accounts','task-read-metadata','task-read-notes']){
   if($(id).textContent.trim())throw new Error('Private DOM remains in '+id);
  }
- for(const e of document.querySelectorAll('input,textarea'))if(e.value)throw new Error('Private form value remains.');
+ for(const e of document.querySelectorAll('input,textarea')){
+  // Range controls cannot be empty: their value sanitizes to a numeric default.
+  // This existing panel-size preference is not private task or email content.
+  if(e.matches('input[type="range"][aria-label="Assistant panel width"]')){
+   if(!Number.isFinite(e.valueAsNumber)||e.valueAsNumber<Number(e.min)||e.valueAsNumber>Number(e.max))throw new Error('Invalid assistant panel width');
+  }else if(e.value)throw new Error('Private form value remains in '+(e.id||e.tagName));
+ }
  if(document.querySelector('dialog[open]'))throw new Error('A private dialog remains open.');
  if($('chat-dialog').dataset.conversationId||$('rename-dialog').dataset.conversationId)throw new Error('Private dialog bindings remain.');
  if(Object.keys(localStorage).some(k=>k.startsWith('mytasks.web.')))throw new Error('Workspace storage remains.');

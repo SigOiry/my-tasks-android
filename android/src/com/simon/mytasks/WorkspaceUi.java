@@ -17,14 +17,20 @@ final class WorkspaceUi {
  static final int ELEVATION_FLOATING=6, ELEVATION_SHEET=12;
  static final long MOTION_FEEDBACK=140L, MOTION_NAVIGATION=280L, MOTION_SHEET=280L;
  final Context context;final Typeface font;
- final int canvas,surface,ink,secondary,border,primary,soft,danger,onPrimary;
+ final int canvas,surface,ink,secondary,border,primary,soft,danger,onPrimary,action,onAction;
  final int unread,focus,separator;
+ final int nav,onNav,navMuted,navSelected;
  WorkspaceUi(Context c,boolean dark){
   context=c;Typeface loaded;try{loaded=c.getResources().getFont(R.font.inter_variable);}catch(Exception e){loaded=Typeface.create("sans-serif",Typeface.NORMAL);}font=loaded;
-  canvas=color(dark?"#0D0F14":"#F5F5F7");surface=color(dark?"#1A1D24":"#ffffff");
-  ink=color(dark?"#f5f5f7":"#1c1c1e");secondary=color(dark?"#aaaab3":"#63636b");border=color(dark?"#34363d":"#d9d9df");
-  primary=color(dark?"#66aaff":"#0068E5");soft=color(dark?"#202e46":"#EDF3FF");danger=color(dark?"#ffb4ab":"#a3322c");onPrimary=color(dark?"#0b0d12":"#ffffff");
-  unread=PresentationPolicy.unreadColor(dark);focus=primary;separator=color(dark?"#30333B":"#DFDFE4");
+  // Correspondence roles in design/tokens.json; secondary is the native muted alias.
+  canvas=color(dark?"#111820":"#F4F6FA");surface=color(dark?"#1A2432":"#FFFFFF");
+  ink=color(dark?"#EDF2F9":"#17243B");secondary=color(dark?"#ADBCD0":"#536176");border=color(dark?"#41516A":"#CED7E4");
+  primary=color(dark?"#A9C7FF":"#245CC6");soft=color(dark?"#253A58":"#E8EFFB");danger=color(dark?"#FFACB8":"#B32640");
+  action=color("#245CC6");onAction=color("#FFFFFF");
+  nav=color(dark?"#101E34":"#172B4A");onNav=color("#EDF3FC");navMuted=color("#BACBE2");navSelected=color("#294D79");
+  // Completion glyph retains its primary accent; dark glyph ink must contrast it.
+  onPrimary=dark?canvas:surface;
+  unread=PresentationPolicy.unreadColor(dark);focus=primary;separator=color(dark?"#2E3B4F":"#E5EAF2");
  }
  static int color(String s){return Color.parseColor(s);}
  boolean motionEnabled(){return !context.getSharedPreferences("appearance",Context.MODE_PRIVATE).getBoolean("reduce_motion",false)&&android.animation.ValueAnimator.areAnimatorsEnabled()&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,1)>0&&android.provider.Settings.Global.getFloat(context.getContentResolver(),android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,1)>0;}
@@ -48,11 +54,12 @@ final class WorkspaceUi {
  void tone(Button b,int fill,int stroke,int foreground){
   StateListDrawable states=new StateListDrawable();states.addState(new int[]{-android.R.attr.state_enabled},shape(canvas,border,24));states.addState(new int[]{},touch(fill,stroke,24));b.setBackground(states);b.setTextColor(new ColorStateList(new int[][]{new int[]{-android.R.attr.state_enabled},new int[]{}},new int[]{secondary,foreground}));
  }
- void primary(Button b){tone(b,primary,0,onPrimary);}
+ void primary(Button b){tone(b,action,0,onAction);}
  void secondary(Button b){tone(b,surface,0,primary);}
  void quiet(Button b){tone(b,Color.TRANSPARENT,0,secondary);}
  void danger(Button b){tone(b,Color.TRANSPARENT,border,danger);}
  void selected(Button b,boolean selected){tone(b,selected?((soft&0x00ffffff)|0x99000000):Color.TRANSPARENT,0,selected?primary:secondary);b.setSelected(selected);b.setContentDescription(b.getText()+(selected?", selected":""));}
+ void navigation(Button b,boolean selected){tone(b,selected?navSelected:nav,0,selected?onNav:navMuted);b.setTextSize(14);b.setSelected(selected);b.setContentDescription(b.getText()+(selected?", selected":""));}
  void leadingIcon(Button button,int resource){Drawable icon=context.getDrawable(resource).mutate();icon.setTint(button.getCurrentTextColor());icon.setBounds(0,0,dp(20),dp(20));button.setCompoundDrawablesRelative(icon,null,null,null);button.setCompoundDrawablePadding(dp(8));}
  ImageButton icon(int resource,String name,Runnable action){
   ImageButton b=new ImageButton(context);b.setImageResource(resource);b.setImageTintList(ColorStateList.valueOf(ink));b.setScaleType(ImageView.ScaleType.CENTER_INSIDE);b.setPadding(dp(12),dp(12),dp(12),dp(12));b.setBackground(touch(Color.TRANSPARENT,0,24));b.setContentDescription(name);b.setTooltipText(name);b.setOnClickListener(v->action.run());b.setMinimumHeight(dp(48));b.setMinimumWidth(dp(48));press(b);return b;

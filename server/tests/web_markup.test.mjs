@@ -20,7 +20,7 @@ test('light/dark text and primary roles meet normal-text 4.5:1 contrast',()=>{
   for(const fg of ['ink','muted','primary'])for(const bg of ['canvas','surface'])assert.ok(contrast(palette[fg],palette[bg])>=4.5,fg+' / '+bg);
   assert.ok(contrast('#fff',palette.action)>=4.5,'white primary-action label');
  }
- assert.equal(light.primary.toLowerCase(),'#0068e5');
+ assert.equal(light.primary.toLowerCase(),'#245cc6'); // Shared light palette in design/tokens.json
 });
 test('licensed self-hosted typography and accessible material/motion controls ship together',()=>{
  const build=readFileSync(new URL('../build_web.py',import.meta.url),'utf8');

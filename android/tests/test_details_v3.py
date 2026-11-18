@@ -78,7 +78,7 @@ assert 'Task workspace' not in details and 'new String[]{"Details","Hermès"}' n
 assert 'JSONObject current=task(selected);if(draft==null)' in details,'Draft hydration seam survives'
 assert 'Runnable reloadLatest=()->confirm(' in details and 'reloadLatest.run()' in details and 'refresh(true);' in details,'Confirmed reload remains reachable'
 edit=method(main,'buildTaskEditor')
-assert 'detailPane.addView' in edit and 'ui.glassSurface()' in edit,'Save and Cancel must sit outside scrolling fields'
+assert 'detailPane.addView' in edit and 'new FrameLayout(this)' in edit and 'material.setBackground(ui.shape(card,0,12))' in edit,'Save and Cancel must sit outside scrolling fields on an opaque surface'
 assert all(field+'=' in edit for field in ['title','description','priority','status','due','project','notes']),'Retain all bound editable fields'
 assert 'findAnchor' in sheets and 'requestFocus' in sheets and 'a.forgetDialog(dialog)' in sheets,'Anchored menu focus and private dismissal lifecycle'
 assert 'ui.glassSurface()' in review and 'setAutoLinkMask(0)' in review and 'MarkdownText.render(value)' in review,'Glass rim, stable restricted prose'

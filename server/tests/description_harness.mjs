@@ -9,7 +9,7 @@ const task={id:'private',title:'Private title',description:'Private description'
 const response=(data,status=200)=>({ok:status===200,status,json:async()=>data});
 export async function harness(){
  const elements=new Map(),calls=[];
- const element=(tagName)=>({tagName,options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(k,v){(this.attributes??={})[k]=String(v);},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},focus(){},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
+ const element=(tagName)=>({tagName,options:[],style:{setProperty(){}},value:'',textContent:'',hidden:true,disabled:false,open:false,dataset:{},children:[],listeners:{},addEventListener(k,fn){this.listeners[k]=fn;},setAttribute(k,v){(this.attributes??={})[k]=String(v);},replaceChildren(...v){this.textContent='';this.children=v;},append(...v){this.children.push(...v);},focus(){context.document.activeElement=this;},getAttribute(k){return this.attributes?.[k]??null;},reset(){},close(){this.open=false;},showModal(){this.open=true;}});
  const get=id=>{if(!elements.has(id)){const e=element(),html=readFileSync(new URL('../web/index.html',import.meta.url),'utf8'),tag=html.match(new RegExp('<[^>]+id="'+id+'"[^>]*>'))?.[0]||'';for(const m of tag.matchAll(/([\w-]+)="([^"]*)"/g))e.setAttribute(m[1],m[2]);elements.set(id,e);}return elements.get(id);};
  const keys=['title','description','notes','project','due_date','status','priority'];
  get('task-form').elements={namedItem:get};get('task-form').reset=()=>keys.forEach(k=>{get(k).value='';});

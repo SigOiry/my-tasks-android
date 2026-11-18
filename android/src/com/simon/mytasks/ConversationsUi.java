@@ -11,6 +11,8 @@ import java.util.*;
 /** Native discussion master/detail and a keyboard-reachable, thread-bound composer. */
 final class ConversationsUi implements ConversationController.Listener {
  final MainActivity a;final ConversationController c;
+ ScrollView discussionScroll;String listOwner="";final LinkedHashMap<String,View> discussionRows=new LinkedHashMap<>();boolean composerRestoring,listRestoring;int composerGeneration,listGeneration;
+ JSONObject composerInitial;
  LinearLayout rows,messages,timeline,historyHeader,historyFooter;ScrollView scroll;TextView state,title,context;EditText input;ImageButton send;Button jump;
  String thread="",signature="",boundTask="",headerSignature="",footerSignature="",listSignature="",followRequest="";
  View discussionPill;LinearLayout discussionTrack;boolean syncing,restoring;long previousFirst=Long.MAX_VALUE;int previousCount,viewportGeneration;
@@ -26,19 +28,20 @@ final class ConversationsUi implements ConversationController.Listener {
  void buildGlobal(LinearLayout parent){
   boundTask="";attach();LinearLayout body=a.horizontal();body.setGravity(Gravity.TOP);parent.addView(body,new LinearLayout.LayoutParams(-1,0,1));
   LinearLayout master=a.vertical(),detail=a.vertical();
-  if(a.wide){body.addView(master,new LinearLayout.LayoutParams(a.dp(280),-1));View divider=new View(a);divider.setBackgroundColor(a.line);body.addView(divider,new LinearLayout.LayoutParams(a.dp(1),-1));body.addView(detail,new LinearLayout.LayoutParams(0,-1,1));body.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{int width=ChatRowPolicy.masterWidth(Math.round(body.getWidth()/a.getResources().getDisplayMetrics().density));if(master.getLayoutParams().width!=a.dp(width)){master.getLayoutParams().width=a.dp(width);master.requestLayout();}});buildList(master);if(!c.state.selected().isEmpty())buildThread(detail,c.state.selected(),false);else a.add(detail,a.label("Select a conversation or start a new one.",16,a.muted));}
+  if(a.wide){body.addView(master,new LinearLayout.LayoutParams(a.dp(a.shellMasterWidth),-1));View divider=new View(a);divider.setBackgroundColor(a.line);body.addView(divider,new LinearLayout.LayoutParams(a.dp(1),-1));body.addView(detail,new LinearLayout.LayoutParams(0,-1,1));buildList(master);if(!c.state.selected().isEmpty())buildThread(detail,c.state.selected(),false);else a.add(detail,a.label("Select a conversation or start a new one.",16,a.muted));}
   else if(c.state.selected().isEmpty())buildList(masterWith(body,master));else buildThread(masterWith(body,detail),c.state.selected(),false);
  }
  LinearLayout masterWith(LinearLayout body,LinearLayout pane){body.addView(pane,new LinearLayout.LayoutParams(-1,-1));return pane;}
  void buildList(LinearLayout pane){
   FrameLayout frame=new FrameLayout(a);pane.addView(frame,new LinearLayout.LayoutParams(-1,0,1));
-  ScrollView sc=new ScrollView(a);sc.setFillViewport(true);sc.setClipToPadding(false);sc.setPadding(0,0,0,a.dp(84));LinearLayout content=a.vertical();sc.addView(content);frame.addView(sc,new FrameLayout.LayoutParams(-1,-1));
+  listOwner=c.scope+"|"+c.archived+"|"+c.state.json().optBoolean("only_tasks")+"|"+c.search;
+  ScrollView sc=new ScrollView(a);discussionScroll=sc;sc.setFillViewport(true);sc.setClipToPadding(false);sc.setPadding(0,0,0,0);LinearLayout content=a.vertical();sc.addView(content);frame.addView(sc,new FrameLayout.LayoutParams(-1,-1));
   LinearLayout heading=a.horizontal();heading.setGravity(Gravity.CENTER_VERTICAL);heading.addView(a.heading("Discussions",30),new LinearLayout.LayoutParams(0,-2,1));heading.addView(a.ui.icon(R.drawable.ic_more,"Discussion filters and search help",()->filters()),new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(content,heading);
   EditText search=new EditText(a);a.ui.input(search);search.setBackground(a.ui.shape(a.ui.surface,0,24));search.setSingleLine(true);search.setText(c.search);search.setHint("Search discussions");search.setContentDescription("Search loaded titles, task labels and excerpts; not message history. Load more for older discussions.");a.add(content,search);
-  search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int x,int y,int z){}public void afterTextChanged(Editable e){}public void onTextChanged(CharSequence s,int x,int y,int z){c.search=s.toString();updateRows();}});
+  search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int x,int y,int z){}public void afterTextChanged(Editable e){}public void onTextChanged(CharSequence s,int x,int y,int z){captureListPresentation();c.search=s.toString();listOwner=c.scope+"|"+c.archived+"|"+c.state.json().optBoolean("only_tasks")+"|"+c.search;listRestoring=true;updateRows();}});
   FrameLayout capsule=a.ui.glassSurface();LinearLayout segments=a.horizontal();segments.setPadding(a.dp(3),a.dp(3),a.dp(3),a.dp(3));discussionTrack=segments;View scopePill=new View(a);discussionPill=scopePill;scopePill.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);scopePill.setBackground(a.ui.shape((a.ui.soft&0x00ffffff)|0x99000000,0,24));capsule.addView(scopePill,new FrameLayout.LayoutParams(0,0));int selectedScope=c.scope.equals("free")?2:c.state.json().optBoolean("only_tasks")?1:0;String[] labels={"All","Tasks","Free"};for(int n=0;n<labels.length;n++){final int index=n;Button segment=a.button(labels[n],()->selectScope(index));a.ui.selected(segment,n==1?c.state.json().optBoolean("only_tasks"):n==2?c.scope.equals("free"):!c.state.json().optBoolean("only_tasks")&&!c.scope.equals("free"));a.ui.tone(segment,android.graphics.Color.TRANSPARENT,0,n==selectedScope?a.ui.primary:a.ui.secondary);segments.addView(segment,new LinearLayout.LayoutParams(0,-2,1));}final int slot=selectedScope;final float origin=a.discussionScopeOrigin;a.discussionScopeOrigin=Float.NaN;final boolean[] placed={false};segments.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob)->{if(!placed[0]||r-l!=or-ol||b-t!=ob-ot){a.ui.placeScopeCapsule(scopePill,segments,slot,placed[0]?Float.NaN:origin);placed[0]=true;}});capsule.addView(segments,new FrameLayout.LayoutParams(-1,-2));a.add(content,capsule);
   state=a.label("",13,a.muted);state.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);a.add(content,state);rows=a.vertical();a.add(content,rows);
-  ImageButton create=a.ui.icon(R.drawable.ic_add,"New conversation",()->c.create(null,()->{c.state.select(c.visible);a.render();}));create.setImageTintList(android.content.res.ColorStateList.valueOf(a.ui.onPrimary));create.setBackground(a.ui.touch(a.ui.primary,0,28));FrameLayout.LayoutParams floating=new FrameLayout.LayoutParams(a.dp(56),a.dp(56),Gravity.BOTTOM|Gravity.END);floating.setMargins(a.dp(12),a.dp(12),a.dp(12),a.dp(12));frame.addView(create,floating);
+  Button create=a.primary("New conversation",()->c.create(null,()->{c.state.select(c.visible);a.render();}));a.ui.leadingIcon(create,R.drawable.ic_add);pane.addView(create,new LinearLayout.LayoutParams(-1,-2));
   updateRows();c.hide();c.list(false);
  }
  void selectScope(int index){a.discussionScopeOrigin=discussionTrack!=null&&discussionTrack.getWidth()>0?discussionPill.getTranslationX()/discussionTrack.getWidth():Float.NaN;ConversationState.put(c.state.json(),"only_tasks",index==1);c.filter(index==2?"free":"all","",false);a.render();a.ui.enter(a.root,NativeMotionPolicy.duration("tab"));}
@@ -47,7 +50,7 @@ final class ConversationsUi implements ConversationController.Listener {
  void updateRows(){
   if(rows==null)return;JSONArray loaded=new JSONArray();
   for(int i=0;i<c.threads.length();i++){JSONObject t=c.threads.optJSONObject(i);if(t==null)continue;JSONObject current=c.state.conversation(t.optString("id"));loaded.put(ConversationState.metadata(current,t));}
-  String nextSignature=loaded.toString()+c.search+c.next+c.archived+c.scope+c.state.json().optBoolean("only_tasks");if(nextSignature.equals(listSignature))return;listSignature=nextSignature;
+  String nextSignature=loaded.toString()+c.search+c.next+c.archived+c.scope+c.state.json().optBoolean("only_tasks");if(nextSignature.equals(listSignature))return;listSignature=nextSignature;captureListPresentation();discussionRows.clear();
   rows.removeAllViews();boolean onlyTasks=c.state.json().optBoolean("only_tasks");String q=c.search.toLowerCase(Locale.ROOT);int shown=0;
   for(int i=0;i<loaded.length();i++){
    JSONObject t=loaded.optJSONObject(i);if(t==null||t.optBoolean("archived")!=c.archived||(onlyTasks&&t.isNull("task_id")))continue;
@@ -60,15 +63,19 @@ final class ConversationsUi implements ConversationController.Listener {
    String updated=dateLabel(t.optString("updated_at"));TextView stamp=a.label(updated,11,a.muted);top.addView(stamp);a.add(text,top);
    JSONObject req=t.optJSONObject("latest_request");String status=req==null?"":req.optString("status");String suffix=ConversationState.pendingStatus(status)?" · "+(status.equals("queued")?"Queued":"Reply in progress"):status.equals("failed")||status.equals("interrupted")?" · "+status:"";
    TextView previewText=a.label((preview.isEmpty()?task:preview)+suffix,13,a.muted);previewText.setMaxLines(1);previewText.setEllipsize(TextUtils.TruncateAt.END);a.add(text,previewText);row.addView(text,new LinearLayout.LayoutParams(0,-2,1));
-   row.setContentDescription(label+", "+task+suffix+", "+preview+(updated.isEmpty()?"":", updated "+updated));a.add(rows,row);View line=new View(a);line.setBackgroundColor(a.line);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,a.dp(1));lp.leftMargin=a.dp(52);rows.addView(line,lp);shown++;
+   row.setContentDescription(label+", "+task+suffix+", "+preview+(updated.isEmpty()?"":", updated "+updated));a.add(rows,row);discussionRows.put(id,row);View line=new View(a);line.setBackgroundColor(a.line);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,a.dp(1));lp.leftMargin=a.dp(52);rows.addView(line,lp);shown++;
   }
   if(shown==0)a.add(rows,a.label("No matching conversations loaded. Start a new conversation, refresh, or load more. Previously discarded chats cannot be recovered.",14,a.muted));
   if(!c.next.isEmpty())a.add(rows,a.button("Load more conversations",()->c.list(true)));
+  restoreListPresentation();
  }
  void buildTask(LinearLayout pane,String task){
   attach();boundTask=task;String id=c.state.taskSelection(task);if(!id.isEmpty()){buildThread(pane,id,true);return;}
   LinearLayout bar=a.horizontal();bar.setGravity(Gravity.CENTER_VERTICAL);bar.addView(a.ui.icon(R.drawable.ic_back,"Back to task details",()->{a.detailsMode="Details";a.renderPage(true);}),new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));bar.addView(a.heading("Hermès",20),new LinearLayout.LayoutParams(0,-2,1));bar.addView(a.ui.icon(R.drawable.ic_more,"Task conversation actions",()->emptyTaskMenu(task)),new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(pane,bar);
-  LinearLayout empty=a.vertical();empty.setGravity(Gravity.CENTER);empty.setPadding(a.dp(24),a.dp(24),a.dp(24),a.dp(24));pane.addView(empty,new LinearLayout.LayoutParams(-1,0,1));a.add(empty,a.heading("A conversation for this task",22));a.add(empty,a.label("Choose saved history or start a new thread with the task’s saved context.",15,a.muted));a.add(empty,a.primary("New task conversation",()->c.create(task,()->{c.state.taskSelection(task,c.visible);c.save();a.render();})));a.add(empty,a.button("Choose saved conversation",()->taskPicker(task)));state=a.label(c.notice,13,a.muted);state.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);a.add(empty,state);c.hide();
+  // Keep the header fixed; measure chooser actions at their natural height even at large font scales.
+  ScrollView choicesScroll=new ScrollView(a);choicesScroll.setFillViewport(true);pane.addView(choicesScroll,new LinearLayout.LayoutParams(-1,0,1));
+  LinearLayout empty=a.vertical();empty.setGravity(Gravity.CENTER);empty.setPadding(a.dp(24),a.dp(24),a.dp(24),a.dp(24));choicesScroll.addView(empty);
+  a.add(empty,a.heading("A conversation for this task",22));a.add(empty,a.label("Choose saved history or start a new thread with the task’s saved context.",15,a.muted));a.add(empty,a.primary("New task conversation",()->c.create(task,()->{c.state.taskSelection(task,c.visible);c.save();a.render();})));a.add(empty,a.button("Choose saved conversation",()->taskPicker(task)));state=a.label(c.notice,13,a.muted);state.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);a.add(empty,state);c.hide();
  }
  void emptyTaskMenu(String task){a.dialogBuilder().setTitle("Task conversation").setItems(new String[]{"Saved conversations","New conversation"},(d,i)->{if(i==0)taskPicker(task);else c.create(task,()->{c.state.taskSelection(task,c.visible);c.save();a.render();});}).show();
  }
@@ -84,9 +91,18 @@ final class ConversationsUi implements ConversationController.Listener {
   title=a.heading("Conversation",17);title.setMaxLines(2);title.setEllipsize(TextUtils.TruncateAt.END);LinearLayout identity=a.vertical();a.add(identity,title);context=a.label(taskBound?"Task conversation":"Free discussion",12,a.muted);context.setMaxLines(1);context.setEllipsize(TextUtils.TruncateAt.END);a.add(identity,context);bar.addView(identity,new LinearLayout.LayoutParams(0,-2,1));bar.addView(a.ui.icon(R.drawable.ic_more,"Conversation actions",()->threadMenu()),new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(pane,bar);
   FrameLayout viewportFrame=new FrameLayout(a);pane.addView(viewportFrame,new LinearLayout.LayoutParams(-1,0,1));
   scroll=new ScrollView(a){
+   @Override public boolean dispatchTouchEvent(MotionEvent event){if(event.getActionMasked()==MotionEvent.ACTION_DOWN)readingInteraction(this);return super.dispatchTouchEvent(event);}
+   @Override public boolean dispatchGenericMotionEvent(MotionEvent event){if(event.getActionMasked()==MotionEvent.ACTION_SCROLL)readingInteraction(this);return super.dispatchGenericMotionEvent(event);}
+   @Override public boolean dispatchKeyEvent(KeyEvent event){if(event.getAction()==KeyEvent.ACTION_DOWN)readingInteraction(this);return super.dispatchKeyEvent(event);}
+   @Override public boolean performAccessibilityAction(int action,android.os.Bundle arguments){
+    boolean handled=super.performAccessibilityAction(action,arguments);
+    // Focus bookkeeping and rejected navigation are not a new reading intent.
+    if(handled&&(action==android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_FORWARD||action==android.view.accessibility.AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD||action==android.R.id.accessibilityActionScrollUp||action==android.R.id.accessibilityActionScrollDown))readingInteraction(this);
+    return handled;
+   }
    @Override protected void onSizeChanged(int width,int height,int oldWidth,int oldHeight){
     boolean preserve=oldHeight>0&&timeline!=null&&!restoring&&c.listener==ConversationsUi.this;
-    boolean wasBottom=preserve&&ChatPresentationPolicy.nearBottom(timeline.getHeight(),getScrollY(),oldHeight,a.dp(72));
+    boolean wasBottom=preserve&&!viewport().optBoolean("reading_hold")&&ChatPresentationPolicy.nearBottom(timeline.getHeight(),getScrollY(),oldHeight,a.dp(72));
     JSONObject anchor=null;if(preserve){captureViewport();try{anchor=new JSONObject(viewport().toString());}catch(JSONException ignored){preserve=false;}}
     super.onSizeChanged(width,height,oldWidth,oldHeight);if(preserve)restoreViewport(wasBottom,anchor);
    }
@@ -99,29 +115,98 @@ final class ConversationsUi implements ConversationController.Listener {
   input.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int x,int y,int z){}public void afterTextChanged(Editable e){}public void onTextChanged(CharSequence s,int x,int y,int z){if(!syncing)c.editDraft(id,s.toString());}});
   // Mode and reviewed voice input live in overflow, not beside every draft.
   send=a.ui.icon(R.drawable.ic_chat_send_up,"Send to Hermès",()->{JSONObject old=c.state.pending(id);String previous=old==null?"":old.optString("request_id");c.state.draft(id,input.getText().toString());c.send(id,c.state.mode(id));JSONObject current=c.state.pending(id);if(current!=null&&!previous.equals(current.optString("request_id"))){followRequest=current.optString("request_id");ConversationState.put(viewport(),"follow_request",followRequest);c.save();}syncDraft();});
-  send.setImageTintList(android.content.res.ColorStateList.valueOf(a.ui.onPrimary));send.setBackground(a.ui.touch(a.ui.primary,0,24));composer.addView(send,new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(pane,composerGlass);
-  updateThread();c.load(id,false);
+  send.setImageTintList(android.content.res.ColorStateList.valueOf(a.ui.onAction));send.setBackground(a.ui.touch(a.ui.action,0,24));composer.addView(send,new LinearLayout.LayoutParams(a.dp(48),a.dp(48)));a.add(pane,composerGlass);
+  restoreComposerPresentation();updateThread();c.load(id,false);
  }
  void composerMenu(){String[] choices={"Question / analysis","Email draft (never sends mail)","Review voice input"};a.dialogBuilder().setTitle("Hermès · message mode").setItems(choices,(d,i)->{if(i==2)a.voice();else{c.state.mode(thread,i==1?"email_draft":"question");c.save();input.setHint(i==1?"Request an email draft":"Message Hermès");}}).show();}
  void threadMenu(){JSONObject meta=c.state.conversation(thread);if(meta==null)return;final String task=boundTask.isEmpty()?(meta.isNull("task_id")?"":meta.optString("task_id")):boundTask;LinkedHashMap<String,String> actions=ConversationActionPolicy.threadActions(task,meta.optBoolean("archived"));String[] keys=actions.keySet().toArray(new String[0]),options=actions.values().toArray(new String[0]);a.dialogBuilder().setTitle(meta.optString("title","Conversation")).setItems(options,(d,i)->{String action=keys[i];if(action.equals("mode")){composerMenu();return;}if(action.equals("capabilities")){a.notice("Hermès capabilities","Discuss, plan and draft. The model cannot create tasks or projects, send mail or access your calendar. This app does not grant terminal tools. Public-web research availability is controlled by your server. Source actions open in your browser.");return;}if(action.equals("discussions")){a.destination="Discussions";c.state.select("");a.render();return;}if(action.equals("tasks")){a.destination="Tasks";a.render();return;}if(action.equals("settings")){a.settings();return;}if(action.equals("saved")||action.equals("new")){taskThreadAction(task,action.equals("new"));return;}if(action.equals("history"))c.load(thread,false);else if(action.equals("rename")){EditText name=new EditText(a);a.ui.input(name);name.setText(c.state.json().optString("rename:"+thread,meta.optString("title")));AlertDialog dialog=a.dialogBuilder().setTitle("Rename conversation").setView(name).setNegativeButton("Cancel",null).setPositiveButton("Rename",null).create();dialog.setOnShowListener(v->dialog.getButton(-1).setOnClickListener(w->{String proposed=name.getText().toString().trim();if(proposed.isEmpty()){name.setError("A title is required");return;}ConversationState.put(c.state.json(),"rename:"+thread,proposed);c.save();c.patch(thread,proposed,null);dialog.dismiss();}));dialog.show();}else if(action.equals("archive"))a.confirm(meta.optBoolean("archived")?"Reopen conversation?":"Archive conversation?","History remains saved on the server. Archived conversations can be reopened from Discussions.",()->c.patch(thread,null,!meta.optBoolean("archived")));}).show();}
  void taskThreadAction(String task,boolean create){a.captureDraft();Runnable open=()->{if(!task.equals(a.selected)){a.selected=task;a.draft=null;a.editing=false;}a.destination="Tasks";a.detailsMode="Hermès";a.render();if(create)c.create(task,()->a.render());else if(a.conversationUi!=null)a.conversationUi.taskPicker(task);};if(a.dirty()&&!task.equals(a.selected))a.confirm("Discard unsaved task fields?","Conversation drafts remain saved per thread.",open);else open.run();}
  void syncDraft(){if(input==null)return;String value=c.state.draft(thread);if(!input.getText().toString().equals(value)){syncing=true;input.setText(value);input.setSelection(value.length());syncing=false;}}
- void capture(){if(input!=null)c.state.draft(thread,input.getText().toString());captureViewport();}
- boolean nearBottom(){return scroll!=null&&ChatPresentationPolicy.nearBottom(timeline.getHeight(),scroll.getScrollY(),scroll.getHeight(),a.dp(72));}
+ void capture(){if(!c.valid()||c.listener!=this)return;if(input!=null)c.state.draft(thread,input.getText().toString());captureComposerPresentation();captureListPresentation();captureViewport();}
+ void captureComposerPresentation(){
+  if(input==null||thread.isEmpty()||!c.valid()||c.listener!=this)return;
+  if(composerRestoring&&MainActivity.untouchedEditor(input,composerInitial))return;
+  ConversationState.put(viewport(),"composer",MainActivity.editorPresentation(input));
+ }
+ void restoreComposerPresentation(){
+  composerRestoring=false;composerInitial=null;final JSONObject saved=viewport().optJSONObject("composer");if(saved==null)return;
+  final EditText target=input;final String targetThread=thread,value=input.getText().toString();final int ticket=++composerGeneration;composerRestoring=true;
+  final JSONObject initial=MainActivity.editorPresentation(input);composerInitial=initial;ConversationState.put(initial,"text",value);
+  target.post(()->{if(input!=target||!thread.equals(targetThread)||c.listener!=this||!c.valid()||ticket!=composerGeneration)return;composerRestoring=false;if(!MainActivity.untouchedEditor(target,initial))return;if(saved.optBoolean("focus")&&target.isEnabled())target.requestFocus();target.setSelection(Math.max(0,Math.min(target.length(),saved.optInt("start"))),Math.max(0,Math.min(target.length(),saved.optInt("end"))));target.scrollTo(Math.max(0,saved.optInt("x")),Math.max(0,saved.optInt("y")));});
+ }
+ JSONObject listViewport(){String key="list_presentation";JSONObject value=c.state.json().optJSONObject(key);if(value==null||!listOwner.equals(value.optString("owner"))){value=new JSONObject();ConversationState.put(value,"owner",listOwner);ConversationState.put(c.state.json(),key,value);}return value;}
+ void captureListPresentation(){
+  if(discussionScroll==null||rows==null||listRestoring||discussionScroll.getHeight()==0||c.listener!=this||!c.valid())return;
+  JSONObject saved=listViewport();int y=discussionScroll.getScrollY();ConversationState.put(saved,"y",y);saved.remove("id");saved.remove("offset");
+  if(y<rows.getTop())return;
+  for(Map.Entry<String,View> entry:discussionRows.entrySet()){View row=entry.getValue();int top=rows.getTop()+row.getTop();if(top+row.getHeight()>y){ConversationState.put(saved,"id",entry.getKey());ConversationState.put(saved,"offset",top-y);break;}}
+ }
+ void restoreListPresentation(){
+  if(discussionScroll==null||rows==null)return;final JSONObject saved;try{saved=new JSONObject(listViewport().toString());}catch(JSONException ignored){return;}
+  final ScrollView target=discussionScroll;final String owner=listOwner;final int ticket=++listGeneration;listRestoring=true;
+  target.getViewTreeObserver().addOnPreDrawListener(new android.view.ViewTreeObserver.OnPreDrawListener(){public boolean onPreDraw(){
+   if(target.getViewTreeObserver().isAlive())target.getViewTreeObserver().removeOnPreDrawListener(this);
+   if(discussionScroll!=target||!owner.equals(listOwner)||c.listener!=ConversationsUi.this||!c.valid()||ticket!=listGeneration)return true;
+   View row=discussionRows.get(saved.optString("id"));int y=row==null?saved.optInt("y"):rows.getTop()+row.getTop()-saved.optInt("offset");target.scrollTo(0,Math.max(0,y));listRestoring=false;return true;
+  }});target.invalidate();
+ }
+ boolean nearBottom(){return scroll!=null&&!viewport().optBoolean("reading_hold")&&ChatPresentationPolicy.nearBottom(timeline.getHeight(),scroll.getScrollY(),scroll.getHeight(),a.dp(72));}
  long latestId(){JSONArray turns=c.state.messages(thread);long latest=0;for(int i=0;i<turns.length();i++){JSONObject m=turns.optJSONObject(i);if(m!=null)latest=Math.max(latest,m.optLong("id"));}return latest;}
  void captureViewport(){
-  if(scroll==null||thread.isEmpty()||restoring||scroll.getHeight()==0)return;
+  if(scroll==null||thread.isEmpty()||restoring||scroll.getHeight()==0||c.listener!=this||!c.valid())return;
   JSONObject saved=viewport();int y=scroll.getScrollY();ConversationState.put(saved,"y",y);ConversationState.put(c.state.json(),"scroll:"+thread,y);
   saved.remove("anchor_id");saved.remove("anchor_offset");
   for(Map.Entry<Long,View> entry:messageRows.entrySet()){View row=entry.getValue();int top=messages.getTop()+row.getTop();if(top+row.getHeight()>y){ConversationState.put(saved,"anchor_id",entry.getKey());ConversationState.put(saved,"anchor_offset",top-y);break;}}
+  captureReading(saved,y);
   boolean bottom=nearBottom();ConversationState.put(saved,"at_bottom",bottom);if(bottom)ConversationState.put(saved,"seen_latest",latestId());
+ }
+ // Only the rendered body is a reading anchor: dates, source chips and wrapper tails are not text.
+ String readingDigest(String text){
+  try{byte[] bytes=java.security.MessageDigest.getInstance("SHA-256").digest(text.getBytes(java.nio.charset.StandardCharsets.UTF_8));StringBuilder out=new StringBuilder();for(byte b:bytes)out.append(String.format(Locale.ROOT,"%02x",b&255));return out.toString();}catch(java.security.NoSuchAlgorithmException impossible){throw new IllegalStateException(impossible);}
+ }
+ int readingBodyTop(TextView body){
+  int top=body.getTotalPaddingTop()-body.getScrollY();View node=body;
+  while(node!=messages){top+=node.getTop();ViewParent parent=node.getParent();if(!(parent instanceof View))return -1;node=(View)parent;}
+  return messages.getTop()+top;
+ }
+ void captureReading(JSONObject saved,int y){
+  saved.remove("reading");
+  for(Map.Entry<Long,View> entry:messageRows.entrySet()){
+   Object tag=entry.getValue().getTag();if(!(tag instanceof TextView))continue;TextView body=(TextView)tag;Layout layout=body.getLayout();int top=readingBodyTop(body);if(layout==null||top<0)continue;
+   String text=body.getText().toString();
+   for(int line=layout.getLineForVertical(Math.max(0,y-top));line<layout.getLineCount();line++){
+    if(top+layout.getLineTop(line)>=y+scroll.getHeight())break;if(top+layout.getLineBottom(line)<=y)continue;
+    int position=layout.getLineStart(line),end=layout.getLineEnd(line);while(position<end&&Character.isWhitespace(text.codePointAt(position)))position+=Character.charCount(text.codePointAt(position));if(position>=end)continue;
+    JSONObject reading=new JSONObject();ConversationState.put(reading,"id",entry.getKey());ConversationState.put(reading,"body",readingDigest(text));ConversationState.put(reading,"position",position);ConversationState.put(reading,"offset",top+layout.getLineTop(line)-y);ConversationState.put(saved,"reading",reading);return;
+   }
+  }
+ }
+ int readingRestoreY(JSONObject anchor,int fallback,JSONObject proof){
+  JSONObject reading=anchor.optJSONObject("reading");ConversationState.put(proof,"mode","legacy-raw");if(reading==null)return fallback;
+  ConversationState.put(proof,"reading_id",reading.optLong("id",-1));ConversationState.put(proof,"position",reading.optInt("position",-1));ConversationState.put(proof,"offset",reading.optInt("offset"));
+  View row=messageRows.get(reading.optLong("id",-1));if(row==null){ConversationState.put(proof,"mode","missing-message");return fallback;}
+  int rowTop=messages.getTop()+row.getTop();if(!(row.getTag() instanceof TextView)){ConversationState.put(proof,"mode","missing-body");return rowTop;}
+  TextView body=(TextView)row.getTag();Layout layout=body.getLayout();String text=body.getText().toString();int position=reading.optInt("position",-1),top=readingBodyTop(body);
+  if(!readingDigest(text).equals(reading.optString("body"))){ConversationState.put(proof,"mode","changed-body");return rowTop;}
+  if(layout==null||top<0){ConversationState.put(proof,"mode","layout-unavailable");return rowTop;}
+  if(position<0||position>=text.length()){ConversationState.put(proof,"mode","invalid-position");return rowTop;}
+  int line=layout.getLineForOffset(position),lineTop=top+layout.getLineTop(line),requested=lineTop-reading.optInt("offset");
+  // Old clipping is not attainable placement when it would hide the entire mapped line.
+  boolean readabilityAdjusted=top+layout.getLineBottom(line)<=requested;
+  ConversationState.put(proof,"unadjusted_y",requested);ConversationState.put(proof,"readability_adjusted",readabilityAdjusted);
+  ConversationState.put(proof,"mode","text-position");return readabilityAdjusted?lineTop:requested;
  }
  void updateJump(){
   if(jump==null)return;boolean bottom=nearBottom();int count=ChatPresentationPolicy.countAfter(c.state.messages(thread),viewport().optLong("seen_latest",latestId()));
   jump.setText(count>0?count+" new · Latest":"Jump to latest");jump.setContentDescription((count>0?count+" new loaded messages. ":"")+"Jump to latest");jump.setVisibility(bottom?View.GONE:View.VISIBLE);
  }
  void jumpToLatest(){
-  if(scroll==null)return;viewportGeneration++;restoring=true;scroll.scrollTo(0,Math.max(0,timeline.getHeight()-scroll.getHeight()));restoring=false;captureViewport();updateJump();c.save();
+  if(scroll==null)return;viewport().remove("reading_hold");viewportGeneration++;restoring=true;scroll.scrollTo(0,Math.max(0,timeline.getHeight()-scroll.getHeight()));restoring=false;captureViewport();updateJump();c.save();
+ }
+ void readingInteraction(View target){
+  if(scroll!=target||c.listener!=this||!c.valid())return;
+  viewport().remove("reading_hold");
+  if(restoring){viewportGeneration++;restoring=false;captureViewport();}
  }
  void restoreViewport(boolean follow,JSONObject anchor){
   final ScrollView target=scroll;final String targetThread=thread;final int generation=++viewportGeneration;restoring=true;
@@ -129,8 +214,16 @@ final class ConversationsUi implements ConversationController.Listener {
    if(target.getViewTreeObserver().isAlive())target.getViewTreeObserver().removeOnPreDrawListener(this);
    if(scroll!=target||!thread.equals(targetThread)||c.listener!=ConversationsUi.this||!c.valid()||generation!=viewportGeneration)return true;
    View row=messageRows.get(anchor.optLong("anchor_id",-1));int top=row==null?-1:messages.getTop()+row.getTop();
-   int y=follow?Math.max(0,timeline.getHeight()-target.getHeight()):ChatPresentationPolicy.restoreY(top,anchor.optInt("anchor_offset"),anchor.optInt("y",c.state.json().optInt("scroll:"+targetThread)));
-   target.scrollTo(0,y);restoring=false;captureViewport();updateJump();return true;
+   // Retain the raw legacy request until the single explicit bounds decision below.
+   int y=follow?Math.max(0,timeline.getHeight()-target.getHeight()):(top<0?anchor.optInt("y",c.state.json().optInt("scroll:"+targetThread)):top-anchor.optInt("anchor_offset"));
+   JSONObject proof=new JSONObject();ConversationState.put(proof,"mode","follow");if(!follow)y=readingRestoreY(anchor,y,proof);
+   int maxY=Math.max(0,timeline.getHeight()-target.getHeight());
+   // A bounds fallback must survive passive captures without becoming follow intent.
+   if(follow)viewport().remove("reading_hold");else if(y<0||y>maxY)ConversationState.put(viewport(),"reading_hold",true);
+   target.scrollTo(0,Math.min(ChatPresentationPolicy.restoreY(-1,0,y),maxY));restoring=false;captureViewport();
+   ConversationState.put(proof,"requested_y",y);ConversationState.put(proof,"max_y",maxY);ConversationState.put(proof,"actual_y",target.getScrollY());ConversationState.put(proof,"bounded",y<0||y>maxY);ConversationState.put(proof,"follow",follow);ConversationState.put(proof,"generation",generation);ConversationState.put(proof,"thread",targetThread);ConversationState.put(viewport(),"reading_restore",proof);
+
+   updateJump();return true;
   }});target.invalidate();
  }
  void updateThread(){
@@ -178,7 +271,7 @@ final class ConversationsUi implements ConversationController.Listener {
    final String original=turn.optString("content");TextView body=a.label("",16,outgoing?android.graphics.Color.WHITE:a.ink);body.setText(outgoing?MarkdownText.render(original):CitationUi.render(a,turn));body.setAutoLinkMask(0);body.setTextIsSelectable(true);body.setBreakStrategy(android.text.Layout.BREAK_STRATEGY_HIGH_QUALITY);if(!outgoing)CitationUi.bindLinks(body);final Store.Account rowOwner=a.account;final long rowGeneration=a.surfaces.generation();
    body.setCustomSelectionActionModeCallback(new ActionMode.Callback(){public boolean onCreateActionMode(ActionMode mode,Menu menu){menu.add(0,7341,0,"Copy original").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);if(!outgoing){menu.add(0,7342,1,"Review as new task").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);if(CitationPolicy.sources(turn).length()>0)menu.add(0,7343,2,"Related sources").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);}return true;}public boolean onPrepareActionMode(ActionMode mode,Menu menu){return false;}public boolean onActionItemClicked(ActionMode mode,MenuItem item){if(!a.alive(rowOwner)||!a.surfaces.current(rowGeneration)){mode.finish();return true;}if(item.getItemId()==7343&&!outgoing){mode.finish();CitationUi.sources(a,turn);return true;}if(item.getItemId()==7342&&!outgoing){mode.finish();a.reviewConversationAsTask(original);return true;}if(item.getItemId()!=7341)return false;copyOriginal(original);mode.finish();return true;}public void onDestroyActionMode(ActionMode mode){}});
    if(!outgoing)body.setAccessibilityDelegate(new View.AccessibilityDelegate(){@Override public void onInitializeAccessibilityNodeInfo(View host,android.view.accessibility.AccessibilityNodeInfo info){super.onInitializeAccessibilityNodeInfo(host,info);info.addAction(new android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction(R.id.action_review_as_task,"Review as new task"));info.addAction(new android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_LONG_CLICK,"Message actions and related sources"));}@Override public boolean performAccessibilityAction(View host,int action,android.os.Bundle arguments){if(!a.alive(rowOwner)||!a.surfaces.current(rowGeneration))return false;if(action==android.view.accessibility.AccessibilityNodeInfo.ACTION_LONG_CLICK){messageMenu(turn);return true;}if(action==R.id.action_review_as_task){a.reviewConversationAsTask(original);return true;}return super.performAccessibilityAction(host,action,arguments);}});
-   a.add(bubble,body);if(!outgoing)CitationUi.chips(a,bubble,turn);
+   wrapper.setTag(body);a.add(bubble,body);if(!outgoing)CitationUi.chips(a,bubble,turn);
    if(original.length()>32000)a.add(bubble,a.button("View full original",()->a.fullMessage(original)));
    row.addView(bubble,new LinearLayout.LayoutParams(-2,-2));
    if(!joinedAfter){String stamp=clockLabel(turn.optString("created_at"));if(!stamp.isEmpty()){TextView time=a.label(stamp,11,a.muted);time.setContentDescription("Sent "+timeLabel(turn.optString("created_at"),true));row.addView(time,new LinearLayout.LayoutParams(-2,-2));}}

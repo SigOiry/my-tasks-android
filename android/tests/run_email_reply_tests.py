@@ -3,7 +3,7 @@
 Host-only, no Android runtime or real mail claim. test.sh owner can invoke this.
 """
 from pathlib import Path
-import os,re,shutil,subprocess,tempfile
+import hashlib,os,re,shutil,subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1];SRC=ROOT/'src/com/simon/mytasks'
 JAVAC=str(Path(os.environ['JAVA_HOME'])/'bin/javac') if os.environ.get('JAVA_HOME') else shutil.which('javac')
 if not JAVAC:raise SystemExit('JAVA_HOME or javac is required')
@@ -29,9 +29,15 @@ with tempfile.TemporaryDirectory(prefix='email-native-tests-') as tmp:
  hinge_methods=['fitPane','fitPaneForMode','split','reflow','capture','put','showEditor','openAssistant']
  harness4=p/'EmailReplyHingeUiHarness.java';harness4.write_text((ROOT/'tests/EmailReplyHingeUiHarness.java').read_text().replace('// ACTUAL_METHODS','\n'.join(method('EmailReplyUi.java',n) for n in hinge_methods)))
  view_group=p/'android/view/ViewGroup.java';view_group.parent.mkdir(parents=True);view_group.write_text('package android.view;public class ViewGroup {public static class LayoutParams {public int width,height;public LayoutParams(int w,int h){width=w;height=h;}}}')
- files=[harness2,harness3,harness4,view_group]+[SRC/(s+'.java') for s in sources]+[ROOT/'tests'/(t+'.java') for t in tests]+list((ROOT/'tests/email-stubs').rglob('*.java'))+[harness]
+ delivery_actual='\n'.join(method('EmailReplyUi.java',n) for n in ['delivery','recipients','render','signature','close','capture','put'])
+ harness5=p/'EmailDeliveryHierarchyHarness.java';harness5.write_text((ROOT/'tests/EmailDeliveryHierarchyHarness.java').read_text().replace('// ACTUAL_METHODS',delivery_actual))
+ # Bind failed RED receipts too: print exact source identities before javac.
+ for source in [SRC/'EmailReplyUi.java',SRC/'EmailReplyState.java',harness5]:
+  print(source.name+' SHA-256 '+hashlib.sha256(source.read_bytes()).hexdigest(),flush=True)
+ print('Delivery extracted methods SHA-256 '+hashlib.sha256(delivery_actual.encode()).hexdigest(),flush=True)
+ files=[harness2,harness3,harness4,harness5,view_group]+[SRC/(s+'.java') for s in sources]+[ROOT/'tests'/(t+'.java') for t in tests]+list((ROOT/'tests/email-stubs').rglob('*.java'))+[harness]
  subprocess.run([JAVAC,'--release','8','-cp',str(JAR),'-d',str(p),*map(str,files)],check=True,timeout=30)
- for t in tests+['EmailReplyUiMethodsHarness','EmailAssistantHistoryHarness','CitationSourceUiHarness','EmailReplyHingeUiHarness']:subprocess.run([str(JAVA),'-cp',str(p)+os.pathsep+str(JAR),'com.simon.mytasks.'+t],check=True,timeout=15)
+ for t in tests+['EmailReplyUiMethodsHarness','EmailAssistantHistoryHarness','CitationSourceUiHarness','EmailReplyHingeUiHarness','EmailDeliveryHierarchyHarness']:subprocess.run([str(JAVA),'-cp',str(p)+os.pathsep+str(JAR),'com.simon.mytasks.'+t],check=True,timeout=15)
  # Same production observer against the OEM vendor Consumer signature.
  vendor=p/'vendor';vendor.mkdir();provider=vendor/'androidx/window/extensions/WindowExtensionsProvider.java';provider.parent.mkdir(parents=True);provider.write_text((ROOT/'tests/email-stubs/androidx/window/extensions/WindowExtensionsProvider.java').read_text().replace('java.util.function.Consumer','androidx.window.extensions.core.util.function.Consumer'))
  consumer=vendor/'androidx/window/extensions/core/util/function/Consumer.java';consumer.parent.mkdir(parents=True);consumer.write_text('package androidx.window.extensions.core.util.function;public interface Consumer<T>{void accept(T value);}')

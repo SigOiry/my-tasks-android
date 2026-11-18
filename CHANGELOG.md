@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0 — Task workspace
+
+- Read a task’s description, notes and status before choosing **Edit**. The editor keeps the complete saved text, not just the overview.
+- See which tasks a filtered list is showing. Open a linked discussion from task details without losing your place in the task.
+- Navigate the web workspace from the keyboard with the command menu. The task list, detail view and discussions use a shared light and dark palette.
+- On Android, navigation adapts to the available width. Short windows give the focused task editor more room, and discussions retain their reading position as text reflows.
+- Android version `1.7.0`, code `16`.
+
 ## 1.6.5 — Compact task descriptions
 
 - Open Android and browser task details with a concise, Markdown-formatted overview derived from the complete description.
